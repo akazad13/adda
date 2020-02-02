@@ -23,7 +23,7 @@ namespace DatingApp.API.Helpers
             CreateMap<UserForUpdateDTO, User>();
             CreateMap<PhotoForCreationDTO, Photo>();
             CreateMap<Photo, PhotoForReturnDTO>();     // from, to
-            CreateMap<User, PhotoForNavbarDTO>()
+            CreateMap<User, UserForNavbarDTO>()
                 .ForMember(dest => dest.PhotoUrl, opt =>
                     opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url));
             CreateMap<UserForRegisterDTO, User>();

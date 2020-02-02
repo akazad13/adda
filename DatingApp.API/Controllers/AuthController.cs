@@ -81,7 +81,7 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            var user = _mapper.Map<PhotoForNavbarDTO>(userFromRepo);
+            var user = _mapper.Map<UserForNavbarDTO>(userFromRepo);
 
             return Ok(new
             {

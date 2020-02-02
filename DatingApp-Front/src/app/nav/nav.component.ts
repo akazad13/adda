@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AlertifyService } from '../services/alertify.service';
@@ -9,16 +9,12 @@ import { Subscription } from 'rxjs';
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css']
 })
-export class NavComponent implements OnInit {
+export class NavComponent implements OnInit, OnDestroy {
   model: any = {};
   photoUrl: string;
   currentPhotoUrlSubscription: Subscription;
 
-  constructor(
-    public authService: AuthService,
-    private alertify: AlertifyService,
-    private router: Router
-  ) {}
+  constructor(public authService: AuthService, private alertify: AlertifyService, private router: Router) {}
 
   ngOnInit() {
     this.currentPhotoUrlSubscription = this.authService.currentPhotoUrl.subscribe(photoUrl => {
