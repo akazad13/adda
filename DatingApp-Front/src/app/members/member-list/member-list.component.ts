@@ -13,11 +13,7 @@ import { Subscription } from 'rxjs';
 export class MemberListComponent implements OnInit, OnDestroy {
   users: User[];
   routeSubscription: Subscription;
-  constructor(
-    private userService: UserService,
-    private alertify: AlertifyService,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private userService: UserService, private alertify: AlertifyService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.routeSubscription = this.route.data.subscribe(data => {
