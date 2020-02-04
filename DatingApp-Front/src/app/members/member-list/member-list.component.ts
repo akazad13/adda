@@ -38,7 +38,7 @@ export class MemberListComponent implements OnInit, OnDestroy {
     this.routeSubscription.unsubscribe();
   }
 
-  pagechanged(event: any) {
+  pageChanged(event: any) {
     this.pagination.currentPage = event.page;
     this.loadUsers();
   }
