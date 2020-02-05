@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { TabsetComponent } from 'ngx-bootstrap';
+import { Subscription } from 'rxjs';
+import { NgxGalleryImage, NgxGalleryOptions, NgxGalleryAnimation } from 'ngx-gallery';
+import { ActivatedRoute } from '@angular/router';
 import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user.service';
 import { AlertifyService } from 'src/app/services/alertify.service';
-import { ActivatedRoute } from '@angular/router';
-import { NgxGalleryImage, NgxGalleryOptions, NgxGalleryAnimation } from 'ngx-gallery';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-member-detail',
@@ -12,20 +13,22 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./member-detail.component.css']
 })
 export class MemberDetailComponent implements OnInit, OnDestroy {
+  @ViewChild('memberTabs', { static: true }) memberTabs: TabsetComponent;
   user: User;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
   routeSubscription: Subscription;
 
-  constructor(
-    private userService: UserService,
-    private alertify: AlertifyService,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private userService: UserService, private alertify: AlertifyService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.routeSubscription = this.route.data.subscribe(data => {
       this.user = data.user;
+    });
+
+    this.route.queryParams.subscribe(params => {
+      const selectedTab = params.tab;
+      this.memberTabs.tabs[selectedTab > 0 ? selectedTab : 0].active = true;
     });
 
     this.galleryOptions = [
@@ -56,5 +59,9 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
       });
     }
     return imageUrl;
+  }
+
+  selecTab(tabId: number) {
+    this.memberTabs.tabs[tabId].active = true;
   }
 }
