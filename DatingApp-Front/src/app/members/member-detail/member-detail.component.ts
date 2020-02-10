@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user.service';
 import { AlertifyService } from 'src/app/services/alertify.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -19,7 +20,12 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   galleryImages: NgxGalleryImage[];
   routeSubscription: Subscription;
 
-  constructor(private userService: UserService, private alertify: AlertifyService, private route: ActivatedRoute) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+    private alertify: AlertifyService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.routeSubscription = this.route.data.subscribe(data => {
@@ -63,5 +69,15 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
 
   selecTab(tabId: number) {
     this.memberTabs.tabs[tabId].active = true;
+  }
+  sendLike(id: number) {
+    this.userService.sendLike(this.authService.decodedToken.nameid, id).subscribe(
+      data => {
+        this.alertify.success('You have liked: ' + this.user.knownAs);
+      },
+      error => {
+        this.alertify.error(error);
+      }
+    );
   }
 }
