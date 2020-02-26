@@ -71,7 +71,7 @@ namespace DatingApp.API
             builder.AddEntityFrameworkStores<DataContext>();
             builder.AddRoleValidator<RoleValidator<Role>>();
             builder.AddRoleManager<RoleManager<Role>>();
-            builder.AddSignInManager<SignInManager<Role>>();
+            builder.AddSignInManager<SignInManager<User>>();
             // add authentication services for Jwt bearer
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

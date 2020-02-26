@@ -8,6 +8,7 @@ using DatingApp.API.Data;
 using DatingApp.API.DTOs;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -22,9 +23,14 @@ namespace DatingApp.API.Controllers
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
 
-        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper,
+        UserManager<User> userManager, SignInManager<User> signInManager)
         {
+            _userManager = userManager;
+            _signInManager = signInManager;
             _repo = repo;
             _mapper = mapper;
             _config = config;
@@ -53,17 +59,30 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDTO userForLoginDTO)
         {
-            var userFromRepo = await _repo.Login(userForLoginDTO.Username.ToLower(), userForLoginDTO.Password);
+            var user = await _userManager.FindByNameAsync(userForLoginDTO.Username);
 
-            if (userFromRepo == null)
+            var result = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDTO.Password, false);
+
+            if (result.Succeeded)
             {
-                return Unauthorized();
+                var appUser = _mapper.Map<UserForNavbarDTO>(user);
+
+                return Ok(new
+                {
+                    token = GenerateJwtToken(user),
+                    user = appUser
+                });
             }
 
+            return Unauthorized();
+        }
+
+        private string GenerateJwtToken(User user)
+        {
             Claim[] claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepo.UserName)
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
             };
 
             // After this, inject the IConfiguration class, then in appsetting add Token
@@ -83,13 +102,7 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            var user = _mapper.Map<UserForNavbarDTO>(userFromRepo);
-
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token),
-                user
-            });
+            return tokenHandler.WriteToken(token);
         }
     }
 }
