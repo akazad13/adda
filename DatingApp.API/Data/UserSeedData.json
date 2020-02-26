@@ -1,6 +1,7 @@
 [
 	{
 		"Username": "Melinda",
+		"Email": "melinda@gmail.com",
 		"Gender": "female",
 		"DateOfBirth": "1952-03-09",
 		"Password": "password",
@@ -21,6 +22,7 @@
 	},
 	{
 		"Username": "Jerri",
+		"Email": "jerri@gmail.com",
 		"Gender": "female",
 		"DateOfBirth": "1986-11-20",
 		"Password": "password",
@@ -41,6 +43,7 @@
 	},
 	{
 		"Username": "Elvira",
+		"Email": "elvira@gmail.com",
 		"Gender": "female",
 		"DateOfBirth": "1953-04-11",
 		"Password": "password",
@@ -61,6 +64,7 @@
 	},
 	{
 		"Username": "Angelica",
+		"Email": "angelica@gmail.com",
 		"Gender": "female",
 		"DateOfBirth": "1976-04-24",
 		"Password": "password",
@@ -81,6 +85,7 @@
 	},
 	{
 		"Username": "Nelda",
+		"Email": "nelda@gmail.com",
 		"Gender": "female",
 		"DateOfBirth": "1987-12-27",
 		"Password": "password",
@@ -101,6 +106,7 @@
 	},
 	{
 		"Username": "Alexander",
+		"Email": "alexander@gmail.com",
 		"Gender": "male",
 		"DateOfBirth": "1983-08-29",
 		"Password": "password",
@@ -121,6 +127,7 @@
 	},
 	{
 		"Username": "Coffey",
+		"Email": "coffey@gmail.com",
 		"Gender": "male",
 		"DateOfBirth": "1957-04-16",
 		"Password": "password",
@@ -141,6 +148,7 @@
 	},
 	{
 		"Username": "Hunter",
+		"Email": "hunter@gmail.com",
 		"Gender": "male",
 		"DateOfBirth": "1972-11-29",
 		"Password": "password",
@@ -161,6 +169,7 @@
 	},
 	{
 		"Username": "Herman",
+		"Email": "herman@gmail.com",
 		"Gender": "male",
 		"DateOfBirth": "1981-03-17",
 		"Password": "password",
@@ -181,6 +190,7 @@
 	},
 	{
 		"Username": "William",
+		"Email": "william@gmail.com",
 		"Gender": "male",
 		"DateOfBirth": "1970-05-23",
 		"Password": "password",

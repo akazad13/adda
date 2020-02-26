@@ -13,6 +13,10 @@
         <img class="card-img-top img-thumbnail" src="{{ photoUrl || '../../../assets/user.png' }}" alt="{{ user.knownAs }}" />
         <div class="card-body">
           <div>
+            <strong>Email:</strong>
+            <P>{{ user.email }}</P>
+          </div>
+          <div>
             <strong>Location:</strong>
             <P>{{ user.city }}, {{ user?.country }}</P>
           </div>
