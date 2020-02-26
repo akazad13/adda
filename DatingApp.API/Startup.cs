@@ -29,7 +29,11 @@ namespace DatingApp.API
         {
             // Database services configure to use in other parts of the application
             // Using SQLite database
-            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(x =>
+            {
+                x.UseLazyLoadingProxies();
+                x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             ConfigureServices(services);
         }
@@ -38,7 +42,11 @@ namespace DatingApp.API
         {
             // Database services configure to use in other parts of the application
             // Using MySql database
-            services.AddDbContext<DataContext>(x => x.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(x =>
+            {
+                x.UseLazyLoadingProxies();
+                x.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             ConfigureServices(services);
         }
