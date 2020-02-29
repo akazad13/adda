@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule, ButtonsModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule, ButtonsModule, ModalModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -32,6 +32,12 @@ import { PhotoEditorComponent } from './members/member-edit/photo-editor/photo-e
 import { ListsResolver } from './resolver/lists.resolver';
 import { MessagesResolver } from './resolver/messages';
 import { MemberMessagesComponent } from './members/member-detail/member-messages/member-messages.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './directives/hasRole.directive';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
+import { PhotoManagementComponent } from './admin/photo-management/photo-management.component';
+import { AdminService } from './services/admin.service';
+import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -57,7 +63,12 @@ export class CustomHammerConfig extends HammerGestureConfig {
     MemberEditComponent,
     PhotoEditorComponent,
     MemberMessagesComponent,
-    TimeAgoPipe
+    TimeAgoPipe,
+    AdminPanelComponent,
+    HasRoleDirective,
+    UserManagementComponent,
+    PhotoManagementComponent,
+    RolesModalComponent
   ],
   imports: [
     BrowserModule,
@@ -71,6 +82,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     PaginationModule.forRoot(),
     ButtonsModule.forRoot(),
     RouterModule.forRoot(appRoutes),
+    ModalModule.forRoot(),
     NgxGalleryModule,
     FileUploadModule,
     JwtModule.forRoot({
@@ -90,9 +102,11 @@ export class CustomHammerConfig extends HammerGestureConfig {
     MemberListResolver,
     MemberEditResolver,
     MessagesResolver,
+    AdminService,
     PreventUnsavedChanges,
     { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
   ],
+  entryComponents: [RolesModalComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace DatingApp.API.Controllers
 {
     [ServiceFilter(typeof(LogUserActivity))]
-    [Authorize]
     [ApiController]
     [Route("api/users/{userId}/[controller]")]
     public class MessagesController : ControllerBase
@@ -78,14 +77,14 @@ namespace DatingApp.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMessage(int userId, MessageForCreationDTO messageForCreationDTO)
         {
-            var sender = await _repo.GetUser(userId);
+            var sender = await _repo.GetUser(userId, true);
 
             if (sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             {
                 return Unauthorized();
             }
             messageForCreationDTO.SenderId = userId;
-            var recipient = await _repo.GetUser(messageForCreationDTO.RecipientId);
+            var recipient = await _repo.GetUser(messageForCreationDTO.RecipientId, false);
 
             if (recipient == null)
             {
@@ -106,7 +105,7 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpPost("{id}")]
-        public async Task<IActionResult> CreateMessage(int userId, int id)
+        public async Task<IActionResult> DeleteMessage(int userId, int id)
         {
 
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))

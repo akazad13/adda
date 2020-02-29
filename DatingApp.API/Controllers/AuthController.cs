@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -7,6 +8,8 @@ using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.DTOs;
 using DatingApp.API.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -15,15 +18,19 @@ namespace DatingApp.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
 
-        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
+        public AuthController(IConfiguration config, IMapper mapper,
+        UserManager<User> userManager, SignInManager<User> signInManager)
         {
-            _repo = repo;
+            _userManager = userManager;
+            _signInManager = signInManager;
             _mapper = mapper;
             _config = config;
 
@@ -32,37 +39,60 @@ namespace DatingApp.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDTO userForRegisterDTO)
         {
-            // validate Request
-            userForRegisterDTO.Username = userForRegisterDTO.Username.ToLower();
-            if (await _repo.UserExists(userForRegisterDTO.Username))
-            {
-                return BadRequest("Username already exits");
-            }
-
             var userToCreate = _mapper.Map<User>(userForRegisterDTO);
 
-            var createUser = await _repo.Register(userToCreate, userForRegisterDTO.Password);
+            var result = await _userManager.CreateAsync(userToCreate, userForRegisterDTO.Password);
 
-            var userToReturn = _mapper.Map<UserForDetailedDTO>(createUser);
+            var userToReturn = _mapper.Map<UserForDetailedDTO>(userToCreate);
 
-            return CreatedAtRoute("GetUser", new { Controller = "Users", id = createUser.Id }, userToReturn);  // temp 
+            if (result.Succeeded)
+            {
+                return CreatedAtRoute("GetUser", new { Controller = "Users", id = userToCreate.Id }, userToReturn);  // temp 
+            }
+
+            return BadRequest(result.Errors);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDTO userForLoginDTO)
         {
-            var userFromRepo = await _repo.Login(userForLoginDTO.Username.ToLower(), userForLoginDTO.Password);
+            var user = await _userManager.FindByNameAsync(userForLoginDTO.Username);
 
-            if (userFromRepo == null)
+            if (user == null)
             {
                 return Unauthorized();
             }
 
-            Claim[] claims = new[]
+            var result = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDTO.Password, false);
+
+            if (result.Succeeded)
             {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepo.Username)
+                var appUser = _mapper.Map<UserForNavbarDTO>(user);
+
+                return Ok(new
+                {
+                    token = GenerateJwtToken(user).Result,
+                    user = appUser
+                });
+            }
+
+            return Unauthorized();
+        }
+
+        private async Task<string> GenerateJwtToken(User user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
             };
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             // After this, inject the IConfiguration class, then in appsetting add Token
             var key = new SymmetricSecurityKey(Encoding.UTF8
@@ -81,13 +111,7 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            var user = _mapper.Map<UserForNavbarDTO>(userFromRepo);
-
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token),
-                user
-            });
+            return tokenHandler.WriteToken(token);
         }
     }
 }
