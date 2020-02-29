@@ -35,7 +35,6 @@ namespace DatingApp.API
             // Using SQLite database
             services.AddDbContext<DataContext>(x =>
             {
-                x.UseLazyLoadingProxies();
                 x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
 
@@ -48,7 +47,6 @@ namespace DatingApp.API
             // Using MySql database
             services.AddDbContext<DataContext>(x =>
             {
-                x.UseLazyLoadingProxies();
                 x.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
             });
 
@@ -86,6 +84,12 @@ namespace DatingApp.API
                     };
                 });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
+            });
+
             services.AddControllers(options =>
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
@@ -98,8 +102,8 @@ namespace DatingApp.API
             services.AddCors(); // cors service
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddAutoMapper(typeof(DatingRepository).Assembly);
-            services.AddScoped<IAuthRepository, AuthRepository>(); // add auth repository scope
             services.AddScoped<IDatingRepository, DatingRepository>(); // add Dating repository scope
+            services.AddScoped<IAdminRepository, AdminRepository>();
 
             services.AddScoped<LogUserActivity>();
         }

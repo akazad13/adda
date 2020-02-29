@@ -11,3 +11,15 @@ img.img-thumbnail {
 input[type='file'] {
   color: transparent;
 }
+
+.pending-image-text {
+  color: red;
+  position: absolute;
+  top: 35px;
+  left: 7px;
+  text-align: center;
+}
+
+.not-approved {
+  opacity: 0.2;
+}
