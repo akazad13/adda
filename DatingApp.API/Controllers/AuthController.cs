@@ -11,6 +11,7 @@ using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -56,7 +57,7 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDTO userForLoginDTO)
         {
-            var user = await _userManager.FindByNameAsync(userForLoginDTO.Username);
+            var user = await _userManager.Users.Include(p => p.Photos).SingleOrDefaultAsync(u => u.UserName.ToLower() == userForLoginDTO.Username.ToLower());
 
             if (user == null)
             {

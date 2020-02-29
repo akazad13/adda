@@ -41,7 +41,9 @@ namespace DatingApp.API.Data
                 var adminUser = new User
                 {
                     UserName = "Admin",
-                    Email = "admin@gmail.com"
+                    Email = "admin@gmail.com",
+                    Gender = "male",
+                    KnownAs = "Admin"
                 };
 
                 var result = userManager.CreateAsync(adminUser, "password").Result;
