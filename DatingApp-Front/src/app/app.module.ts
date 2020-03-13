@@ -38,6 +38,8 @@ import { UserManagementComponent } from './admin/user-management/user-management
 import { PhotoManagementComponent } from './admin/photo-management/photo-management.component';
 import { AdminService } from './services/admin.service';
 import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
+import { LoderComponent } from './shared/loader.component';
+import { LoaderService } from './services/loader.service';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -68,7 +70,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     HasRoleDirective,
     UserManagementComponent,
     PhotoManagementComponent,
-    RolesModalComponent
+    RolesModalComponent,
+    LoderComponent
   ],
   imports: [
     BrowserModule,
@@ -88,8 +91,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     JwtModule.forRoot({
       config: {
         tokenGetter,
-        whitelistedDomains: ['localhost:5000'],
-        blacklistedRoutes: ['localhost:5000/auth']
+        whitelistedDomains: ['aws.akazad.dev'],
+        blacklistedRoutes: ['aws.akazad.dev/auth']
       }
     })
   ],
@@ -104,6 +107,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     MessagesResolver,
     AdminService,
     PreventUnsavedChanges,
+    LoaderService,
     { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
   ],
   entryComponents: [RolesModalComponent],

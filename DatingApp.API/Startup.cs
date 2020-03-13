@@ -27,7 +27,7 @@ namespace DatingApp.API
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration;
 
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {

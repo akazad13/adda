@@ -33,7 +33,7 @@ namespace DatingApp.API.Data
                 {
                     user.Photos.FirstOrDefault().IsApproved = true;
                     userManager.CreateAsync(user, "password").Wait();
-                    userManager.AddToRoleAsync(user, "Member");
+                    userManager.AddToRoleAsync(user, "Member").Wait();
                 }
 
 
@@ -50,7 +50,7 @@ namespace DatingApp.API.Data
                 if (result.Succeeded)
                 {
                     var admin = userManager.FindByNameAsync("Admin").Result;
-                    userManager.AddToRolesAsync(admin, new[] { "Admin", "Moderator" });
+                    userManager.AddToRolesAsync(admin, new[] { "Admin", "Moderator" }).Wait();
                 }
             }
         }

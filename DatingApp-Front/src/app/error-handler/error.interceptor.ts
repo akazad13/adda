@@ -1,16 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpErrorResponse, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { LoaderService } from '../services/loader.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
+  constructor(public loaderService: LoaderService) {}
   intercept(
     req: import('@angular/common/http').HttpRequest<any>,
     next: import('@angular/common/http').HttpHandler
   ): import('rxjs').Observable<import('@angular/common/http').HttpEvent<any>> {
+    if (!(req.url.endsWith('/messages') && req.method.toLowerCase() === 'post')) {
+      this.loaderService.showLoader();
+    }
     return next.handle(req).pipe(
       catchError(error => {
+        this.loaderService.hideLoader();
         if (error.status === 401) {
           return throwError(error.statusText);
         }
@@ -30,6 +36,11 @@ export class ErrorInterceptor implements HttpInterceptor {
             }
           }
           return throwError(modalStateErrors || serverError || 'Server Error');
+        }
+      }),
+      finalize(() => {
+        if (!(req.url.endsWith('/messages') && req.method.toLowerCase() === 'post')) {
+          this.loaderService.hideLoader();
         }
       })
     );
