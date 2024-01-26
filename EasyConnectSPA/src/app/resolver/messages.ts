@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
+import { Router, ActivatedRouteSnapshot } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { AlertifyService } from '../services/alertify.service';
 import { Observable, of } from 'rxjs';
@@ -8,7 +8,7 @@ import { Message } from '../models/message';
 import { AuthService } from '../services/auth.service';
 
 @Injectable()
-export class MessagesResolver implements Resolve<Message[]> {
+export class MessagesResolver  {
   pageNumber = 1;
   pageSize = 5;
   messageContainer = 'unread';

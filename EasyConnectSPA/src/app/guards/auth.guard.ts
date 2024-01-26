@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
+import { Router, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { AlertifyService } from '../services/alertify.service';
@@ -7,7 +7,7 @@ import { AlertifyService } from '../services/alertify.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class AuthGuard  {
   constructor(private authService: AuthService, private router: Router, private alertify: AlertifyService) {}
   canActivate(next: ActivatedRouteSnapshot): boolean {
     const roles = next.firstChild.data.roles as Array<string>;

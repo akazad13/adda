@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
+import { Router, ActivatedRouteSnapshot } from '@angular/router';
 import { User } from '../models/user';
 import { UserService } from '../services/user.service';
 import { AlertifyService } from '../services/alertify.service';
@@ -7,7 +7,7 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable()
-export class ListsResolver implements Resolve<User[]> {
+export class ListsResolver  {
   pageNumber = 1;
   pageSize = 5;
   likesParams = 'Likers';

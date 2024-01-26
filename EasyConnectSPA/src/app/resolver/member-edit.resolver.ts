@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
+import { Router, ActivatedRouteSnapshot } from '@angular/router';
 import { User } from '../models/user';
 import { UserService } from '../services/user.service';
 import { AlertifyService } from '../services/alertify.service';
@@ -8,7 +8,7 @@ import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
 @Injectable()
-export class MemberEditResolver implements Resolve<User> {
+export class MemberEditResolver  {
   constructor(
     private userService: UserService,
     private router: Router,
