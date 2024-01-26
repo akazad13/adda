@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -14,13 +14,13 @@ import { User } from '../models/user';
 export class RegisterComponent implements OnInit {
   user: User;
   @Output() cancelRegister = new EventEmitter();
-  registerForm: FormGroup;
+  registerForm: UntypedFormGroup;
   bsConfig: Partial<BsDatepickerConfig>; // adding partial, make all the required field partial
 
   constructor(
     private authService: AuthService,
     private alertify: AlertifyService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router
   ) {}
 
@@ -48,7 +48,7 @@ export class RegisterComponent implements OnInit {
     );
   }
 
-  passwordMatchValidator(g: FormGroup) {
+  passwordMatchValidator(g: UntypedFormGroup) {
     return g.get('password').value === g.get('confirmPassword').value ? null : { mismatch: true };
   }
 
