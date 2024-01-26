@@ -105,5 +105,8 @@
       }
     }
   },
-  "defaultProject": "EasyConnect-Front"
+  "defaultProject": "EasyConnect-Front",
+  "cli": {
+    "analytics": false
+  }
 }
