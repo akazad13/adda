@@ -57,18 +57,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "EasyConnect-Front:build"
+            "buildTarget": "EasyConnect-Front:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "EasyConnect-Front:build:production"
+              "buildTarget": "EasyConnect-Front:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "EasyConnect-Front:build"
+            "buildTarget": "EasyConnect-Front:build"
           }
         },
         "test": {
