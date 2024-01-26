@@ -52,64 +52,63 @@ export class CustomHammerConfig extends HammerGestureConfig {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavComponent,
-    HomeComponent,
-    RegisterComponent,
-    MemberListComponent,
-    ListsComponent,
-    MessagesComponent,
-    MemberCardComponent,
-    MemberDetailComponent,
-    MemberEditComponent,
-    PhotoEditorComponent,
-    MemberMessagesComponent,
-    AdminPanelComponent,
-    HasRoleDirective,
-    UserManagementComponent,
-    PhotoManagementComponent,
-    RolesModalComponent,
-    LoderComponent
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    BsDropdownModule.forRoot(),
-    BsDatepickerModule.forRoot(),
-    TabsModule.forRoot(),
-    PaginationModule.forRoot(),
-    ButtonsModule.forRoot(),
-    RouterModule.forRoot(appRoutes),
-    ModalModule.forRoot(),
-    NgxGalleryModule,
-    FileUploadModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter,
-        whitelistedDomains: ['aws.akazad.dev'],
-        blacklistedRoutes: ['aws.akazad.dev/auth']
-      }
-    })
-  ],
-  providers: [
-    AuthService,
-    UserService,
-    ErrorInterceptorProvider,
-    ListsResolver,
-    MemberDetailResolver,
-    MemberListResolver,
-    MemberEditResolver,
-    MessagesResolver,
-    AdminService,
-    PreventUnsavedChanges,
-    LoaderService,
-    { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
-  ],
-  entryComponents: [RolesModalComponent],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        NavComponent,
+        HomeComponent,
+        RegisterComponent,
+        MemberListComponent,
+        ListsComponent,
+        MessagesComponent,
+        MemberCardComponent,
+        MemberDetailComponent,
+        MemberEditComponent,
+        PhotoEditorComponent,
+        MemberMessagesComponent,
+        AdminPanelComponent,
+        HasRoleDirective,
+        UserManagementComponent,
+        PhotoManagementComponent,
+        RolesModalComponent,
+        LoderComponent
+    ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        BsDropdownModule.forRoot(),
+        BsDatepickerModule.forRoot(),
+        TabsModule.forRoot(),
+        PaginationModule.forRoot(),
+        ButtonsModule.forRoot(),
+        RouterModule.forRoot(appRoutes),
+        ModalModule.forRoot(),
+        NgxGalleryModule,
+        FileUploadModule,
+        JwtModule.forRoot({
+            config: {
+                tokenGetter,
+                whitelistedDomains: ['aws.akazad.dev'],
+                blacklistedRoutes: ['aws.akazad.dev/auth']
+            }
+        })
+    ],
+    providers: [
+        AuthService,
+        UserService,
+        ErrorInterceptorProvider,
+        ListsResolver,
+        MemberDetailResolver,
+        MemberListResolver,
+        MemberEditResolver,
+        MessagesResolver,
+        AdminService,
+        PreventUnsavedChanges,
+        LoaderService,
+        { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {}
