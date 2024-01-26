@@ -41,7 +41,7 @@
             <strong>{{ message.recipientKnownAs }}</strong>
           </div>
         </td>
-        <td>{{ message.messageSent | timeAgo }}</td>
+        <td>{{ message.messageSent }}</td>
         <td>
           <button class="btn btn-danger" (click)="$event.stopPropagation()" (click)="deleteMessage(message.id)">Delete</button>
         </td>
