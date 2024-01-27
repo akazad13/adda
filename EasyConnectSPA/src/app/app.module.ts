@@ -45,9 +45,11 @@ import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
 import { LoderComponent } from './shared/loader.component';
 import { LoaderService } from './services/loader.service';
 import { HasErrorPipe } from './shared/pipes/has-error.pipe';
+import { IsInvalidPipe } from './shared/pipes/is-invalid.pipe';
+import { environment } from 'src/environments/environment';
 
-export function tokenGetter() {
-  return localStorage.getItem('token');
+export function tokenGetter(): string {
+  return localStorage.getItem('token') ?? '';
 }
 @Injectable()
 export class CustomHammerConfig extends HammerGestureConfig {
@@ -78,6 +80,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     RolesModalComponent,
     LoderComponent,
     HasErrorPipe,
+    IsInvalidPipe,
   ],
   imports: [
     BrowserModule,
@@ -97,8 +100,9 @@ export class CustomHammerConfig extends HammerGestureConfig {
     JwtModule.forRoot({
       config: {
         tokenGetter,
-        // whitelistedDomains: ['aws.akazad.dev'],
-        // blacklistedRoutes: ['aws.akazad.dev/auth']
+        allowedDomains: [environment.apiUrl.split('//')[1]], // needs to remove the https:// portion
+        skipWhenExpired: true,
+        disallowedRoutes: [`${environment.apiUrl.split('//')[1]}/api/auth`],
       },
     }),
   ],

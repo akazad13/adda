@@ -10,7 +10,7 @@
           </div>
           <div>
             <strong>Location:</strong>
-            <P>{{ user.city }}, {{ user?.country }}</P>
+            <P>{{ user.city }}, {{ user.country }}</P>
           </div>
           <div>
             <strong>Age:</strong>
@@ -18,11 +18,11 @@
           </div>
           <div>
             <strong>Last Active:</strong>
-            <P>{{ user.lastActive  }}</P>
+            <P>{{ user.lastActive }}</P>
           </div>
           <div>
             <strong>Member since:</strong>
-            <P>{{ user.created | date: 'mediumDate' }}</P>
+            <P>{{ user.created | date : 'mediumDate' }}</P>
           </div>
         </div>
         <div class="card-footer">
@@ -36,7 +36,7 @@
     <div class="col-sm-8">
       <div class="tab-panel">
         <tabset class="member-tabset" #memberTabs>
-          <tab heading="About {{ user?.knownAs }}">
+          <tab heading="About {{ user.knownAs }}">
             <h4>Description</h4>
             <p>{{ user.introduction }}</p>
             <h4>Looking For</h4>

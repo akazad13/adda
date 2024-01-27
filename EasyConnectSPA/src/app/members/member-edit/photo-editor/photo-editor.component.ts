@@ -15,7 +15,7 @@ export class PhotoEditorComponent implements OnInit {
   @Input() photos!: Photo[];
   uploader!: FileUploader;
   hasBaseDropZoneOver: boolean;
-  baseUrl = environment.apiUrl;
+  baseUrl = `${environment.apiUrl}/api/`;
   currentMain!: Photo;
 
   constructor(private authService: AuthService, private userService: UserService, private alertify: AlertifyService) {
@@ -60,7 +60,7 @@ export class PhotoEditorComponent implements OnInit {
         this.photos.push(photo);
         if (photo.isMain) {
           this.authService.changeMemberPhoto(photo.url);
-          this.authService.currentUser.photoUrl = photo.url;
+          this.authService.currentUser!.photoUrl = photo.url;
           localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
         }
       }
@@ -74,7 +74,7 @@ export class PhotoEditorComponent implements OnInit {
         this.currentMain.isMain = false;
         photo.isMain = true;
         this.authService.changeMemberPhoto(photo.url);
-        this.authService.currentUser.photoUrl = photo.url;
+        this.authService.currentUser!.photoUrl = photo.url;
         localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
       },
       (error) => {

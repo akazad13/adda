@@ -11,7 +11,7 @@ import { Message } from '../models/message';
   providedIn: 'root',
 })
 export class UserService {
-  baseUrl = environment.apiUrl;
+  baseUrl = `${environment.apiUrl}/api/`;
 
   constructor(private http: HttpClient) {}
 
@@ -100,8 +100,8 @@ export class UserService {
     return this.http.get<Message[]>(this.baseUrl + 'users/' + id + '/messages/thread/' + recipientId);
   }
 
-  sendMessage(id: number, message: Message) {
-    return this.http.post(this.baseUrl + 'users/' + id + '/messages', message);
+  sendMessage(id: number, message: Message): Observable<Message> {
+    return this.http.post<Message>(this.baseUrl + 'users/' + id + '/messages', message);
   }
 
   deleteMessage(id: number, userId: number) {

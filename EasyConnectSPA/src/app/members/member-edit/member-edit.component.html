@@ -18,7 +18,7 @@
           </div>
           <div>
             <strong>Location:</strong>
-            <P>{{ user.city }}, {{ user?.country }}</P>
+            <P>{{ user.city }}, {{ user.country }}</P>
           </div>
           <div>
             <strong>Age:</strong>
@@ -26,17 +26,15 @@
           </div>
           <div>
             <strong>Last Active:</strong>
-            <P>{{ user.lastActive  }}</P>
+            <P>{{ user.lastActive }}</P>
           </div>
           <div>
             <strong>Member since:</strong>
-            <P>{{ user.created | date: 'mediumDate' }}</P>
+            <P>{{ user.created | date : 'mediumDate' }}</P>
           </div>
         </div>
         <div class="card-footer">
-          <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-success btn-block">
-            Save Changes
-          </button>
+          <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-success btn-block">Save Changes</button>
         </div>
       </div>
     </div>
@@ -61,7 +59,7 @@
             </form>
           </tab>
           <tab heading="Edit Photos">
-            <app-photo-editor [photos]="user.photos"></app-photo-editor>
+            <app-photo-editor [photos]="user.photos!"></app-photo-editor>
           </tab>
         </tabset>
       </div>

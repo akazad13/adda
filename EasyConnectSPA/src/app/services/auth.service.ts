@@ -10,10 +10,10 @@ import { User } from '../models/user';
   providedIn: 'root',
 })
 export class AuthService {
-  baseUrl = environment.apiUrl + 'auth/';
+  baseUrl = `${environment.apiUrl}/api/auth/`;
   jwtHelper = new JwtHelperService();
   decodedToken: any;
-  currentUser!: User;
+  currentUser: User | null = null;
   photoUrl = new BehaviorSubject<string>('../../assets/user.png');
   currentPhotoUrl = this.photoUrl.asObservable();
 
@@ -32,7 +32,7 @@ export class AuthService {
           localStorage.setItem('user', JSON.stringify(user.user));
           this.decodedToken = this.jwtHelper.decodeToken(user.token);
           this.currentUser = user.user;
-          this.changeMemberPhoto(this.currentUser.photoUrl);
+          this.changeMemberPhoto(this.currentUser!.photoUrl);
         }
       })
     );

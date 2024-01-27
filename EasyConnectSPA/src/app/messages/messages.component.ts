@@ -9,11 +9,11 @@ import { AlertifyService } from '../services/alertify.service';
 @Component({
   selector: 'app-messages',
   templateUrl: './messages.component.html',
-  styleUrls: ['./messages.component.css']
+  styleUrls: ['./messages.component.css'],
 })
 export class MessagesComponent implements OnInit {
-  messages: Message[];
-  pagination: Pagination;
+  messages: Message[] | null = null;
+  pagination!: Pagination;
   messageContainer = 'unread';
   constructor(
     private userService: UserService,
@@ -23,7 +23,7 @@ export class MessagesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.data.subscribe(data => {
+    this.route.data.subscribe((data) => {
       this.messages = data['messages'].result;
       this.pagination = data['messages'].pagination;
     });
@@ -44,7 +44,7 @@ export class MessagesComponent implements OnInit {
             this.messageContainer = messageContainer;
           }
         },
-        error => {
+        (error) => {
           this.alertify.error(error);
         }
       );
@@ -59,13 +59,13 @@ export class MessagesComponent implements OnInit {
     this.alertify.confirm('Are you sure you want to delete this message?', () => {
       this.userService.deleteMessage(id, this.authService.decodedToken.nameid).subscribe(
         () => {
-          this.messages.splice(
-            this.messages.findIndex(m => m.id === id),
+          this.messages!.splice(
+            this.messages!.findIndex((m) => m.id === id),
             1
           );
           this.alertify.success('Message has been deleted');
         },
-        error => {
+        (error) => {
           this.alertify.error('Failed to delete the messages');
         }
       );

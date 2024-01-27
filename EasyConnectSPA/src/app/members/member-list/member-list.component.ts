@@ -13,14 +13,14 @@ import { Pagination, PaginatedResult } from 'src/app/models/pagination';
 })
 export class MemberListComponent implements OnInit, OnDestroy {
   users: User[] = [];
-  user: User = JSON.parse(localStorage.getItem('user'));
+  user: User | null = JSON.parse(localStorage.getItem('user')!);
   userParams: any = {};
   genderList = [
     { value: 'male', display: 'Males' },
     { value: 'female', display: 'Females' },
   ];
-  pagination: Pagination;
-  routeSubscription: Subscription;
+  pagination!: Pagination;
+  routeSubscription!: Subscription;
   constructor(private userService: UserService, private alertify: AlertifyService, private route: ActivatedRoute) {}
 
   ngOnInit() {
@@ -28,7 +28,7 @@ export class MemberListComponent implements OnInit, OnDestroy {
       this.users = data['users'].result;
       this.pagination = data['users'].pagination;
     });
-    this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
+    this.userParams.gender = this.user!.gender === 'female' ? 'male' : 'female';
     this.userParams.minAge = 18;
     this.userParams.maxAge = 99;
     this.userParams.orderBy = 'lastActive';
@@ -44,7 +44,7 @@ export class MemberListComponent implements OnInit, OnDestroy {
   }
 
   resetFilters() {
-    this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
+    this.userParams.gender = this.user!.gender === 'female' ? 'male' : 'female';
     this.userParams.minAge = 18;
     this.userParams.maxAge = 99;
     this.loadUsers();
@@ -53,7 +53,7 @@ export class MemberListComponent implements OnInit, OnDestroy {
   loadUsers() {
     this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams).subscribe(
       (res: PaginatedResult<User[]>) => {
-        this.users = res.result;
+        this.users = res.result!;
         this.pagination = res.pagination;
       },
       (error) => {

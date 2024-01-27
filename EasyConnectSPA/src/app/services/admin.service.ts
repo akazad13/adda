@@ -3,16 +3,17 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user';
 import { Photo } from '../models/photo';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AdminService {
-  baseUrl = environment.apiUrl;
+  baseUrl = `${environment.apiUrl}/api/`;
   constructor(private http: HttpClient) {}
 
-  getUsersWithRoles() {
-    return this.http.get(this.baseUrl + 'admin/usersWithRoles');
+  getUsersWithRoles(): Observable<User[]> {
+    return this.http.get<User[]>(this.baseUrl + 'admin/usersWithRoles');
   }
 
   updateUserRoles(user: User, roles: {}) {

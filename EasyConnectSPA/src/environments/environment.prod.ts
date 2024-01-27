@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://aws.akazad.dev/api/'
+  apiUrl: 'http://localhost:5000',
 };

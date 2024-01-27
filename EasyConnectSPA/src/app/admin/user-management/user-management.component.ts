@@ -8,7 +8,7 @@ import { RolesModalComponent } from '../roles-modal/roles-modal.component';
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
-  styleUrls: ['./user-management.component.css']
+  styleUrls: ['./user-management.component.css'],
 })
 export class UserManagementComponent implements OnInit {
   bsModalRef!: BsModalRef;
@@ -25,7 +25,7 @@ export class UserManagementComponent implements OnInit {
       (users: User[]) => {
         this.users = users;
       },
-      error => {
+      (error) => {
         this.alertify.error(error);
       }
     );
@@ -34,12 +34,12 @@ export class UserManagementComponent implements OnInit {
   editRolesModal(user: User) {
     const initialState = {
       user,
-      roles: this.GetRolesArray(user)
+      roles: this.GetRolesArray(user),
     };
     this.bsModalRef = this.modalService.show(RolesModalComponent, { initialState });
     this.bsModalRef.content.updateSelectedRoles.subscribe((values: any[]) => {
       const rolesToUpdate = {
-        roleName: [...values.filter(el => el.checked === true).map(el => el.name)]
+        roleName: [...values.filter((el) => el.checked === true).map((el) => el.name)],
       };
 
       if (rolesToUpdate) {
@@ -47,7 +47,7 @@ export class UserManagementComponent implements OnInit {
           () => {
             user.roles = [...rolesToUpdate.roleName];
           },
-          error => {
+          (error) => {
             this.alertify.error(error);
           }
         );
@@ -61,7 +61,7 @@ export class UserManagementComponent implements OnInit {
     const availableRoles: any[] = [
       { name: 'Admin', value: 'Admin' },
       { name: 'Moderator', value: 'Moderator' },
-      { name: 'Member', value: 'Member' }
+      { name: 'Member', value: 'Member' },
     ];
 
     for (const availableRole of availableRoles) {

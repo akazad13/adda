@@ -7,17 +7,17 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css']
+  styleUrls: ['./nav.component.css'],
 })
 export class NavComponent implements OnInit, OnDestroy {
   model: any = {};
-  photoUrl: string;
-  currentPhotoUrlSubscription: Subscription;
+  photoUrl!: string;
+  currentPhotoUrlSubscription!: Subscription;
 
   constructor(public authService: AuthService, private alertify: AlertifyService, private router: Router) {}
 
   ngOnInit() {
-    this.currentPhotoUrlSubscription = this.authService.currentPhotoUrl.subscribe(photoUrl => {
+    this.currentPhotoUrlSubscription = this.authService.currentPhotoUrl.subscribe((photoUrl) => {
       this.photoUrl = photoUrl;
     });
   }
@@ -28,10 +28,10 @@ export class NavComponent implements OnInit, OnDestroy {
 
   login() {
     this.authService.login(this.model).subscribe(
-      next => {
+      (next) => {
         this.alertify.success('Logged in successfully!');
       },
-      error => {
+      (error) => {
         this.alertify.error(error);
       },
       () => {

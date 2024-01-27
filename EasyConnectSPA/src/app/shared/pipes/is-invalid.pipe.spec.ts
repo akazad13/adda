@@ -1,11 +1,11 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, async } from '@angular/core/testing';
-import { HasErrorPipe } from './has-error.pipe';
+import { IsInvalidPipe } from './is-invalid.pipe';
 
-describe('Pipe: HasError', () => {
+describe('Pipe: IsInvalide', () => {
   it('create an instance', () => {
-    let pipe = new HasErrorPipe();
+    let pipe = new IsInvalidPipe();
     expect(pipe).toBeTruthy();
   });
 });
