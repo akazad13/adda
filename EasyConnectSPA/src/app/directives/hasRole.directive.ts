@@ -2,10 +2,10 @@ import { Directive, Input, ViewContainerRef, TemplateRef, OnInit } from '@angula
 import { AuthService } from '../services/auth.service';
 
 @Directive({
-  selector: '[appHasRole]'
+  selector: '[appHasRole]',
 })
 export class HasRoleDirective implements OnInit {
-  @Input() appHasRole: string[];
+  @Input() appHasRole!: string[];
   isVisible = false;
 
   constructor(private viewContainerRef: ViewContainerRef, private templateRef: TemplateRef<any>, private authService: AuthService) {}

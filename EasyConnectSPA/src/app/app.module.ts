@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { BsDatepickerModule} from 'ngx-bootstrap/datepicker';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -44,76 +44,78 @@ import { AdminService } from './services/admin.service';
 import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
 import { LoderComponent } from './shared/loader.component';
 import { LoaderService } from './services/loader.service';
+import { HasErrorPipe } from './shared/pipes/has-error.pipe';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
 }
 @Injectable()
 export class CustomHammerConfig extends HammerGestureConfig {
-  overrides = {
+  override overrides = {
     pinch: { enable: false },
-    rotate: { enable: false }
+    rotate: { enable: false },
   };
 }
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        NavComponent,
-        HomeComponent,
-        RegisterComponent,
-        MemberListComponent,
-        ListsComponent,
-        MessagesComponent,
-        MemberCardComponent,
-        MemberDetailComponent,
-        MemberEditComponent,
-        PhotoEditorComponent,
-        MemberMessagesComponent,
-        AdminPanelComponent,
-        HasRoleDirective,
-        UserManagementComponent,
-        PhotoManagementComponent,
-        RolesModalComponent,
-        LoderComponent
-    ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
-        FormsModule,
-        ReactiveFormsModule,
-        BrowserAnimationsModule,
-        BsDropdownModule.forRoot(),
-        BsDatepickerModule.forRoot(),
-        TabsModule.forRoot(),
-        PaginationModule.forRoot(),
-        ButtonsModule.forRoot(),
-        RouterModule.forRoot(appRoutes),
-        ModalModule.forRoot(),
-        // NgxGalleryModule,
-        FileUploadModule,
-        JwtModule.forRoot({
-            config: {
-                tokenGetter,
-                // whitelistedDomains: ['aws.akazad.dev'],
-                // blacklistedRoutes: ['aws.akazad.dev/auth']
-            }
-        })
-    ],
-    providers: [
-        AuthService,
-        UserService,
-        ErrorInterceptorProvider,
-        ListsResolver,
-        MemberDetailResolver,
-        MemberListResolver,
-        MemberEditResolver,
-        MessagesResolver,
-        AdminService,
-        PreventUnsavedChanges,
-        LoaderService,
-        { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
-    ],
-    bootstrap: [AppComponent]
+  declarations: [
+    AppComponent,
+    NavComponent,
+    HomeComponent,
+    RegisterComponent,
+    MemberListComponent,
+    ListsComponent,
+    MessagesComponent,
+    MemberCardComponent,
+    MemberDetailComponent,
+    MemberEditComponent,
+    PhotoEditorComponent,
+    MemberMessagesComponent,
+    AdminPanelComponent,
+    HasRoleDirective,
+    UserManagementComponent,
+    PhotoManagementComponent,
+    RolesModalComponent,
+    LoderComponent,
+    HasErrorPipe,
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    BsDropdownModule.forRoot(),
+    BsDatepickerModule.forRoot(),
+    TabsModule.forRoot(),
+    PaginationModule.forRoot(),
+    ButtonsModule.forRoot(),
+    RouterModule.forRoot(appRoutes),
+    ModalModule.forRoot(),
+    // NgxGalleryModule,
+    FileUploadModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter,
+        // whitelistedDomains: ['aws.akazad.dev'],
+        // blacklistedRoutes: ['aws.akazad.dev/auth']
+      },
+    }),
+  ],
+  providers: [
+    AuthService,
+    UserService,
+    ErrorInterceptorProvider,
+    ListsResolver,
+    MemberDetailResolver,
+    MemberListResolver,
+    MemberEditResolver,
+    MessagesResolver,
+    AdminService,
+    PreventUnsavedChanges,
+    LoaderService,
+    { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig },
+  ],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

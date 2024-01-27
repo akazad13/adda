@@ -1,5 +1,5 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { UntypedFormGroup, Validators, FormBuilder, FormGroup, AbstractControlOptions, AbstractControl } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -9,29 +9,32 @@ import { User } from '../models/user';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
-  user: User;
+  user!: User;
   @Output() cancelRegister = new EventEmitter();
-  registerForm: UntypedFormGroup;
-  bsConfig: Partial<BsDatepickerConfig>; // adding partial, make all the required field partial
+  registerForm!: FormGroup;
+  bsConfig!: Partial<BsDatepickerConfig>; // adding partial, make all the required field partial
 
   constructor(
     private authService: AuthService,
     private alertify: AlertifyService,
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private router: Router
   ) {}
 
   ngOnInit() {
     this.bsConfig = {
-      containerClass: 'theme-red'
+      containerClass: 'theme-red',
     };
     this.createRegisterFrom();
   }
 
   createRegisterFrom() {
+    const formOptions: AbstractControlOptions = {
+      validators: this.passwordMatchValidator,
+    };
     this.registerForm = this.formBuilder.group(
       {
         gender: ['male'],
@@ -42,24 +45,24 @@ export class RegisterComponent implements OnInit {
         city: ['', Validators.required],
         country: ['', Validators.required],
         password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
-        confirmPassword: ['', Validators.required]
+        confirmPassword: ['', Validators.required],
       },
-      { validator: this.passwordMatchValidator }
+      formOptions
     );
   }
 
-  passwordMatchValidator(g: UntypedFormGroup) {
+  passwordMatchValidator(g: AbstractControl) {
     return g.get('password')?.value === g.get('confirmPassword')?.value ? null : { mismatch: true };
   }
 
   register() {
     if (this.registerForm.valid) {
-      this.user = Object.assign({}, this.registerForm.value);
+      this.user = { ...this.registerForm.value };
       this.authService.register(this.user).subscribe(
         () => {
           this.alertify.success('registration successful');
         },
-        error => {
+        (error) => {
           this.alertify.error(error);
         },
         () => {
@@ -67,13 +70,17 @@ export class RegisterComponent implements OnInit {
             () => {
               this.router.navigate(['/members']);
             },
-            error => {
+            (error) => {
               this.alertify.error(error);
             }
           );
         }
       );
     }
+  }
+
+  get formData() {
+    return this.registerForm.controls;
   }
 
   cancel() {

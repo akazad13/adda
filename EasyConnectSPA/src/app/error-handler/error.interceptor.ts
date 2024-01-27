@@ -18,12 +18,12 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError(error => {
         this.loaderService.hideLoader();
         if (error.status === 401) {
-          return throwError(error.statusText);
+          return throwError(() => error.statusText);
         }
         if (error instanceof HttpErrorResponse) {
           const applicationError = error.headers.get('Application-Error');
           if (applicationError) {
-            return throwError(applicationError);
+            return throwError(() => applicationError);
           }
 
           const serverError = error.error;
@@ -35,8 +35,9 @@ export class ErrorInterceptor implements HttpInterceptor {
               }
             }
           }
-          return throwError(modalStateErrors || serverError || 'Server Error');
+          return throwError(() => modalStateErrors || serverError || 'Server Error');
         }
+        return throwError(() => "Internal Server Error.");
       }),
       finalize(() => {
         if (!(req.url.endsWith('/messages') && req.method.toLowerCase() === 'post')) {

@@ -11,14 +11,14 @@ import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-member-detail',
   templateUrl: './member-detail.component.html',
-  styleUrls: ['./member-detail.component.css']
+  styleUrls: ['./member-detail.component.css'],
 })
 export class MemberDetailComponent implements OnInit, OnDestroy {
-  @ViewChild('memberTabs', { static: true }) memberTabs: TabsetComponent;
-  user: User;
+  @ViewChild('memberTabs', { static: true }) memberTabs!: TabsetComponent;
+  user!: User;
   // galleryOptions: NgxGalleryOptions[];
   // galleryImages: NgxGalleryImage[];
-  routeSubscription: Subscription;
+  routeSubscription!: Subscription;
 
   constructor(
     private userService: UserService,
@@ -28,12 +28,12 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.routeSubscription = this.route.data.subscribe(data => {
-      this.user = data.user;
+    this.routeSubscription = this.route.data.subscribe((data) => {
+      this.user = data['user'];
     });
 
-    this.route.queryParams.subscribe(params => {
-      const selectedTab = params.tab;
+    this.route.queryParams.subscribe((params) => {
+      const selectedTab = params['tab'];
       this.memberTabs.tabs[selectedTab > 0 ? selectedTab : 0].active = true;
     });
 
@@ -56,12 +56,12 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
 
   getImages() {
     const imageUrl = [];
-    for (const photo of this.user.photos) {
+    for (const photo of this.user.photos!) {
       imageUrl.push({
         small: photo.url,
         medium: photo.url,
         big: photo.url,
-        description: photo.description
+        description: photo.description,
       });
     }
     return imageUrl;
@@ -72,10 +72,10 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   }
   sendLike(id: number) {
     this.userService.sendLike(this.authService.decodedToken.nameid, id).subscribe(
-      data => {
+      (data) => {
         this.alertify.success('You have liked: ' + this.user.knownAs);
       },
-      error => {
+      (error) => {
         this.alertify.error(error);
       }
     );

@@ -7,13 +7,13 @@ import { environment } from 'src/environments/environment';
 import { User } from '../models/user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   baseUrl = environment.apiUrl + 'auth/';
   jwtHelper = new JwtHelperService();
   decodedToken: any;
-  currentUser: User;
+  currentUser!: User;
   photoUrl = new BehaviorSubject<string>('../../assets/user.png');
   currentPhotoUrl = this.photoUrl.asObservable();
 
@@ -47,10 +47,10 @@ export class AuthService {
     return !this.jwtHelper.isTokenExpired(token);
   }
 
-  roleMatch(allowedRoles): boolean {
+  roleMatch(allowedRoles: string[]): boolean {
     let isMatch = false;
     const userRoles = this.decodedToken.role as Array<string>;
-    allowedRoles.forEach(element => {
+    allowedRoles.forEach((element: string) => {
       if (userRoles.includes(element)) {
         isMatch = true;
         return;

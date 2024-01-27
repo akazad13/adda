@@ -7,7 +7,7 @@ import { LoaderService } from './services/loader.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
   jwtHelper = new JwtHelperService();
@@ -16,7 +16,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     const token = localStorage.getItem('token');
-    const user: User = JSON.parse(localStorage.getItem('user'));
+    const userStr = localStorage.getItem('user');
+    let user!: User;
+    if (userStr != null) {
+      user = JSON.parse(userStr);
+    }
     if (token) {
       this.authService.decodedToken = this.jwtHelper.decodeToken(token);
     }

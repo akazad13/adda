@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-member-edit',
   templateUrl: './member-edit.component.html',
-  styleUrls: ['./member-edit.component.css']
+  styleUrls: ['./member-edit.component.css'],
 })
 export class MemberEditComponent implements OnInit, OnDestroy {
   constructor(
@@ -19,11 +19,11 @@ export class MemberEditComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private authService: AuthService
   ) {}
-  @ViewChild('editForm', { static: true }) editFrom: NgForm;
-  user: User;
-  photoUrl: string;
-  routeSubscription: Subscription;
-  currentPhotoUrlSubscription: Subscription;
+  @ViewChild('editForm', { static: true }) editFrom!: NgForm;
+  user!: User;
+  photoUrl!: string;
+  routeSubscription!: Subscription;
+  currentPhotoUrlSubscription!: Subscription;
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
     if (this.editFrom.dirty) {
@@ -32,12 +32,10 @@ export class MemberEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.routeSubscription = this.route.data.subscribe(data => {
-      this.user = data.user;
+    this.routeSubscription = this.route.data.subscribe((data) => {
+      this.user = data['user'];
     });
-    this.currentPhotoUrlSubscription = this.authService.currentPhotoUrl.subscribe(
-      photoUrl => (this.photoUrl = photoUrl)
-    );
+    this.currentPhotoUrlSubscription = this.authService.currentPhotoUrl.subscribe((photoUrl) => (this.photoUrl = photoUrl));
   }
 
   ngOnDestroy() {
@@ -47,11 +45,11 @@ export class MemberEditComponent implements OnInit, OnDestroy {
 
   updateUser() {
     this.userService.updateUser(this.authService.decodedToken.nameid, this.user).subscribe(
-      next => {
+      (next) => {
         this.alertify.success('Profile added successfully.');
         this.editFrom.reset(this.user);
       },
-      error => {
+      (error) => {
         this.alertify.error(error);
       }
     );

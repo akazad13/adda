@@ -9,7 +9,7 @@ import { AlertifyService } from 'src/app/services/alertify.service';
   styleUrls: ['./photo-management.component.css']
 })
 export class PhotoManagementComponent implements OnInit {
-  photos: Photo[];
+  photos: Photo[] = [];
   constructor(private adminService: AdminService, private alertify: AlertifyService) {}
 
   ngOnInit() {

@@ -11,8 +11,8 @@ import { RolesModalComponent } from '../roles-modal/roles-modal.component';
   styleUrls: ['./user-management.component.css']
 })
 export class UserManagementComponent implements OnInit {
-  bsModalRef: BsModalRef;
-  users: User[];
+  bsModalRef!: BsModalRef;
+  users: User[] = [];
 
   constructor(private adminService: AdminService, private alertify: AlertifyService, private modalService: BsModalService) {}
 
@@ -37,7 +37,7 @@ export class UserManagementComponent implements OnInit {
       roles: this.GetRolesArray(user)
     };
     this.bsModalRef = this.modalService.show(RolesModalComponent, { initialState });
-    this.bsModalRef.content.updateSelectedRoles.subscribe(values => {
+    this.bsModalRef.content.updateSelectedRoles.subscribe((values: any[]) => {
       const rolesToUpdate = {
         roleName: [...values.filter(el => el.checked === true).map(el => el.name)]
       };

@@ -7,11 +7,11 @@ import { AlertifyService } from 'src/app/services/alertify.service';
 @Component({
   selector: 'app-member-messages',
   templateUrl: './member-messages.component.html',
-  styleUrls: ['./member-messages.component.css']
+  styleUrls: ['./member-messages.component.css'],
 })
 export class MemberMessagesComponent implements OnInit {
-  @Input() recipientId: number;
-  messages: Message[];
+  @Input() recipientId!: number;
+  messages!: Message[];
   newMessage: any = {};
 
   constructor(private userService: UserService, private authService: AuthService, private alertify: AlertifyService) {}
@@ -34,10 +34,10 @@ export class MemberMessagesComponent implements OnInit {
         })
       )
       .subscribe(
-        messages => {
+        (messages) => {
           this.messages = messages;
         },
-        error => {
+        (error) => {
           this.alertify.error(error);
         }
       );
@@ -50,7 +50,7 @@ export class MemberMessagesComponent implements OnInit {
         this.messages.unshift(message);
         this.newMessage.content = '';
       },
-      error => {
+      (error) => {
         this.alertify.error(error);
       }
     );

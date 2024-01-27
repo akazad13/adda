@@ -9,8 +9,8 @@ import { User } from 'src/app/models/user';
 })
 export class RolesModalComponent implements OnInit {
   @Output() updateSelectedRoles = new EventEmitter();
-  user: User;
-  roles: any[];
+  user!: User;
+  roles!: any[];
   constructor(public bsModalRef: BsModalRef) {}
 
   ngOnInit() {}

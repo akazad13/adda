@@ -3,7 +3,7 @@
   <hr />
 
   <div class="form-group">
-    <label class="control-label" style="margin-right:10px">I am a: </label>
+    <label class="control-label" style="margin-right: 10px">I am a: </label>
     <div class="custom-control custom-radio custom-control-inline">
       <input type="radio" class="custom-control-input" id="male" value="male" formControlName="gender" />
       <label class="custom-control-label" for="male">Male </label>
@@ -15,13 +15,7 @@
   </div>
 
   <div class="form-group">
-    <input
-      type="text"
-      class="form-control"
-      [ngClass]="{ 'is-invalid': registerForm.get('username').errors && registerForm.get('username').touched }"
-      formControlName="username"
-      placeholder="Username"
-    />
+    <input type="text" class="form-control" [class.is-invalid]="formData['username']" formControlName="username" placeholder="Username" />
     <div class="invalid-feedback">Please choose a username</div>
   </div>
 

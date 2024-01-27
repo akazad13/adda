@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Router, ActivatedRouteSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { AlertifyService } from '../services/alertify.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class AuthGuard  {
+export class AuthGuard {
   constructor(private authService: AuthService, private router: Router, private alertify: AlertifyService) {}
   canActivate(next: ActivatedRouteSnapshot): boolean {
-    const roles = next.firstChild.data.roles as Array<string>;
+    const roles = next.firstChild!.data['roles'] as Array<string>;
 
     if (roles) {
       const match = this.authService.roleMatch(roles);
@@ -27,5 +26,6 @@ export class AuthGuard  {
     }
     this.alertify.error('You are not authorized!!');
     this.router.navigate(['home']);
+    return false;
   }
 }

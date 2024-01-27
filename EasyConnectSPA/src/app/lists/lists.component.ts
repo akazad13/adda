@@ -9,12 +9,12 @@ import { AlertifyService } from '../services/alertify.service';
 @Component({
   selector: 'app-lists',
   templateUrl: './lists.component.html',
-  styleUrls: ['./lists.component.css']
+  styleUrls: ['./lists.component.css'],
 })
 export class ListsComponent implements OnInit {
-  users: User[];
-  pagination: Pagination;
-  likesParam: string;
+  users!: User[];
+  pagination!: Pagination;
+  likesParam!: string;
   constructor(
     private authService: AuthService,
     private userService: UserService,
@@ -23,9 +23,9 @@ export class ListsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.data.subscribe(data => {
-      this.users = data.users.result;
-      this.pagination = data.users.pagination;
+    this.route.data.subscribe((data) => {
+      this.users = data['users'].result;
+      this.pagination = data['users'].pagination;
     });
     this.likesParam = 'Likers';
   }
@@ -38,10 +38,12 @@ export class ListsComponent implements OnInit {
   loadUsers() {
     this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, null, this.likesParam).subscribe(
       (res: PaginatedResult<User[]>) => {
-        this.users = res.result;
+        if (res.result != null) {
+          this.users = res.result;
+        }
         this.pagination = res.pagination;
       },
-      error => {
+      (error) => {
         this.alertify.error(error);
       }
     );
