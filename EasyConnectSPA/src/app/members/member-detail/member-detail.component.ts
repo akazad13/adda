@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { TabsetComponent } from 'ngx-bootstrap';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { Subscription } from 'rxjs';
-import { NgxGalleryImage, NgxGalleryOptions, NgxGalleryAnimation } from 'ngx-gallery';
+// import { NgxGalleryImage, NgxGalleryOptions, NgxGalleryAnimation } from 'ngx-gallery';
 import { ActivatedRoute } from '@angular/router';
 import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user.service';
@@ -16,8 +16,8 @@ import { AuthService } from 'src/app/services/auth.service';
 export class MemberDetailComponent implements OnInit, OnDestroy {
   @ViewChild('memberTabs', { static: true }) memberTabs: TabsetComponent;
   user: User;
-  galleryOptions: NgxGalleryOptions[];
-  galleryImages: NgxGalleryImage[];
+  // galleryOptions: NgxGalleryOptions[];
+  // galleryImages: NgxGalleryImage[];
   routeSubscription: Subscription;
 
   constructor(
@@ -37,17 +37,17 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
       this.memberTabs.tabs[selectedTab > 0 ? selectedTab : 0].active = true;
     });
 
-    this.galleryOptions = [
-      {
-        width: '500px',
-        height: '500px',
-        imagePercent: 100,
-        thumbnailsColumns: 4,
-        imageAnimation: NgxGalleryAnimation.Slide,
-        preview: false
-      }
-    ];
-    this.galleryImages = this.getImages();
+    // this.galleryOptions = [
+    //   {
+    //     width: '500px',
+    //     height: '500px',
+    //     imagePercent: 100,
+    //     thumbnailsColumns: 4,
+    //     imageAnimation: NgxGalleryAnimation.Slide,
+    //     preview: false
+    //   }
+    // ];
+    // this.galleryImages = this.getImages();
   }
 
   ngOnDestroy() {

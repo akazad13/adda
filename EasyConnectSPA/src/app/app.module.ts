@@ -3,9 +3,14 @@ import { NgModule, Injectable } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule, ButtonsModule, ModalModule } from 'ngx-bootstrap';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { BsDatepickerModule} from 'ngx-bootstrap/datepicker';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { RouterModule } from '@angular/router';
-import { NgxGalleryModule } from 'ngx-gallery';
+// import { NgxGalleryModule } from 'ngx-gallery';
 import { JwtModule } from '@auth0/angular-jwt';
 import { FileUploadModule } from 'ng2-file-upload';
 
@@ -85,13 +90,13 @@ export class CustomHammerConfig extends HammerGestureConfig {
         ButtonsModule.forRoot(),
         RouterModule.forRoot(appRoutes),
         ModalModule.forRoot(),
-        NgxGalleryModule,
+        // NgxGalleryModule,
         FileUploadModule,
         JwtModule.forRoot({
             config: {
                 tokenGetter,
-                whitelistedDomains: ['aws.akazad.dev'],
-                blacklistedRoutes: ['aws.akazad.dev/auth']
+                // whitelistedDomains: ['aws.akazad.dev'],
+                // blacklistedRoutes: ['aws.akazad.dev/auth']
             }
         })
     ],

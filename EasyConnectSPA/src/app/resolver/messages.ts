@@ -6,6 +6,7 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Message } from '../models/message';
 import { AuthService } from '../services/auth.service';
+import { PaginatedResult } from '../models/pagination';
 
 @Injectable()
 export class MessagesResolver  {
@@ -19,7 +20,7 @@ export class MessagesResolver  {
     private authService: AuthService,
     private alertify: AlertifyService
   ) {}
-  resolve(route: ActivatedRouteSnapshot): Observable<Message[]> {
+  resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<Message[]> | null> {
     return this.userService.getMessages(this.authService.decodedToken.nameid, this.pageNumber, this.pageSize, this.messageContainer).pipe(
       catchError(error => {
         this.alertify.error('Problem retrieving messages');

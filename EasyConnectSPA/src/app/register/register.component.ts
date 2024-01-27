@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
-import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AlertifyService } from '../services/alertify.service';
@@ -49,7 +49,7 @@ export class RegisterComponent implements OnInit {
   }
 
   passwordMatchValidator(g: UntypedFormGroup) {
-    return g.get('password').value === g.get('confirmPassword').value ? null : { mismatch: true };
+    return g.get('password')?.value === g.get('confirmPassword')?.value ? null : { mismatch: true };
   }
 
   register() {
