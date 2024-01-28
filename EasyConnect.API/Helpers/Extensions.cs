@@ -9,9 +9,9 @@ namespace EasyConnect.API.Helpers
     {
         public static void AddApplicationError(this HttpResponse response, string message)
         {
-            response.Headers.Add("Application-Error", message);
-            response.Headers.Add("Access-Control-Expose-Headers", "Application-Error");
-            response.Headers.Add("Access-Control-Allow-Origin", "*");
+            response.Headers.Append("Application-Error", message);
+            response.Headers.Append("Access-Control-Expose-Headers", "Application-Error");
+            response.Headers.Append("Access-Control-Allow-Origin", "*");
         }
 
         public static int CalculateAge(this DateTime theDateTime)
@@ -40,12 +40,12 @@ namespace EasyConnect.API.Helpers
             );
             var camelCaseFormatter = new JsonSerializerSettings();
             camelCaseFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            response.Headers.Add(
+            response.Headers.Append(
                 "Pagination",
                 JsonConvert.SerializeObject(paginationHeader, camelCaseFormatter)
             );
-            response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
-            response.Headers.Add("Access-Control-Allow-Origin", "*");
+            response.Headers.Append("Access-Control-Expose-Headers", "Pagination");
+            response.Headers.Append("Access-Control-Allow-Origin", "*");
         }
     }
 }
