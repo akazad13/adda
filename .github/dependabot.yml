@@ -9,7 +9,7 @@ updates:
     directory: "/EasyConnectSPA" # Location of package manifests
     schedule:
       interval: "weekly"
-  - package-ecosystem: "npm" # See documentation for possible values
+  - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/EasyConnect.API" # Location of package manifests
     schedule:
       interval: "weekly"
