@@ -87,7 +87,7 @@ namespace EasyConnect.API.Controllers
                 }
             }
 
-            photoForCreationDTO.Url = uploadResult.Uri.ToString();
+            photoForCreationDTO.Url = uploadResult.Url.ToString();
             photoForCreationDTO.PublicId = uploadResult.PublicId;
 
             var photo = _mapper.Map<Photo>(photoForCreationDTO);

@@ -1,16 +1,67 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EasyConnect.API.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace EasyConnect.API.Data
 {
-    public class seed
+    public class Seed
     {
-        public static void seedUsers(UserManager<User> userManager, RoleManager<Role> roleManager)
+        private readonly ILogger<Seed> _logger;
+        private readonly DataContext _context;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
+
+        public Seed(
+            ILogger<Seed> logger,
+            DataContext context,
+            UserManager<User> userManager,
+            RoleManager<Role> roleManager
+        )
         {
-            if (!userManager.Users.Any())
+            _logger = logger;
+            _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
+        }
+
+        public async Task InitialiseAsync()
+        {
+            try
+            {
+                if (_context.Database.IsMySql() || _context.Database.IsSqlite())
+                {
+                    await _context.Database.MigrateAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while initialising the database.");
+                throw;
+            }
+        }
+
+        public async Task SeedAsync()
+        {
+            try
+            {
+                await TrySeedAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while seeding the database.");
+                throw;
+            }
+        }
+
+        public async Task TrySeedAsync()
+        {
+            if (!await _userManager.Users.AnyAsync())
             {
                 var userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
                 var users = JsonConvert.DeserializeObject<List<User>>(userData);
@@ -19,21 +70,24 @@ namespace EasyConnect.API.Data
 
                 var roles = new List<Role>
                 {
-                    new Role { Name = "Member" },
-                    new Role { Name = "Admin" },
-                    new Role { Name = "Moderator" }
+                    new() { Name = "Member" },
+                    new() { Name = "Admin" },
+                    new() { Name = "Moderator" }
                 };
 
                 foreach (var role in roles)
                 {
-                    roleManager.CreateAsync(role).Wait();
+                    await _roleManager.CreateAsync(role);
                 }
 
                 foreach (var user in users)
                 {
-                    user.Photos.FirstOrDefault().IsApproved = true;
-                    userManager.CreateAsync(user, "password").Wait();
-                    userManager.AddToRoleAsync(user, "Member").Wait();
+                    if (user.Photos.Any())
+                    {
+                        user.Photos.First().IsApproved = true;
+                    }
+                    await _userManager.CreateAsync(user, "password");
+                    await _userManager.AddToRoleAsync(user, "Member");
                 }
 
                 // create admin user
@@ -45,11 +99,11 @@ namespace EasyConnect.API.Data
                     KnownAs = "Admin"
                 };
 
-                var result = userManager.CreateAsync(adminUser, "password").Result;
+                var result = await _userManager.CreateAsync(adminUser, "password");
                 if (result.Succeeded)
                 {
-                    var admin = userManager.FindByNameAsync("Admin").Result;
-                    userManager.AddToRolesAsync(admin, new[] { "Admin", "Moderator" }).Wait();
+                    var admin = await _userManager.FindByNameAsync("Admin");
+                    await _userManager.AddToRolesAsync(admin, new[] { "Admin", "Moderator" });
                 }
             }
         }
