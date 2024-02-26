@@ -1,21 +1,19 @@
 <div class="card">
   <div class="card-body">
-    <div *ngIf="messages?.length === 0">
-      No message yet.... say hi by using the message box below
-    </div>
+    <div *ngIf="messages?.length === 0">No message yet.... say hi by using the message box below</div>
 
     <ul class="chat">
       <li *ngFor="let message of messages">
         <!-- to them -->
         <div *ngIf="message.senderId === recipientId">
-          <span class="chat-img float-left mr-2">
+          <span class="chat-img float-left me-2">
             <img src="{{ message.senderPhotoUrl }}" alt="{{ message.senderKnownAs }}" class="rounded-circle" />
           </span>
           <div class="chat-body">
             <div class="header">
               <strong class="primary-font">{{ message.senderKnownAs }}</strong>
               <small class="text-muted float-right">
-                <span class="fa fa-clock-o"> {{ message.messageSent  }}</span>
+                <span class="fa fa-clock-o"> {{ message.messageSent | date : 'mediumDate' }}</span>
               </small>
             </div>
             <p>{{ message.content }}</p>
@@ -30,9 +28,9 @@
           <div class="chat-body">
             <div class="header">
               <small class="text-muted">
-                <span class="fa fa-clock-o"> {{ message.messageSent  }}</span>
-                <span *ngIf="!message.isRead" class="text-danger">(unread)</span>
-                <span *ngIf="message.isRead" class="text-success">(Read {{ message.dateRead  }})</span>
+                <span class="fa fa-clock-o"> {{ message.messageSent | date : 'mediumDate' }}</span>
+                <span *ngIf="!message.isRead" class="text-danger"> (unread) </span>
+                <span *ngIf="message.isRead" class="text-success">(Read {{ message.dateRead | date : 'mediumDate' }})</span>
               </small>
               <strong class="primary-font float-right">{{ message.senderKnownAs }}</strong>
             </div>

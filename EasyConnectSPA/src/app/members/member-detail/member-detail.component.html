@@ -18,7 +18,7 @@
           </div>
           <div>
             <strong>Last Active:</strong>
-            <P>{{ user.lastActive }}</P>
+            <P>{{ user.lastActive | date : 'mediumDate' }}</P>
           </div>
           <div>
             <strong>Member since:</strong>

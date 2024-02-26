@@ -2,7 +2,7 @@
   <div class="container">
     <a class="navbar-brand" [routerLink]="['/home']">Easy Connect</a>
 
-    <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
+    <ul *ngIf="loggedIn()" class="navbar-nav me-auto">
       <li class="nav-item" routerLinkActive="active">
         <a class="nav-link" [routerLink]="['/members']">Matches</a>
       </li>
@@ -18,7 +18,7 @@
     </ul>
 
     <div *ngIf="loggedIn()" class="dropdown" dropdown>
-      <span class="mr-1">
+      <span class="me-1">
         <img src="{{ photoUrl || './assets/user.png' }}" alt="{{ authService.currentUser?.knownAs }}" />
       </span>
       <a class="dropdown-toggle text-light" dropdownToggle> Welcome {{ authService.decodedToken?.unique_name }} </a>
@@ -31,8 +31,8 @@
     </div>
 
     <form *ngIf="!loggedIn()" #loginFrom="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
-      <input class="form-control mr-sm-2" type="text" name="username" placeholder="Username" required [(ngModel)]="model.username" />
-      <input class="form-control mr-sm-2" type="password" name="password" placeholder="Password" required [(ngModel)]="model.password" />
+      <input class="form-control me-sm-2" type="text" name="username" placeholder="Username" required [(ngModel)]="model.username" />
+      <input class="form-control me-sm-2" type="password" name="password" placeholder="Password" required [(ngModel)]="model.password" />
       <button class="btn btn-success my-2 my-sm-0" [disabled]="!loginFrom.valid" type="submit">Login</button>
     </form>
   </div>

@@ -4,12 +4,8 @@
       <h4>{{ photo.userName }}</h4>
       <img src="{{ photo.url }}" class="img-thumbnail p-1" alt="photo.userName" />
       <div class="text-center">
-        <button type="button" class="btn btn-sm btn-success mr-2" (click)="approvePhoto(photo.id)">
-          Approve
-        </button>
-        <button type="button" class="btn btn-sm btn-danger" (click)="rejectPhoto(photo.id)">
-          Reject
-        </button>
+        <button type="button" class="btn btn-sm btn-success me-2" (click)="approvePhoto(photo.id)">Approve</button>
+        <button type="button" class="btn btn-sm btn-danger" (click)="rejectPhoto(photo.id)">Reject</button>
       </div>
     </div>
   </div>
