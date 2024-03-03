@@ -17,7 +17,7 @@
     "@angular/forms": "^17.2.3",
     "@angular/platform-browser": "^17.2.1",
     "@angular/platform-browser-dynamic": "^17.2.1",
-    "@angular/router": "^17.2.1",
+    "@angular/router": "^17.2.3",
     "@auth0/angular-jwt": "^5.2.0",
     "@popperjs/core": "^2.11.8",
     "alertifyjs": "^1.13.1",
