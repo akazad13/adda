@@ -1,8 +1,8 @@
 using System;
 
-namespace EasyConnect.API.DTOs
+namespace EasyConnect.API.Dtos
 {
-    public class MessageToReturnDTO
+    public class MessageToReturnDto
     {
         public int Id { get; set; }
         public int SenderId { get; set; }

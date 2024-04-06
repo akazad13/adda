@@ -6,14 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EasyConnect.API.Data
 {
-    public class AdminRepository : IAdminRepository
+    public class AdminRepository(DataContext context) : IAdminRepository
     {
-        private readonly DataContext _context;
-
-        public AdminRepository(DataContext context)
-        {
-            _context = context;
-        }
+        private readonly DataContext _context = context;
 
         public async Task<IEnumerable<object>> GetAllPhotos()
         {

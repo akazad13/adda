@@ -1,15 +1,15 @@
 using System;
 
-namespace EasyConnect.API.DTOs
+namespace EasyConnect.API.Dtos
 {
-    public class MessageForCreationDTO
+    public class MessageForCreationDto
     {
         public int SenderId { get; set; }
         public int RecipientId { get; set; }
         public DateTime MessageSent { get; set; }
         public string Content { get; set; }
 
-        public MessageForCreationDTO()
+        public MessageForCreationDto()
         {
             MessageSent = DateTime.Now;
         }

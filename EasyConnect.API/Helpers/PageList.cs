@@ -10,11 +10,11 @@ namespace EasyConnect.API.Helpers
     {
         public PageList(List<T> items, int count, int pageNumber, int pageSize)
         {
-            this.CurrrentPage = pageNumber;
-            this.TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-            this.PageSize = pageSize;
-            this.TotalCount = count;
-            this.AddRange(items);
+            CurrrentPage = pageNumber;
+            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            PageSize = pageSize;
+            TotalCount = count;
+            AddRange(items);
         }
 
         public int CurrrentPage { get; set; }

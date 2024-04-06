@@ -1,6 +1,6 @@
 using AutoMapper;
 using EasyConnect.API.Models;
-using EasyConnect.API.DTOs;
+using EasyConnect.API.Dtos;
 using System.Linq;
 
 namespace EasyConnect.API.Helpers
@@ -9,7 +9,7 @@ namespace EasyConnect.API.Helpers
     {
         public AutoMapperProfiles()
         {
-            CreateMap<User, UserForListDTO>()
+            CreateMap<User, UserForListDto>()
                 .ForMember(
                     dest => dest.PhotoUrl,
                     opt => opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url)
@@ -18,7 +18,7 @@ namespace EasyConnect.API.Helpers
                     dest => dest.Age,
                     opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge())
                 );
-            CreateMap<User, UserForDetailedDTO>()
+            CreateMap<User, UserForDetailedDto>()
                 .ForMember(
                     dest => dest.PhotoUrl,
                     opt => opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url)
@@ -27,18 +27,18 @@ namespace EasyConnect.API.Helpers
                     dest => dest.Age,
                     opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge())
                 );
-            CreateMap<Photo, PhotosForDetailedDTO>();
-            CreateMap<UserForUpdateDTO, User>();
-            CreateMap<PhotoForCreationDTO, Photo>();
-            CreateMap<Photo, PhotoForReturnDTO>(); // from, to
-            CreateMap<User, UserForNavbarDTO>()
+            CreateMap<Photo, PhotosForDetailedDto>();
+            CreateMap<UserForUpdateDto, User>();
+            CreateMap<PhotoForCreationDto, Photo>();
+            CreateMap<Photo, PhotoForReturnDto>(); // from, to
+            CreateMap<User, UserForNavbarDto>()
                 .ForMember(
                     dest => dest.PhotoUrl,
                     opt => opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url)
                 );
-            CreateMap<UserForRegisterDTO, User>();
-            CreateMap<MessageForCreationDTO, Message>();
-            CreateMap<Message, MessageToReturnDTO>()
+            CreateMap<UserForRegisterDto, User>();
+            CreateMap<MessageForCreationDto, Message>();
+            CreateMap<Message, MessageToReturnDto>()
                 .ForMember(
                     m => m.SenderPhotoUrl,
                     opt => opt.MapFrom(src => src.Sender.Photos.FirstOrDefault(p => p.IsMain).Url)

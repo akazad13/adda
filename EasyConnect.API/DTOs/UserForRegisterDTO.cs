@@ -1,11 +1,11 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace EasyConnect.API.DTOs
+namespace EasyConnect.API.Dtos
 {
-    public class UserForRegisterDTO
+    public class UserForRegisterDto
     {
-        public UserForRegisterDTO()
+        public UserForRegisterDto()
         {
             Created = DateTime.Now;
             LastActive = DateTime.Now;

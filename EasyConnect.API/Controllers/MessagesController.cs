@@ -4,27 +4,20 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EasyConnect.API.Data;
-using EasyConnect.API.DTOs;
+using EasyConnect.API.Dtos;
 using EasyConnect.API.Helpers;
 using EasyConnect.API.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EasyConnect.API.Controllers
-{
+namespace EasyConnect.API.Controllers;
+
     [ServiceFilter(typeof(LogUserActivity))]
     [ApiController]
     [Route("api/users/{userId}/[controller]")]
-    public class MessagesController : ControllerBase
+    public class MessagesController(IDatingRepository repo, IMapper mapper) : ControllerBase
     {
-        private readonly IMapper _mapper;
-        public IDatingRepository _repo { get; set; }
-
-        public MessagesController(IDatingRepository repo, IMapper mapper)
-        {
-            _repo = repo;
-            _mapper = mapper;
-        }
+        private readonly IMapper _mapper = mapper;
+        public IDatingRepository _repo { get; set; } = repo;
 
         [HttpGet("{id}", Name = "GetMessage")]
         public async Task<IActionResult> GetMessage(int userId, int id)
@@ -58,7 +51,7 @@ namespace EasyConnect.API.Controllers
             messageParams.UserId = userId;
 
             var messagesFromRepo = await _repo.GetMessagesForUser(messageParams);
-            var messages = _mapper.Map<IEnumerable<MessageToReturnDTO>>(messagesFromRepo);
+            var messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
             Response.AddPagination(
                 messagesFromRepo.CurrrentPage,
                 messagesFromRepo.PageSize,
@@ -77,7 +70,7 @@ namespace EasyConnect.API.Controllers
             }
 
             var messagesFromRepo = await _repo.GetMessageThread(userId, recipientId);
-            var messages = _mapper.Map<IEnumerable<MessageToReturnDTO>>(messagesFromRepo);
+            var messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
 
             return Ok(messages);
         }
@@ -85,7 +78,7 @@ namespace EasyConnect.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMessage(
             int userId,
-            MessageForCreationDTO messageForCreationDTO
+            MessageForCreationDto messageForCreationDto
         )
         {
             var sender = await _repo.GetUser(userId, true);
@@ -94,20 +87,20 @@ namespace EasyConnect.API.Controllers
             {
                 return Unauthorized();
             }
-            messageForCreationDTO.SenderId = userId;
-            var recipient = await _repo.GetUser(messageForCreationDTO.RecipientId, false);
+            messageForCreationDto.SenderId = userId;
+            var recipient = await _repo.GetUser(messageForCreationDto.RecipientId, false);
 
             if (recipient == null)
             {
                 return BadRequest("Could not find user");
             }
 
-            var message = _mapper.Map<Message>(messageForCreationDTO);
+            var message = _mapper.Map<Message>(messageForCreationDto);
             _repo.Add(message);
 
             if (await _repo.SaveAll())
             {
-                var messageToReturn = _mapper.Map<MessageToReturnDTO>(message);
+                var messageToReturn = _mapper.Map<MessageToReturnDto>(message);
                 return CreatedAtRoute(
                     "GetMessage",
                     new { userId, id = message.Id },
@@ -152,7 +145,7 @@ namespace EasyConnect.API.Controllers
                 return NoContent();
             }
 
-            throw new Exception("Error deleting the message");
+            return BadRequest("Error deleting the message");
         }
 
         [HttpPost("{id}/read")]
@@ -183,7 +176,6 @@ namespace EasyConnect.API.Controllers
                 return NoContent();
             }
 
-            throw new Exception("Error marking the message as read");
+            return BadRequest("Error marking the message as read");
         }
     }
-}

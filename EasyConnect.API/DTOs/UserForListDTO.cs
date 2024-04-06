@@ -1,8 +1,8 @@
 using System;
 
-namespace EasyConnect.API.DTOs
+namespace EasyConnect.API.Dtos
 {
-    public class UserForListDTO
+    public class UserForListDto
     {
         public int Id { get; set; }
         public string Username { get; set; }

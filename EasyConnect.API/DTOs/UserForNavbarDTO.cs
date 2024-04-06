@@ -1,6 +1,6 @@
-namespace EasyConnect.API.DTOs
+namespace EasyConnect.API.Dtos
 {
-    public class UserForNavbarDTO
+    public class UserForNavbarDto
     {
         public int Id { get; set; }
         public string KnownAs { get; set; }

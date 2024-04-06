@@ -1,6 +1,6 @@
-namespace EasyConnect.API.DTOs
+namespace EasyConnect.API.Dtos
 {
-    public class UserForUpdateDTO
+    public class UserForUpdateDto
     {
         public string Introduction { get; set; }
         public string LookingFor { get; set; }

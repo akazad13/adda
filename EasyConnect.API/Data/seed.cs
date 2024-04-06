@@ -10,25 +10,17 @@ using Newtonsoft.Json;
 
 namespace EasyConnect.API.Data
 {
-    public class Seed
-    {
-        private readonly ILogger<Seed> _logger;
-        private readonly DataContext _context;
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<Role> _roleManager;
-
-        public Seed(
-            ILogger<Seed> logger,
-            DataContext context,
-            UserManager<User> userManager,
-            RoleManager<Role> roleManager
+    public class Seed(
+        ILogger<Seed> logger,
+        DataContext context,
+        UserManager<User> userManager,
+        RoleManager<Role> roleManager
         )
-        {
-            _logger = logger;
-            _context = context;
-            _userManager = userManager;
-            _roleManager = roleManager;
-        }
+    {
+        private readonly ILogger<Seed> _logger = logger;
+        private readonly DataContext _context = context;
+        private readonly UserManager<User> _userManager = userManager;
+        private readonly RoleManager<Role> _roleManager = roleManager;
 
         public async Task InitialiseAsync()
         {

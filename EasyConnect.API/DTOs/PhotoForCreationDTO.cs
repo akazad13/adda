@@ -1,13 +1,13 @@
 using System;
 using Microsoft.AspNetCore.Http;
 
-namespace EasyConnect.API.DTOs
+namespace EasyConnect.API.Dtos
 {
-    public class PhotoForCreationDTO
+    public class PhotoForCreationDto
     {
-        public PhotoForCreationDTO()
+        public PhotoForCreationDto()
         {
-            this.DateAdded = DateTime.Now;
+            DateAdded = DateTime.Now;
         }
 
         public string Url { get; set; }

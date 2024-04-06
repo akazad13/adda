@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using EasyConnect.API.Models;
 
-namespace EasyConnect.API.DTOs
+namespace EasyConnect.API.Dtos
 {
-    public class UserForDetailedDTO
+    public class UserForDetailedDto
     {
         public int Id { get; set; }
         public string Username { get; set; }
@@ -20,6 +19,6 @@ namespace EasyConnect.API.DTOs
         public string city { get; set; }
         public string Country { get; set; }
         public string PhotoUrl { get; set; }
-        public ICollection<PhotosForDetailedDTO> Photos { get; set; }
+        public ICollection<PhotosForDetailedDto> Photos { get; set; }
     }
 }

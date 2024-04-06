@@ -38,8 +38,10 @@ namespace EasyConnect.API.Helpers
                 totalItems,
                 totalPages
             );
-            var camelCaseFormatter = new JsonSerializerSettings();
-            camelCaseFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            var camelCaseFormatter = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
             response.Headers.Append(
                 "Pagination",
                 JsonConvert.SerializeObject(paginationHeader, camelCaseFormatter)

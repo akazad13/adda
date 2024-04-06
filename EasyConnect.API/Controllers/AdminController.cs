@@ -1,49 +1,27 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
 using EasyConnect.API.Data;
-using EasyConnect.API.DTOs;
-using EasyConnect.API.Helpers;
+using EasyConnect.API.Dtos;
+using EasyConnect.API.ExternalServices.Cloudinary;
 using EasyConnect.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
-namespace EasyConnect.API.Controllers
-{
-    [ApiController]
+namespace EasyConnect.API.Controllers;
+[ApiController]
     [Route("api/[controller]")]
-    public class AdminController : ControllerBase
+    public class AdminController(
+    IAdminRepository repo,
+    UserManager<User> userManager,
+    ICloudinaryService cloudinaryService
+        ) : ControllerBase
     {
-        private readonly IAdminRepository _repo;
-        private readonly UserManager<User> _userManager;
-        private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
-        private Cloudinary _cloudinary;
+        private readonly IAdminRepository _repo = repo;
+        private readonly UserManager<User> _userManager = userManager;
+        private readonly ICloudinaryService _cloudinaryService = cloudinaryService;
 
-        public AdminController(
-            IAdminRepository repo,
-            UserManager<User> userManager,
-            IOptions<CloudinarySettings> cloudinaryConfig
-        )
-        {
-            _userManager = userManager;
-            _repo = repo;
-
-            _cloudinaryConfig = cloudinaryConfig;
-
-            Account acc = new Account(
-                _cloudinaryConfig.Value.CloudName,
-                _cloudinaryConfig.Value.ApiKey,
-                _cloudinaryConfig.Value.ApiSecret
-            );
-
-            _cloudinary = new Cloudinary(acc);
-        }
-
-        [Authorize(Policy = "RequireAdminRole")]
+    [Authorize(Policy = "RequireAdminRole")]
         [HttpGet("usersWithRoles")]
         public async Task<IActionResult> GetUsersWithRoles()
         {
@@ -71,7 +49,7 @@ namespace EasyConnect.API.Controllers
             {
                 return NoContent();
             }
-            throw new Exception("Failed to Approve user photo");
+            return BadRequest("Failed to Approve user photo");
         }
 
         [Authorize(Policy = "ModeratePhotoRole")]
@@ -87,10 +65,9 @@ namespace EasyConnect.API.Controllers
 
             if (photo.PublicId != null)
             {
-                var deleteParams = new DeletionParams(photo.PublicId);
-                var result = _cloudinary.Destroy(deleteParams);
+                var result = await _cloudinaryService.DeletePhotoAsync(photo.PublicId);
 
-                if (result.Result == "ok")
+                if (!result.IsError)
                 {
                     _repo.Delete(photo);
                 }
@@ -110,15 +87,15 @@ namespace EasyConnect.API.Controllers
 
         [Authorize(Policy = "RequireAdminRole")]
         [HttpPost("editRoles/{userName}")]
-        public async Task<IActionResult> editRoles(string userName, RoleEditDTO roleEditDTO)
+        public async Task<IActionResult> editRoles(string userName, RoleEditDto roleEditDto)
         {
             var user = await _userManager.FindByNameAsync(userName);
 
             var userRoles = await _userManager.GetRolesAsync(user);
 
-            var selectedRoles = roleEditDTO.RoleName;
+            var selectedRoles = roleEditDto.RoleName;
 
-            selectedRoles = selectedRoles ?? new string[] { };
+            selectedRoles ??= [];
             var result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));
 
             if (!result.Succeeded)
@@ -136,4 +113,3 @@ namespace EasyConnect.API.Controllers
             return Ok(await _userManager.GetRolesAsync(user));
         }
     }
-}

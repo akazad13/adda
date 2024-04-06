@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EasyConnect.API.Data
 {
-    public class DataContext
-        : IdentityDbContext<
+    public class DataContext(DbContextOptions<DataContext> options)
+                : IdentityDbContext<
             User,
             Role,
             int,
@@ -15,10 +15,8 @@ namespace EasyConnect.API.Data
             IdentityUserLogin<int>,
             IdentityRoleClaim<int>,
             IdentityUserToken<int>
-        >
+        >(options)
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
-
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Like> Likes { get; set; }
         public DbSet<Message> Messages { get; set; }
