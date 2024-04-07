@@ -68,17 +68,17 @@ public class UsersController(IMemberRepository repo, IMapper mapper) : Controlle
         return BadRequest($"Updating user {id} failed on save");
     }
 
-    [HttpPost("{id}/like/{recipientId}")]
-    public async Task<IActionResult> LikeUser(int id, int recipientId)
+    [HttpPost("{id}/bookmark/{recipientId}")]
+    public async Task<IActionResult> BookmakUser(int id, int recipientId)
     {
         if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
         {
             return Unauthorized();
         }
 
-        var like = await _repo.GetLike(id, recipientId);
+        var bookmark = await _repo.GetBookmark(id, recipientId);
 
-        if (like != null)
+        if (bookmark != null)
         {
             return BadRequest("You already bookmark this user.");
         }
@@ -88,15 +88,15 @@ public class UsersController(IMemberRepository repo, IMapper mapper) : Controlle
             return NotFound();
         }
 
-        var newLike = new Like { LikerId = id, LikeeId = recipientId };
+        var newBookmark = new Bookmark { BookmarkerId = id, BookmarkedId= recipientId };
 
-        _repo.Add<Like>(newLike);
+        _repo.Add<Bookmark>(newBookmark);
 
         if (await _repo.SaveAll())
         {
             return Ok();
         }
 
-        return BadRequest("Failed to like user");
+        return BadRequest("Failed to bookmark user");
     }
 }

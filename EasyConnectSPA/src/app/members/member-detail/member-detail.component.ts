@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { Subscription } from 'rxjs';
-// import { NgxGalleryImage, NgxGalleryOptions, NgxGalleryAnimation } from 'ngx-gallery';
 import { ActivatedRoute } from '@angular/router';
 import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user.service';
@@ -36,18 +35,6 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
       const selectedTab = params['tab'];
       this.memberTabs.tabs[selectedTab > 0 ? selectedTab : 0].active = true;
     });
-
-    // this.galleryOptions = [
-    //   {
-    //     width: '500px',
-    //     height: '500px',
-    //     imagePercent: 100,
-    //     thumbnailsColumns: 4,
-    //     imageAnimation: NgxGalleryAnimation.Slide,
-    //     preview: false
-    //   }
-    // ];
-    // this.galleryImages = this.getImages();
   }
 
   ngOnDestroy() {
@@ -70,10 +57,10 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   selecTab(tabId: number) {
     this.memberTabs.tabs[tabId].active = true;
   }
-  sendLike(id: number) {
-    this.userService.sendLike(this.authService.decodedToken.nameid, id).subscribe(
+  bookmark(id: number) {
+    this.userService.bookmark(this.authService.decodedToken.nameid, id).subscribe(
       (data) => {
-        this.alertify.success('You have liked: ' + this.user.knownAs);
+        this.alertify.success('You have bookmarked: ' + this.user.knownAs);
       },
       (error) => {
         this.alertify.error(error);

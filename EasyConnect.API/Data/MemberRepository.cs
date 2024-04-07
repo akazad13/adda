@@ -22,10 +22,10 @@ namespace EasyConnect.API.Data
             _context.Remove(entity);
         }
 
-        public async Task<Like> GetLike(int userId, int recipientId)
+        public async Task<Bookmark> GetBookmark(int userId, int recipientId)
         {
-            return await _context.Likes.FirstOrDefaultAsync(
-                u => u.LikerId == userId && u.LikeeId == recipientId
+            return await _context.Bookmarks.FirstOrDefaultAsync(
+                u => u.BookmarkerId == userId && u.BookmarkedId == recipientId
             );
         }
 
@@ -73,16 +73,16 @@ namespace EasyConnect.API.Data
 
             users = users.Where(u => u.Id != userParams.UserId);
 
-            if (userParams.Likers)
+            if (userParams.Bookmarkers)
             {
-                var userLikers = await GetUserLikes(userParams.UserId, userParams.Likers);
-                users = users.Where(u => userLikers.Contains(u.Id));
+                var userBookmarks = await GetUserBookmarks(userParams.UserId, userParams.Bookmarkers);
+                users = users.Where(u => userBookmarks.Contains(u.Id));
             }
 
-            if (userParams.Likees)
+            if (userParams.Bookmarkeds)
             {
-                var userLikees = await GetUserLikes(userParams.UserId, userParams.Likers);
-                users = users.Where(u => userLikees.Contains(u.Id));
+                var userBookmarkeds = await GetUserBookmarks(userParams.UserId, userParams.Bookmarkers);
+                users = users.Where(u => userBookmarkeds.Contains(u.Id));
             }
 
             if (userParams.MinAge != 18 || userParams.MaxAge != 99)
@@ -111,19 +111,19 @@ namespace EasyConnect.API.Data
             );
         }
 
-        private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
+        private async Task<IEnumerable<int>> GetUserBookmarks(int id, bool bookmarkers)
         {
             var user = await _context.Users
-                .Include(x => x.Likers)
-                .Include(x => x.Likees)
+                .Include(x => x.Bookmarkers)
+                .Include(x => x.Bookmarkeds)
                 .FirstOrDefaultAsync(u => u.Id == id);
-            if (likers)
+            if (bookmarkers)
             {
-                return user.Likers.Where(u => u.LikeeId == id).Select(i => i.LikerId);
+                return user.Bookmarkers.Where(u => u.BookmarkedId == id).Select(i => i.BookmarkerId);
             }
             else
             {
-                return user.Likees.Where(u => u.LikerId == id).Select(i => i.LikeeId);
+                return user.Bookmarkeds.Where(u => u.BookmarkerId == id).Select(i => i.BookmarkedId);
             }
         }
 

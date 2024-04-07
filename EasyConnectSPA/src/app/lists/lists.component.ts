@@ -14,7 +14,7 @@ import { AlertifyService } from '../services/alertify.service';
 export class ListsComponent implements OnInit {
   users!: User[];
   pagination!: Pagination;
-  likesParam!: string;
+  bookmarkParam!: string;
   constructor(
     private authService: AuthService,
     private userService: UserService,
@@ -27,7 +27,7 @@ export class ListsComponent implements OnInit {
       this.users = data['users'].result;
       this.pagination = data['users'].pagination;
     });
-    this.likesParam = 'Likees';
+    this.bookmarkParam = 'bookmarkeds';
   }
 
   pageChanged(event: any) {
@@ -36,7 +36,7 @@ export class ListsComponent implements OnInit {
   }
 
   loadUsers() {
-    this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, null, this.likesParam).subscribe(
+    this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, null, this.bookmarkParam).subscribe(
       (res: PaginatedResult<User[]>) => {
         if (res.result != null) {
           this.users = res.result;

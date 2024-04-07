@@ -10,7 +10,6 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { RouterModule } from '@angular/router';
-// import { NgxGalleryModule } from 'ngx-gallery';
 import { JwtModule } from '@auth0/angular-jwt';
 import { FileUploadModule } from 'ng2-file-upload';
 
@@ -95,7 +94,6 @@ export class CustomHammerConfig extends HammerGestureConfig {
     ButtonsModule.forRoot(),
     RouterModule.forRoot(appRoutes),
     ModalModule.forRoot(),
-    // NgxGalleryModule,
     FileUploadModule,
     JwtModule.forRoot({
       config: {

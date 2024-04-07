@@ -11,11 +11,11 @@ import { PaginatedResult } from '../models/pagination';
 export class ListsResolver  {
   pageNumber = 1;
   pageSize = 10;
-  likesParams = 'Likees';
+  bookmarkParams = 'bookmarkeds';
 
   constructor(private userService: UserService, private router: Router, private alertify: AlertifyService) {}
   resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<User[]> | null> {
-    return this.userService.getUsers(this.pageNumber, this.pageSize, null, this.likesParams).pipe(
+    return this.userService.getUsers(this.pageNumber, this.pageSize, null, this.bookmarkParams).pipe(
       catchError(error => {
         this.alertify.error('Problem retrieving data');
         this.router.navigate(['/home']);

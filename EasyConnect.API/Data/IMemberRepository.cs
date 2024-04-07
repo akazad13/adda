@@ -14,7 +14,7 @@ namespace EasyConnect.API.Data
         Task<User> GetUser(int id, bool isCurrentUser);
         Task<Photo> GetPhoto(int id);
         Task<Photo> GetMainPhotoForUser(int userId);
-        Task<Like> GetLike(int userId, int recipientId);
+        Task<Bookmark> GetBookmark(int userId, int recipientId);
         Task<Message> GetMessage(int id);
         Task<PageList<Message>> GetMessagesForUser(MessageParams messageParams);
         Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId);

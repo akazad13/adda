@@ -18,7 +18,7 @@ namespace EasyConnect.API.Data
         >(options)
     {
         public DbSet<Photo> Photos { get; set; }
-        public DbSet<Like> Likes { get; set; }
+        public DbSet<Bookmark> Bookmarks { get; set; }
         public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -41,20 +41,20 @@ namespace EasyConnect.API.Data
                     .IsRequired();
             });
 
-            builder.Entity<Like>().HasKey(k => new { k.LikerId, k.LikeeId });
+            builder.Entity<Bookmark>().HasKey(k => new { k.BookmarkerId, k.BookmarkedId });
 
             builder
-                .Entity<Like>()
-                .HasOne(u => u.Likee)
-                .WithMany(u => u.Likers)
-                .HasForeignKey(u => u.LikeeId)
+                .Entity<Bookmark>()
+                .HasOne(u => u.Bookmarked)
+                .WithMany(u => u.Bookmarkers)
+                .HasForeignKey(u => u.BookmarkedId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder
-                .Entity<Like>()
-                .HasOne(u => u.Liker)
-                .WithMany(u => u.Likees)
-                .HasForeignKey(u => u.LikerId)
+                .Entity<Bookmark>()
+                .HasOne(u => u.Bookmarker)
+                .WithMany(u => u.Bookmarkeds)
+                .HasForeignKey(u => u.BookmarkerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder

@@ -8,7 +8,7 @@
         </button>
       </li>
       <li class="list-inline-item">
-        <button class="btn btn-primary" (click)="sendLike(user.id)" title="Bookmark"><i class="fa fa-bookmark" aria-hidden="true" ></i></button>
+        <button class="btn btn-primary" (click)="bookmark(user.id)" title="Bookmark"><i class="fa fa-bookmark" aria-hidden="true" ></i></button>
       </li>
       <li class="list-inline-item">
         <button class="btn btn-primary" [routerLink]="['/members/', user.id]" [queryParams]="{ tab: 3 }">

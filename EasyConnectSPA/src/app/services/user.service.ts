@@ -15,7 +15,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getUsers(page?: any, itemsPerPage?: any, userParams?: any, likesParams?: string): Observable<PaginatedResult<User[]>> {
+  getUsers(page?: any, itemsPerPage?: any, userParams?: any, bookmarkParams?: string): Observable<PaginatedResult<User[]>> {
     const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
     let params = new HttpParams();
 
@@ -30,10 +30,10 @@ export class UserService {
       params = params.append('orderBy', userParams.orderBy);
     }
 
-    if (likesParams === 'Likers') {
-      params = params.append('likers', 'true');
-    } else if (likesParams === 'Likees') {
-      params = params.append('likees', 'true');
+    if (bookmarkParams === 'bookmarkers') {
+      params = params.append('bookmarkers', 'true');
+    } else if (bookmarkParams === 'bookmarkeds') {
+      params = params.append('bookmarkeds', 'true');
     }
 
     return this.http.get<User[]>(this.baseUrl + 'users', { observe: 'response', params }).pipe(
@@ -65,8 +65,8 @@ export class UserService {
     return this.http.delete(this.baseUrl + 'users/' + userId + '/photos/' + id);
   }
 
-  sendLike(id: number, recipientId: number) {
-    return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipientId, {});
+  bookmark(id: number, recipientId: number) {
+    return this.http.post(this.baseUrl + 'users/' + id + '/bookmark/' + recipientId, {});
   }
 
   getMessages(id: number, page?: number, itemsPerPage?: number, messageContainer?: string) {

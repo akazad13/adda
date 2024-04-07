@@ -1,12 +1,12 @@
 <div class="text-center mt-3">
-  <h2>{{ likesParam === 'Likers' ? 'Members who bookmark me' : "Members who I've bookmarked" }} : {{ pagination.totalItems }}</h2>
+  <h2>{{ bookmarkParam === 'bookmarkers' ? 'Members who bookmark me' : "Members who I've bookmarked" }} : {{ pagination.totalItems }}</h2>
 </div>
 
 <div class="container mt-3">
   <div class="row">
     <div class="btn-group">
-      <button class="btn btn-primary" [(ngModel)]="likesParam" btnRadio="Likees" (click)="loadUsers()">Members who I bookmark</button>
-      <button class="btn btn-primary" [(ngModel)]="likesParam" btnRadio="Likers" (click)="loadUsers()">Members who bookmark me</button>
+      <button class="btn btn-primary" [(ngModel)]="bookmarkParam" btnRadio="bookmarkeds" (click)="loadUsers()">Members who I bookmark</button>
+      <button class="btn btn-primary" [(ngModel)]="bookmarkParam" btnRadio="bookmarkers" (click)="loadUsers()">Members who bookmark me</button>
     </div>
   </div>
 
