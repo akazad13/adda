@@ -1,6 +1,6 @@
 <div class="container mt-5">
-  <div class="row">
-    <div class="btn-group">
+  <div class="row mb-3">
+    <div class="btn-group p-0">
       <button class="btn btn-primary" [ngModel]="messageContainer" btnRadio="unread" (click)="loadMessages('unread')">
         <i class="fa fa-envelope"></i> Unread
       </button>
@@ -19,17 +19,22 @@
 
   <div class="row" *ngIf="messages!.length > 0">
     <table class="table table-hover" style="cursor: pointer">
-      <tr>
-        <th style="width: 40%">Message</th>
-        <th style="width: 20%">From / To</th>
-        <th style="width: 20%">Sent / Received</th>
-        <th style="width: 20%"></th>
-      </tr>
-      <tr
+      <caption></caption>
+      <thead>
+        <tr class="table-dark">
+          <th style="width: 40%">Message</th>
+          <th style="width: 20%">From / To</th>
+          <th style="width: 20%">Sent / Received</th>
+          <th style="width: 20%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
         *ngFor="let message of messages"
         [routerLink]="['/members', messageContainer == 'Outbox' ? message.recipientId : message.senderId]"
         [queryParams]="{ tab: 3 }"
-      >
+        class="table-light"
+        >
         <td>{{ message.content }}</td>
         <td>
           <div *ngIf="messageContainer != 'Outbox'">
@@ -46,6 +51,7 @@
           <button class="btn btn-danger" (click)="$event.stopPropagation()" (click)="deleteMessage(message.id)">Delete</button>
         </td>
       </tr>
+    </tbody>
     </table>
   </div>
 </div>

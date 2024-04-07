@@ -90,14 +90,22 @@ public static class DependencyInjection
                     .ReferenceLoopHandling
                     .Ignore;
             });
-        builder.Services
-            .AddCors()
-            .Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"))
-            .AddAutoMapper(typeof(DatingRepository).Assembly)
-            .AddScoped<IDatingRepository, DatingRepository>()
-            .AddScoped<IAdminRepository, AdminRepository>()
-            .AddScoped<LogUserActivity>()
-            .AddScoped<Seed>();
+
+        services.AddEndpointsApiExplorer().AddSwaggerGen();
+
+        services.AddCors();
+
+        services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
+
+        services.AddAutoMapper(typeof(MemberRepository).Assembly);
+
+        services
+            .AddScoped<IMemberRepository, MemberRepository>()
+            .AddScoped<IAdminRepository, AdminRepository>();
+
+        services.AddScoped<LogUserActivity>();
+
+        services.AddScoped<Seed>();
 
         services.AddTransient<ICloudinary, Cloudinary>(sp =>
         {

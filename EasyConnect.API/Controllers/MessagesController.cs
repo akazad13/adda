@@ -13,11 +13,11 @@ namespace EasyConnect.API.Controllers;
 
     [ServiceFilter(typeof(LogUserActivity))]
     [ApiController]
-    [Route("api/users/{userId}/[controller]")]
-    public class MessagesController(IDatingRepository repo, IMapper mapper) : ControllerBase
+    [Route("api/users/{userId}/messages")]
+    public class MessagesController(IMemberRepository repo, IMapper mapper) : ControllerBase
     {
         private readonly IMapper _mapper = mapper;
-        public IDatingRepository _repo { get; set; } = repo;
+        public IMemberRepository _repo { get; set; } = repo;
 
         [HttpGet("{id}", Name = "GetMessage")]
         public async Task<IActionResult> GetMessage(int userId, int id)

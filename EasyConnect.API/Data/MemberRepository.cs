@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EasyConnect.API.Data
 {
-    public class DatingRepository(DataContext context) : IDatingRepository
+    public class MemberRepository(DataContext context) : IMemberRepository
     {
         private readonly DataContext _context = context;
 
@@ -73,7 +73,6 @@ namespace EasyConnect.API.Data
 
             users = users.Where(u => u.Id != userParams.UserId);
 
-            users = users.Where(u => u.Gender == userParams.Gender);
             if (userParams.Likers)
             {
                 var userLikers = await GetUserLikes(userParams.UserId, userParams.Likers);
@@ -151,20 +150,20 @@ namespace EasyConnect.API.Data
             {
                 case "Inbox":
                     messages = messages.Where(
-                        m => m.RecipientId == messageParams.UserId && m.RecipientDeleted == false
+                        m => m.RecipientId == messageParams.UserId && !m.RecipientDeleted
                     );
                     break;
                 case "Outbox":
                     messages = messages.Where(
-                        m => m.SenderId == messageParams.UserId && m.SenderDeleted == false
+                        m => m.SenderId == messageParams.UserId && !m.SenderDeleted
                     );
                     break;
                 default:
                     messages = messages.Where(
                         m =>
                             m.RecipientId == messageParams.UserId
-                            && m.IsRead == false
-                            && m.RecipientDeleted == false
+                            && !m.IsRead
+                            && !m.RecipientDeleted
                     );
                     break;
             }
@@ -188,10 +187,10 @@ namespace EasyConnect.API.Data
                 .Where(
                     m =>
                         m.RecipientId == userId
-                            && m.RecipientDeleted == false
+                            && !m.RecipientDeleted
                             && m.SenderId == recipientId
                         || m.RecipientId == recipientId
-                            && m.SenderDeleted == false
+                            && !m.SenderDeleted
                             && m.SenderId == userId
                 )
                 .OrderByDescending(m => m.MessageSent)

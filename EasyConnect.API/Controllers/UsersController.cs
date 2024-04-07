@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -13,10 +12,10 @@ namespace EasyConnect.API.Controllers;
 
 [ServiceFilter(typeof(LogUserActivity))]
 [ApiController]
-[Route("api/[controller]")]
-public class UsersController(IDatingRepository repo, IMapper mapper) : ControllerBase
+[Route("api/users")]
+public class UsersController(IMemberRepository repo, IMapper mapper) : ControllerBase
 {
-    private readonly IDatingRepository _repo = repo;
+    private readonly IMemberRepository _repo = repo;
     private readonly IMapper _mapper = mapper;
 
     [HttpGet]
@@ -24,12 +23,6 @@ public class UsersController(IDatingRepository repo, IMapper mapper) : Controlle
     {
         var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         userParams.UserId = currentUserId;
-
-        if (string.IsNullOrEmpty(userParams.Gender))
-        {
-            var userFromRepo = await _repo.GetUser(currentUserId, true);
-            userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
-        }
 
         var users = await _repo.GetUsers(userParams);
 
@@ -87,7 +80,7 @@ public class UsersController(IDatingRepository repo, IMapper mapper) : Controlle
 
         if (like != null)
         {
-            return BadRequest("You already like this user");
+            return BadRequest("You already bookmark this user.");
         }
 
         if (await _repo.GetUser(recipientId, false) == null)

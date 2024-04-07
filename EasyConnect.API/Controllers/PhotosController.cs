@@ -12,9 +12,9 @@ namespace EasyConnect.API.Controllers;
 
 [ApiController]
 [Route("api/users/{userId}/photos")]
-public class PhotosController(IDatingRepository repo, IMapper mapper, ICloudinaryService cloudinaryService) : ControllerBase
+public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinaryService cloudinaryService) : ControllerBase
 {
-    private readonly IDatingRepository _repo = repo;
+    private readonly IMemberRepository _repo = repo;
     private readonly IMapper _mapper = mapper; 
     private readonly ICloudinaryService _cloudinaryService = cloudinaryService;
 

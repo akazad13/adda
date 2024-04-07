@@ -17,7 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace EasyConnect.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/auth")]
 [AllowAnonymous]
 public class AuthController(
     IConfiguration config,
@@ -60,8 +60,7 @@ public class AuthController(
             .SingleOrDefaultAsync(
                 u =>
                     u.UserName.Equals(
-                        userForLoginDto.Username,
-                        StringComparison.CurrentCultureIgnoreCase
+                        userForLoginDto.Username
                     )
             );
 

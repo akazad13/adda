@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EasyConnect.API.Controllers;
 [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/admin")]
     public class AdminController(
     IAdminRepository repo,
     UserManager<User> userManager,

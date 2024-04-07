@@ -14,7 +14,7 @@ namespace EasyConnect.API.Data
         {
             return await _context.Photos
                 .IgnoreQueryFilters()
-                .Where(p => p.IsApproved == false)
+                .Where(p => !p.IsApproved)
                 .Select(
                     u =>
                         new

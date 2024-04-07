@@ -10,8 +10,8 @@ import { PaginatedResult } from '../models/pagination';
 @Injectable()
 export class ListsResolver  {
   pageNumber = 1;
-  pageSize = 5;
-  likesParams = 'Likers';
+  pageSize = 10;
+  likesParams = 'Likees';
 
   constructor(private userService: UserService, private router: Router, private alertify: AlertifyService) {}
   resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<User[]> | null> {

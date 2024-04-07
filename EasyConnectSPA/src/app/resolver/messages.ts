@@ -11,7 +11,7 @@ import { PaginatedResult } from '../models/pagination';
 @Injectable()
 export class MessagesResolver  {
   pageNumber = 1;
-  pageSize = 5;
+  pageSize = 10;
   messageContainer = 'unread';
 
   constructor(

@@ -5,7 +5,7 @@ using EasyConnect.API.Models;
 
 namespace EasyConnect.API.Data
 {
-    public interface IDatingRepository
+    public interface IMemberRepository
     {
         void Add<T>(T entity) where T : class;
         void Delete<T>(T entity) where T : class;
