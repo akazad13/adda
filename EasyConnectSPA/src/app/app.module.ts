@@ -1,6 +1,6 @@
 import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule, Injectable } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -58,66 +58,63 @@ export class CustomHammerConfig extends HammerGestureConfig {
   };
 }
 
-@NgModule({
+@NgModule({ 
   declarations: [
-    AppComponent,
-    NavComponent,
-    HomeComponent,
-    RegisterComponent,
-    MemberListComponent,
-    ListsComponent,
-    MessagesComponent,
-    MemberCardComponent,
-    MemberDetailComponent,
-    MemberEditComponent,
-    PhotoEditorComponent,
-    MemberMessagesComponent,
-    AdminPanelComponent,
-    HasRoleDirective,
-    UserManagementComponent,
-    PhotoManagementComponent,
-    RolesModalComponent,
-    LoderComponent,
-    HasErrorPipe,
-    IsInvalidPipe,
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    BsDropdownModule.forRoot(),
-    BsDatepickerModule.forRoot(),
-    TabsModule.forRoot(),
-    PaginationModule.forRoot(),
-    ButtonsModule.forRoot(),
-    RouterModule.forRoot(appRoutes),
-    ModalModule.forRoot(),
-    FileUploadModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter,
-        allowedDomains: [environment.apiUrl.split('//')[1]], // needs to remove the https:// portion
-        skipWhenExpired: true,
-        disallowedRoutes: [`${environment.apiUrl.split('//')[1]}/api/auth`],
-      },
-    }),
-  ],
-  providers: [
-    AuthService,
-    UserService,
-    ErrorInterceptorProvider,
-    ListsResolver,
-    MemberDetailResolver,
-    MemberListResolver,
-    MemberEditResolver,
-    MessagesResolver,
-    AdminService,
-    PreventUnsavedChanges,
-    LoaderService,
-    { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig },
+        AppComponent,
+        NavComponent,
+        HomeComponent,
+        RegisterComponent,
+        MemberListComponent,
+        ListsComponent,
+        MessagesComponent,
+        MemberCardComponent,
+        MemberDetailComponent,
+        MemberEditComponent,
+        PhotoEditorComponent,
+        MemberMessagesComponent,
+        AdminPanelComponent,
+        HasRoleDirective,
+        UserManagementComponent,
+        PhotoManagementComponent,
+        RolesModalComponent,
+        LoderComponent,
+        HasErrorPipe,
+        IsInvalidPipe,
   ],
   bootstrap: [AppComponent],
+  imports: [BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        BsDropdownModule.forRoot(),
+        BsDatepickerModule.forRoot(),
+        TabsModule.forRoot(),
+        PaginationModule.forRoot(),
+        ButtonsModule.forRoot(),
+        RouterModule.forRoot(appRoutes),
+        ModalModule.forRoot(),
+        FileUploadModule,
+        JwtModule.forRoot({
+            config: {
+                tokenGetter,
+                allowedDomains: [environment.apiUrl.split('//')[1]], // needs to remove the https:// portion
+                skipWhenExpired: true,
+                disallowedRoutes: [`${environment.apiUrl.split('//')[1]}/api/auth`],
+            },
+        })], providers: [
+        AuthService,
+        UserService,
+        ErrorInterceptorProvider,
+        ListsResolver,
+        MemberDetailResolver,
+        MemberListResolver,
+        MemberEditResolver,
+        MessagesResolver,
+        AdminService,
+        PreventUnsavedChanges,
+        LoaderService,
+        { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig },
+        provideHttpClient(withInterceptorsFromDi()),
+  ] 
 })
 export class AppModule {}
