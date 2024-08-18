@@ -27,8 +27,8 @@
         </div>
         <div class="card-footer">
           <div class="btn-group d-flex">
-            <button class="btn btn-primary w-100" (click)="bookmark(user.id)">Bookmark</button>
-            <button class="btn btn-success w-100" (click)="selecTab(3)">Message</button>
+            <button class="btn btn-outline-primary w-100" (click)="bookmark(user.id)">Bookmark</button>
+            <button class="btn btn-outline-info w-100" (click)="selecTab(3)">Message</button>
           </div>
         </div>
       </div>
@@ -36,20 +36,19 @@
     <div class="col-sm-8">
       <div class="tab-panel">
         <tabset class="member-tabset" #memberTabs>
-          <tab heading="About {{ user.knownAs }}">
+          <tab heading="About {{ user.knownAs }}" class="mt-4">
             <h4>Description</h4>
             <p>{{ user.introduction }}</p>
             <h4>Looking For</h4>
             <p>{{ user.lookingFor }}</p>
           </tab>
-          <tab heading="Interests">
+          <tab heading="Interests" class="mt-4">
             <h4>Interests</h4>
             <p>{{ user.interests }}</p>
           </tab>
-          <tab heading="Photos">
-            <!-- <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery> -->
+          <tab heading="Files" class="mt-4">
           </tab>
-          <tab heading="Messages">
+          <tab heading="Messages" class="mt-4">
             <app-member-messages [recipientId]="user.id"></app-member-messages>
           </tab>
         </tabset>
