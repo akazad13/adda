@@ -11,7 +11,18 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css'],
+  styles: `
+    .dropdown-toggle,
+    .dropdown-item {
+      cursor: pointer;
+    }
+
+    img {
+      max-height: 50px;
+      border: 2px solid #fff;
+      display: inline;
+    }
+  `,
   imports: [FormsModule, RouterLink, NgIf, HasRoleDirective, BsDropdownModule],
   standalone: true,
 })

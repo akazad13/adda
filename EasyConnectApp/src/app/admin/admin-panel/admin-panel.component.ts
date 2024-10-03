@@ -7,7 +7,7 @@ import { HasRoleDirective } from '../../directives/hasRole.directive';
 @Component({
   selector: 'app-admin-panel',
   templateUrl: './admin-panel.component.html',
-  styleUrls: ['./admin-panel.component.css'],
+  styles: ``,
   imports: [PhotoManagementComponent, TabsModule, UserManagementComponent, HasRoleDirective],
   standalone: true,
 })

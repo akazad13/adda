@@ -5,15 +5,22 @@ import { UserService } from '../services/user.service';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AlertifyService } from '../services/alertify.service';
-import { CommonModule } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
   selector: 'app-messages',
   templateUrl: './messages.component.html',
-  styleUrls: ['./messages.component.css'],
-  imports: [CommonModule, FormsModule, PaginationModule, RouterLink],
+  styles: `
+    table {
+      margin-top: 15px;
+    }
+    .img-circle {
+      max-height: 50px;
+    }
+  `,
+  imports: [NgIf, NgFor, NgClass, DatePipe, FormsModule, PaginationModule, RouterLink],
   standalone: true,
 })
 export class MessagesComponent implements OnInit {

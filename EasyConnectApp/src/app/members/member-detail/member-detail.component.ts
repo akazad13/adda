@@ -12,7 +12,23 @@ import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-member-detail',
   templateUrl: './member-detail.component.html',
-  styleUrls: ['./member-detail.component.css'],
+  styles: `
+    .img-thumbnail {
+      margin: 25px;
+      width: 85%;
+      height: 85%;
+    }
+
+    .card-body {
+      padding: 0 25px;
+    }
+
+    .card-footer {
+      padding: 10px 15px;
+      background-color: #fff;
+      border-top: none;
+    }
+  `,
   imports: [MemberMessagesComponent, TabsModule, DatePipe],
   standalone: true,
 })

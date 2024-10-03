@@ -5,13 +5,39 @@ import { Photo } from '../../../models/photo';
 import { AlertifyService } from '../../../services/alertify.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
-import { CommonModule } from '@angular/common';
+import { DecimalPipe, NgClass, NgFor, NgIf, NgStyle, SlicePipe } from '@angular/common';
 
 @Component({
   selector: 'app-photo-editor',
   templateUrl: './photo-editor.component.html',
-  styleUrls: ['./photo-editor.component.css'],
-  imports: [CommonModule, FileUploadModule],
+  styles: `
+    img.img-thumbnail {
+      height: 100px;
+      min-width: 100px !important;
+      margin-bottom: 2px;
+    }
+
+    .nv-file-over {
+      border: dotted 3px red;
+    }
+
+    input[type='file'] {
+      color: transparent;
+    }
+
+    .pending-image-text {
+      color: red;
+      position: absolute;
+      top: 35px;
+      left: 7px;
+      text-align: center;
+    }
+
+    .not-approved {
+      opacity: 0.2;
+    }
+  `,
+  imports: [NgIf, NgStyle, FileUploadModule, DecimalPipe, SlicePipe, NgClass, NgFor],
   standalone: true,
 })
 export class PhotoEditorComponent implements OnInit {

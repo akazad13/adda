@@ -20,7 +20,7 @@ import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
+  styles: ``,
   imports: [HasErrorPipe, IsInvalidPipe, BsDatepickerModule, ReactiveFormsModule, NgIf],
   standalone: true,
 })

@@ -13,7 +13,7 @@ import { MemberCardComponent } from './member-card/member-card.component';
 @Component({
   selector: 'app-member-list',
   templateUrl: './member-list.component.html',
-  styleUrls: ['./member-list.component.css'],
+  styles: ``,
   imports: [PaginationModule, FormsModule, NgClass, NgFor, MemberCardComponent],
   standalone: true,
 })

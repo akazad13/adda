@@ -33,7 +33,7 @@
             <P>{{ user.created | date : 'mediumDate' }}</P>
           </div>
         </div>
-        <div class="margin-auto mb-4">
+        <div class="margin-auto mb-4 card-footer">
           <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-success btn-block">Save Changes</button>
         </div>
       </div>
@@ -44,11 +44,11 @@
           <tab heading="Edit Profile">
             <form #editForm="ngForm" id="editForm" (ngSubmit)="updateUser()">
               <h4>Description</h4>
-              <textarea name="introduction" rows="6" class="form-control" [(ngModel)]="user.introduction"></textarea>
+              <textarea name="introduction" rows="5" class="form-control" [(ngModel)]="user.introduction"></textarea>
               <h4>Looking For</h4>
-              <textarea name="lookingFor" rows="6" class="form-control" [(ngModel)]="user.lookingFor"></textarea>
+              <textarea name="lookingFor" rows="5" class="form-control" [(ngModel)]="user.lookingFor"></textarea>
               <h4>Interests</h4>
-              <textarea name="interests" rows="6" class="form-control" [(ngModel)]="user.interests"></textarea>
+              <textarea name="interests" rows="5" class="form-control" [(ngModel)]="user.interests"></textarea>
               <h4>Location Details:</h4>
               <div class="form-inline">
                 <label for="city">City</label>

@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-roles-modal',
   templateUrl: './roles-modal.component.html',
-  styleUrls: ['./roles-modal.component.css'],
+  styles: ``,
   imports: [NgFor, FormsModule],
   standalone: true,
 })

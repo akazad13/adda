@@ -7,7 +7,7 @@ import { NgFor } from '@angular/common';
 @Component({
   selector: 'app-photo-management',
   templateUrl: './photo-management.component.html',
-  styleUrls: ['./photo-management.component.css'],
+  styles: ``,
   imports: [NgFor],
   standalone: true,
 })

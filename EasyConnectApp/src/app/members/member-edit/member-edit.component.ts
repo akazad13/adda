@@ -13,7 +13,22 @@ import { DatePipe, NgIf } from '@angular/common';
 @Component({
   selector: 'app-member-edit',
   templateUrl: './member-edit.component.html',
-  styleUrls: ['./member-edit.component.css'],
+  styles: `
+   .img-thumbnail {
+      margin: 25px;
+      width: 85%;
+      height: 85%;
+    }
+
+    .card-body {
+      padding: 0 25px;
+    }
+
+    .card-footer {
+      border-top: none;
+    }
+
+  `,
   imports: [PhotoEditorComponent, TabsModule, FormsModule, DatePipe, NgIf],
   standalone: true,
 })

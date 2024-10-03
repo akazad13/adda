@@ -9,7 +9,33 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
 @Component({
   selector: 'app-member-messages',
   templateUrl: './member-messages.component.html',
-  styleUrls: ['./member-messages.component.css'],
+  styles: `
+    .card {
+      border: none;
+    }
+
+    .chat {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .chat li {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dotted #b3a9a9;
+    }
+
+    .rounded-circle {
+      height: 50px;
+      width: 50px;
+    }
+
+    .card-body {
+      overflow-y: scroll;
+      height: 400px;
+    }
+  `,
   imports: [FormsModule, DatePipe, NgIf, NgFor],
   standalone: true,
 })

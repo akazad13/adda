@@ -9,7 +9,7 @@ import { NgFor } from '@angular/common';
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
-  styleUrls: ['./user-management.component.css'],
+  styles: ``,
   imports: [NgFor],
   providers: [BsModalService],
   standalone: true,
