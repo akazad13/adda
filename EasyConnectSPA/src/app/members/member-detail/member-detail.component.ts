@@ -32,8 +32,11 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     });
 
     this.route.queryParams.subscribe((params) => {
-      const selectedTab = params['tab'];
-      this.memberTabs.tabs[selectedTab > 0 ? selectedTab : 0].active = true;
+      let selectedTab = parseInt(params['tab'], 10);
+      if (isNaN(selectedTab) || selectedTab < 0 || selectedTab >= this.memberTabs.tabs.length) {
+        selectedTab = 0;
+      }
+      this.memberTabs.tabs[selectedTab].active = true;
     });
   }
 
