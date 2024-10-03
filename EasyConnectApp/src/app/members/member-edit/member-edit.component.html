@@ -7,7 +7,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row mb-4">
     <div class="col-sm-4">
       <div class="card">
         <img class="card-img-top img-thumbnail" src="{{ photoUrl || '../../../assets/user.png' }}" alt="{{ user.knownAs }}" />
@@ -33,7 +33,7 @@
             <P>{{ user.created | date : 'mediumDate' }}</P>
           </div>
         </div>
-        <div class="card-footer">
+        <div class="margin-auto mb-4">
           <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-success btn-block">Save Changes</button>
         </div>
       </div>

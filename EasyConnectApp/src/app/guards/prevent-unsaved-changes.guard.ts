@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { MemberEditComponent } from '../members/member-edit/member-edit.component';
 
-@Injectable()
-export class PreventUnsavedChanges  {
+@Injectable({
+  providedIn: 'root',
+})
+export class PreventUnsavedChanges {
   canDeactivate(
     component: MemberEditComponent,
     currentRoute: import('@angular/router').ActivatedRouteSnapshot,

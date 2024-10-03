@@ -36,7 +36,7 @@ export class MessagesComponent implements OnInit {
 
   loadMessages(messageContainer?: string) {
     let msgContainer = this.messageContainer;
-    if (!!messageContainer) {
+    if (messageContainer) {
       msgContainer = messageContainer;
     }
     this.userService

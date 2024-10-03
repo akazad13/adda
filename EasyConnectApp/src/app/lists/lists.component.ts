@@ -1,29 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { Pagination, PaginatedResult } from '../models/pagination';
 import { User } from '../models/user';
-import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { AlertifyService } from '../services/alertify.service';
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { MemberCardComponent } from '../members/member-list/member-card/member-card.component';
-import { NgFor } from '@angular/common';
-import { ListsResolver } from '../resolver/lists.resolver';
+import { NgClass, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-lists',
   templateUrl: './lists.component.html',
   styleUrls: ['./lists.component.css'],
-  imports: [FormsModule, PaginationModule, MemberCardComponent, NgFor],
+  imports: [FormsModule, PaginationModule, MemberCardComponent, NgFor, NgClass],
   standalone: true,
 })
 export class ListsComponent implements OnInit {
   users: User[] | null = null;
-  pagination!: Pagination;
-  bookmarkParam!: string;
+  pagination: Pagination = {
+    currentPage: 1,
+    itemsPerPage: 10,
+    totalItems: 0,
+    totalPages: 0,
+  };
+  bookmarkParam: string = 'bookmarkeds';
   constructor(
-    private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly route: ActivatedRoute,
     private readonly alertify: AlertifyService
@@ -39,10 +41,13 @@ export class ListsComponent implements OnInit {
 
   pageChanged(event: any) {
     this.pagination.currentPage = event.page;
-    this.loadUsers();
+    this.loadUsers(null);
   }
 
-  loadUsers() {
+  loadUsers(bookmarkOption: string | null) {
+    if (bookmarkOption != null) {
+      this.bookmarkParam = bookmarkOption;
+    }
     this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, null, this.bookmarkParam).subscribe(
       (res: PaginatedResult<User[]>) => {
         if (res.result != null) {

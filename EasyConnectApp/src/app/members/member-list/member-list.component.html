@@ -2,7 +2,7 @@
   <h2>Your matches - {{ pagination.totalItems }} found</h2>
 </div>
 <div class="container mt-5">
-  <form class="" #form="ngForm" (ngSubmit)="loadUsers()" novalidate>
+  <form class="" #form="ngForm" (ngSubmit)="loadUsers(null)" novalidate>
     <div class="row">
       <div class="col-10">
         <div class="row">
@@ -56,8 +56,9 @@
             name="orderBy"
             class="btn btn-primary"
             btnRadio="lastActive"
-            (click)="loadUsers()"
-            [(ngModel)]="userParams.orderBy"
+            id="lastActive"
+            (click)="loadUsers('lastActive')"
+            [ngClass]="userParams.orderBy == 'lastActive' ? 'active' : ''"
           >
             Last Active
           </button>
@@ -66,8 +67,9 @@
             name="orderBy"
             class="btn btn-primary"
             btnRadio="created"
-            (click)="loadUsers()"
-            [(ngModel)]="userParams.orderBy"
+            id="created"
+            (click)="loadUsers('created')"
+            [ngClass]="userParams.orderBy == 'created' ? 'active' : ''"
           >
             Newest Members
           </button>

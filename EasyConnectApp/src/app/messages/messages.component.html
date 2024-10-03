@@ -1,13 +1,28 @@
 <div class="container mt-5">
   <div class="row mb-3">
     <div class="btn-group p-0">
-      <button class="btn btn-primary" [ngModel]="messageContainer" btnRadio="unread" (click)="loadMessages('unread')">
+      <button
+        class="btn btn-primary"
+        btnRadio="unread"
+        (click)="loadMessages('unread')"
+        [ngClass]="messageContainer == 'unread' ? 'active' : ''"
+      >
         <i class="fa fa-envelope"></i> Unread
       </button>
-      <button class="btn btn-primary" [ngModel]="messageContainer" btnRadio="Inbox" (click)="loadMessages('Inbox')">
+      <button
+        class="btn btn-primary"
+        btnRadio="Inbox"
+        (click)="loadMessages('Inbox')"
+        [ngClass]="messageContainer == 'Inbox' ? 'active' : ''"
+      >
         <i class="fa fa-envelope-open"></i> Inbox
       </button>
-      <button class="btn btn-primary" [ngModel]="messageContainer" btnRadio="Outbox" (click)="loadMessages('Outbox')">
+      <button
+        class="btn btn-primary"
+        btnRadio="Outbox"
+        (click)="loadMessages('Outbox')"
+        [ngClass]="messageContainer == 'Outbox' ? 'active' : ''"
+      >
         <i class="fa fa-paper-plane"></i> Outbox
       </button>
     </div>

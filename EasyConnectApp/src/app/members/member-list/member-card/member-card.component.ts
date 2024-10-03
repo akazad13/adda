@@ -13,7 +13,8 @@ import { RouterLink } from '@angular/router';
   standalone: true,
 })
 export class MemberCardComponent implements OnInit {
-  @Input() user: User | null = null;
+  @Input()
+  user!: User;
 
   constructor(
     private readonly authService: AuthService,

@@ -5,7 +5,7 @@ import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { AlertifyService } from '../../services/alertify.service';
 import { PaginatedResult, Pagination } from '../../models/pagination';
-import { CommonModule } from '@angular/common';
+import { NgClass, NgFor } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { FormsModule } from '@angular/forms';
 import { MemberCardComponent } from './member-card/member-card.component';
@@ -14,13 +14,19 @@ import { MemberCardComponent } from './member-card/member-card.component';
   selector: 'app-member-list',
   templateUrl: './member-list.component.html',
   styleUrls: ['./member-list.component.css'],
-  imports: [CommonModule, PaginationModule, FormsModule, MemberCardComponent],
+  imports: [PaginationModule, FormsModule, NgClass, NgFor, MemberCardComponent],
   standalone: true,
 })
 export class MemberListComponent implements OnInit, OnDestroy {
   users: User[] = [];
-  user: User | null = JSON.parse(localStorage.getItem('user')!);
-  userParams: any = {};
+  userParams: any = {
+    minAge: 18,
+    maxAge: 99,
+    gender: 'male',
+    orderBy: 'lastActive',
+    pageNumber: 1,
+    pageSize: 10,
+  };
   genderList = [
     { value: 'male', display: 'Males' },
     { value: 'female', display: 'Females' },
@@ -49,16 +55,17 @@ export class MemberListComponent implements OnInit, OnDestroy {
 
   pageChanged(event: any) {
     this.pagination.currentPage = event.page;
-    this.loadUsers();
+    this.loadUsers(this.userParams.orderBy);
   }
 
   resetFilters() {
     this.userParams.minAge = 18;
     this.userParams.maxAge = 99;
-    this.loadUsers();
+    this.loadUsers(this.userParams.orderBy);
   }
 
-  loadUsers() {
+  loadUsers(orderBy: string | null) {
+    this.userParams.orderBy = orderBy ?? this.userParams.orderBy;
     this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams).subscribe(
       (res: PaginatedResult<User[]>) => {
         this.users = res.result!;

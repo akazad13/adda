@@ -6,12 +6,13 @@ import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { HasRoleDirective } from '../directives/hasRole.directive';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css'],
-  imports: [FormsModule, RouterLink, NgIf, HasRoleDirective],
+  imports: [FormsModule, RouterLink, NgIf, HasRoleDirective, BsDropdownModule],
   standalone: true,
 })
 export class NavComponent implements OnInit, OnDestroy {
