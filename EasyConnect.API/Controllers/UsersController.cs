@@ -7,6 +7,7 @@ using EasyConnect.API.Dtos;
 using EasyConnect.API.Helpers;
 using EasyConnect.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EasyConnect.API.Controllers;
 
@@ -19,6 +20,10 @@ public class UsersController(IMemberRepository repo, IMapper mapper) : Controlle
     private readonly IMapper _mapper = mapper;
 
     [HttpGet]
+    [SwaggerResponse(200, "Claims have been validated", typeof(IEnumerable<UserForListDto>))]
+    [SwaggerResponse(400)]
+    [SwaggerResponse(500)]
+
     public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
     {
         var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
