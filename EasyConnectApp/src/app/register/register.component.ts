@@ -1,20 +1,12 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import {
-  Validators,
-  FormBuilder,
-  FormGroup,
-  AbstractControlOptions,
-  AbstractControl,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, AbstractControlOptions, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AlertifyService } from '../services/alertify.service';
 import { User } from '../models/user';
-import { HasErrorPipe } from '../shared/pipes/has-error.pipe';
-import { IsInvalidPipe } from '../shared/pipes/is-invalid.pipe';
+import { HasErrorPipe } from '../pipes/has-error.pipe';
+import { IsInvalidPipe } from '../pipes/is-invalid.pipe';
 import { NgIf } from '@angular/common';
 
 @Component({

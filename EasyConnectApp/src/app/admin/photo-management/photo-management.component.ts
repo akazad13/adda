@@ -3,6 +3,7 @@ import { Photo } from '../../models/photo';
 import { AdminService } from '../../services/admin.service';
 import { AlertifyService } from '../../services/alertify.service';
 import { NgFor } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-photo-management',
@@ -19,46 +20,40 @@ export class PhotoManagementComponent implements OnInit {
     this.getPhotosForModeration();
   }
 
-  getPhotosForModeration() {
-    this.adminService.getPhotosForModeration().subscribe(
-      (photos: Photo[]) => {
-        this.photos = photos;
-      },
-      (error: any) => {
-        this.alertify.error(error);
-      }
-    );
+  async getPhotosForModeration(): Promise<void> {
+    try {
+      const photos: Photo[] = await firstValueFrom(this.adminService.getPhotosForModeration());
+      this.photos = photos;
+    } catch (e: any) {
+      this.alertify.error(e.statusText);
+    }
   }
 
-  approvePhoto(photoId: number) {
-    this.adminService.approvePhoto(photoId).subscribe(
-      () => {
+  async approvePhoto(photoId: number): Promise<void> {
+    try {
+      await firstValueFrom(this.adminService.approvePhoto(photoId));
+      this.photos.splice(
+        this.photos.findIndex((p) => p.id === photoId),
+        1
+      );
+      this.alertify.success('Photo has been approved successfully');
+    } catch (e: any) {
+      this.alertify.error(e.statusText);
+    }
+  }
+
+  async rejectPhoto(photoId: number): Promise<void> {
+    this.alertify.confirm('Are you sure you want to delete this photo?', async () => {
+      try {
+        await firstValueFrom(this.adminService.rejectPhoto(photoId));
         this.photos.splice(
           this.photos.findIndex((p) => p.id === photoId),
           1
         );
-        this.alertify.success('Photo has been approved successfully');
-      },
-      (error: any) => {
-        this.alertify.error(error);
+        this.alertify.success('Photo has been deleted successfully');
+      } catch (e: any) {
+        this.alertify.error(e.statusText);
       }
-    );
-  }
-
-  rejectPhoto(photoId: number) {
-    this.alertify.confirm('Are you sure you want to delete this photo?', () => {
-      this.adminService.rejectPhoto(photoId).subscribe(
-        () => {
-          this.photos.splice(
-            this.photos.findIndex((p) => p.id === photoId),
-            1
-          );
-          this.alertify.success('Photo has been deleted successfully');
-        },
-        (error: any) => {
-          this.alertify.error(error);
-        }
-      );
     });
   }
 }

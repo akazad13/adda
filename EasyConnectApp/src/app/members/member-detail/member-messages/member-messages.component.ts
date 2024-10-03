@@ -1,11 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { tap } from 'rxjs/operators';
 import { Message } from '../../../models/message';
 import { AlertifyService } from '../../../services/alertify.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DateAgoPipe } from '../../../pipes/date-ago.pipe';
+import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-member-messages',
   templateUrl: './member-messages.component.html',
@@ -33,10 +34,10 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
 
     .card-body {
       overflow-y: scroll;
-      height: 400px;
+      height: 460px;
     }
   `,
-  imports: [FormsModule, DatePipe, NgIf, NgFor],
+  imports: [FormsModule, DatePipe, NgIf, NgFor, DateAgoPipe],
   standalone: true,
 })
 export class MemberMessagesComponent implements OnInit {
@@ -54,39 +55,29 @@ export class MemberMessagesComponent implements OnInit {
     this.loadMessages();
   }
 
-  loadMessages() {
+  async loadMessages(): Promise<void> {
     const currentUserId = +this.authService.decodedToken.nameid;
-    this.userService
-      .getMessageThread(currentUserId, this.recipientId)
-      .pipe(
-        tap((messages: Message[]) => {
-          for (const message of messages) {
-            if (message.isRead === false && message.recipientId === currentUserId) {
-              this.userService.markAsRead(currentUserId, message.id); // to make all as read after view
-            }
-          }
-        })
-      )
-      .subscribe(
-        (messages) => {
-          this.messages = messages;
-        },
-        (error) => {
-          this.alertify.error(error);
+    try {
+      const messages: Message[] = await firstValueFrom(this.userService.getMessageThread(currentUserId, this.recipientId));
+      for (const message of messages) {
+        if (message.isRead === false && message.recipientId === currentUserId) {
+          this.userService.markAsRead(currentUserId, message.id); // to make all as read after view
         }
-      );
+      }
+      this.messages = messages;
+    } catch (e: any) {
+      this.alertify.error(e.statusText);
+    }
   }
 
-  sendMessage() {
+  async sendMessage(): Promise<void> {
     this.newMessage.recipientId = this.recipientId;
-    this.userService.sendMessage(this.authService.decodedToken.nameid, this.newMessage).subscribe(
-      (message: Message) => {
-        this.messages.unshift(message);
-        this.newMessage.content = '';
-      },
-      (error) => {
-        this.alertify.error(error);
-      }
-    );
+    try {
+      const message: Message = await firstValueFrom(this.userService.sendMessage(this.authService.decodedToken.nameid, this.newMessage));
+      this.messages.push(message);
+      this.newMessage.content = '';
+    } catch (e: any) {
+      this.alertify.error(e.statusText);
+    }
   }
 }

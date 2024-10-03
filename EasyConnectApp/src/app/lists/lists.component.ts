@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { MemberCardComponent } from '../members/member-list/member-card/member-card.component';
 import { NgClass, NgFor } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-lists',
@@ -44,20 +45,20 @@ export class ListsComponent implements OnInit {
     this.loadUsers(null);
   }
 
-  loadUsers(bookmarkOption: string | null) {
+  async loadUsers(bookmarkOption: string | null): Promise<void> {
     if (bookmarkOption != null) {
       this.bookmarkParam = bookmarkOption;
     }
-    this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, null, this.bookmarkParam).subscribe(
-      (res: PaginatedResult<User[]>) => {
-        if (res.result != null) {
-          this.users = res.result;
-        }
-        this.pagination = res.pagination;
-      },
-      (error) => {
-        this.alertify.error(error);
+    try {
+      const res: PaginatedResult<User[]> = await firstValueFrom(
+        this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, null, this.bookmarkParam)
+      );
+      if (res.result != null) {
+        this.users = res.result;
       }
-    );
+      this.pagination = res.pagination;
+    } catch (e: any) {
+      this.alertify.error(e.statusText);
+    }
   }
 }

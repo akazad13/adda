@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { User } from '../../models/user';
 import { AlertifyService } from '../../services/alertify.service';
 import { AuthService } from '../../services/auth.service';
@@ -63,15 +63,13 @@ export class MemberEditComponent implements OnInit, OnDestroy {
     this.currentPhotoUrlSubscription.unsubscribe();
   }
 
-  updateUser() {
-    this.userService.updateUser(this.authService.decodedToken.nameid, this.user).subscribe(
-      (next) => {
-        this.alertify.success('Profile added successfully.');
-        this.editFrom.reset(this.user);
-      },
-      (error) => {
-        this.alertify.error(error);
-      }
-    );
+  async updateUser(): Promise<void> {
+    try {
+      await firstValueFrom(this.userService.updateUser(this.authService.decodedToken.nameid, this.user));
+      this.alertify.success('Profile added successfully.');
+      this.editFrom.reset(this.user);
+    } catch (e: any) {
+      this.alertify.error(e.statusText);
+    }
   }
 }

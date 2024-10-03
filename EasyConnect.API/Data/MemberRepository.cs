@@ -193,7 +193,7 @@ namespace EasyConnect.API.Data
                             && !m.SenderDeleted
                             && m.SenderId == userId
                 )
-                .OrderByDescending(m => m.MessageSent)
+                .OrderBy(m => m.MessageSent)
                 .ToListAsync();
             return messages;
         }

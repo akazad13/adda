@@ -5,6 +5,7 @@ import { User } from '../../models/user';
 import { AdminService } from '../../services/admin.service';
 import { AlertifyService } from '../../services/alertify.service';
 import { NgFor } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-user-management',
@@ -28,37 +29,33 @@ export class UserManagementComponent implements OnInit {
     this.getUsersWithRoles();
   }
 
-  getUsersWithRoles() {
-    this.adminService.getUsersWithRoles().subscribe(
-      (users: User[]) => {
-        this.users = users;
-      },
-      (error: any) => {
-        this.alertify.error(error);
-      }
-    );
+  async getUsersWithRoles(): Promise<void> {
+    try {
+      const users: User[] = await firstValueFrom(this.adminService.getUsersWithRoles());
+      this.users = users;
+    } catch (e: any) {
+      this.alertify.error(e.statusText);
+    }
   }
 
-  editRolesModal(user: User) {
+  async editRolesModal(user: User): Promise<void> {
     const initialState = {
       user,
       roles: this.GetRolesArray(user),
     };
     this.bsModalRef = this.modalService.show(RolesModalComponent, { initialState });
-    this.bsModalRef.content.updateSelectedRoles.subscribe((values: any[]) => {
+    this.bsModalRef.content.updateSelectedRoles.subscribe(async (values: any[]) => {
       const rolesToUpdate = {
         roleName: [...values.filter((el) => el.checked === true).map((el) => el.name)],
       };
 
       if (rolesToUpdate) {
-        this.adminService.updateUserRoles(user, rolesToUpdate).subscribe(
-          () => {
-            user.roles = [...rolesToUpdate.roleName];
-          },
-          (error: any) => {
-            this.alertify.error(error);
-          }
-        );
+        try {
+          await firstValueFrom(this.adminService.updateUserRoles(user, rolesToUpdate));
+          user.roles = [...rolesToUpdate.roleName];
+        } catch (e: any) {
+          this.alertify.error(e.statusText);
+        }
       }
     });
   }

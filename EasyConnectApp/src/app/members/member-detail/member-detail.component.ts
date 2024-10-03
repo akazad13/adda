@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { TabsetComponent, TabsModule } from 'ngx-bootstrap/tabs';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../../models/user';
 import { AlertifyService } from '../../services/alertify.service';
@@ -80,14 +80,12 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   selecTab(tabId: number) {
     this.memberTabs.tabs[tabId].active = true;
   }
-  bookmark(id: number) {
-    this.userService.bookmark(this.authService.decodedToken.nameid, id).subscribe(
-      (data) => {
-        this.alertify.success('You have bookmarked: ' + this.user.knownAs);
-      },
-      (error) => {
-        this.alertify.error(error);
-      }
-    );
+  async bookmark(id: number): Promise<void> {
+    try {
+      await firstValueFrom(this.userService.bookmark(this.authService.decodedToken.nameid, id));
+      this.alertify.success('You have bookmarked: ' + this.user.knownAs);
+    } catch (e: any) {
+      this.alertify.error(e.statusText);
+    }
   }
 }

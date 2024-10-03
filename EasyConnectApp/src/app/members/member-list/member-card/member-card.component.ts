@@ -4,6 +4,7 @@ import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
 import { AlertifyService } from '../../../services/alertify.service';
 import { RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-member-card',
@@ -61,15 +62,14 @@ export class MemberCardComponent implements OnInit {
 
   ngOnInit() {}
 
-  bookmark(id: number | undefined) {
+  async bookmark(id: number | undefined): Promise<void> {
     if (id === undefined) return;
-    this.userService.bookmark(this.authService.decodedToken.nameid, id).subscribe(
-      (data) => {
-        this.alertify.success('You have bookmarked: ' + this.user?.knownAs);
-      },
-      (error) => {
-        this.alertify.error(error);
-      }
-    );
+
+    try {
+      await firstValueFrom(this.userService.bookmark(this.authService.decodedToken.nameid, id));
+      this.alertify.success('You have bookmarked: ' + this.user?.knownAs);
+    } catch (e: any) {
+      this.alertify.error(e.statusText);
+    }
   }
 }

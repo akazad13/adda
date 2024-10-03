@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { AlertifyService } from '../../services/alertify.service';
@@ -64,16 +64,17 @@ export class MemberListComponent implements OnInit, OnDestroy {
     this.loadUsers(this.userParams.orderBy);
   }
 
-  loadUsers(orderBy: string | null) {
+  async loadUsers(orderBy: string | null): Promise<void> {
     this.userParams.orderBy = orderBy ?? this.userParams.orderBy;
-    this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams).subscribe(
-      (res: PaginatedResult<User[]>) => {
-        this.users = res.result!;
-        this.pagination = res.pagination;
-      },
-      (error) => {
-        this.alertify.error(error);
-      }
-    );
+
+    try {
+      const res: PaginatedResult<User[]> = await firstValueFrom(
+        this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams)
+      );
+      this.users = res.result!;
+      this.pagination = res.pagination;
+    } catch (e: any) {
+      this.alertify.error(e.statusText);
+    }
   }
 }

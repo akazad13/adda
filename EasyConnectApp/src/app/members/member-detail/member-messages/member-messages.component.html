@@ -6,35 +6,29 @@
       <li *ngFor="let message of messages">
         <!-- to them -->
         <div *ngIf="message.senderId === recipientId">
-          <span class="chat-img float-left me-2">
-            <img src="{{ message.senderPhotoUrl }}" alt="{{ message.senderKnownAs }}" class="rounded-circle" />
-          </span>
+          <p>{{ message.content }}</p>
           <div class="chat-body">
             <div class="header">
-              <strong class="primary-font">{{ message.senderKnownAs }}</strong>
-              <small class="text-muted float-right">
-                <span class="fa fa-clock-o"> {{ message.messageSent | date : 'mediumDate' }}</span>
+              <small class="text-muted">
+                <span class="fa fa-clock-o"> {{ message.messageSent | dateAgo }}</span>
               </small>
             </div>
-            <p>{{ message.content }}</p>
           </div>
         </div>
 
         <!-- to me -->
         <div *ngIf="message.senderId !== recipientId">
-          <span class="chat-img float-right">
-            <img src="{{ message.senderPhotoUrl }}" alt="{{ message.senderKnownAs }}" class="rounded-circle" />
-          </span>
-          <div class="chat-body">
+          <div class="chat-body text-end">
+            <p>{{ message.content }}</p>
             <div class="header">
               <small class="text-muted">
-                <span class="fa fa-clock-o"> {{ message.messageSent | date : 'mediumDate' }}</span>
-                <span *ngIf="!message.isRead" class="text-danger"> (unread) </span>
-                <span *ngIf="message.isRead" class="text-success">(Read {{ message.dateRead | date : 'mediumDate' }})</span>
+                <span class="fa fa-clock-o"> {{ message.messageSent | dateAgo }}</span>
+                <span *ngIf="!message.isRead" class="ms-2" style="color: lightgray"> <i class="fa fa-check" aria-hidden="true"></i> </span>
+                <span *ngIf="message.isRead" class="text-success ms-2">
+                  <i class="fa fa-check" aria-hidden="true"></i> <i class="fa fa-check" aria-hidden="true"></i
+                ></span>
               </small>
-              <strong class="primary-font float-right">{{ message.senderKnownAs }}</strong>
             </div>
-            <p>{{ message.content }}</p>
           </div>
         </div>
       </li>
