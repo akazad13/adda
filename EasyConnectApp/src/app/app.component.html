@@ -1,0 +1,5 @@
+<app-nav></app-nav>
+<app-loader [hidden]="!loaderService.viewLoader"></app-loader>
+<div [hidden]="loaderService.viewLoader">
+  <router-outlet></router-outlet>
+</div>
