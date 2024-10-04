@@ -87,7 +87,7 @@ namespace EasyConnect.API.Controllers;
 
         [Authorize(Policy = "RequireAdminRole")]
         [HttpPost("editRoles/{userName}")]
-        public async Task<IActionResult> editRoles(string userName, RoleEditDto roleEditDto)
+        public async Task<IActionResult> EditRoles(string userName, RoleEditDto roleEditDto)
         {
             var user = await _userManager.FindByNameAsync(userName);
 

@@ -6,6 +6,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { JwtModule } from '@auth0/angular-jwt';
 import { environment } from '../environments/environment';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideScrollbarOptions } from 'ngx-scrollbar';
 
 export function tokenGetter(): string {
   return localStorage.getItem('token') ?? '';
@@ -17,6 +18,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimations(),
+    provideScrollbarOptions({
+      visibility: 'native',
+      appearance: 'compact',
+    }),
     importProvidersFrom([
       JwtModule.forRoot({
         config: {

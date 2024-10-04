@@ -4,3 +4,4 @@ obj
 *.db
 *.db-*
 appsettings.json
+.vs

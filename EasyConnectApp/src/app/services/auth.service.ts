@@ -23,6 +23,18 @@ export class AuthService {
     this.photoUrl.next(photoUrl);
   }
 
+  getCurrentUserId(): number {
+    const decodedToken = this.jwtHelper.decodeToken(this.getToken());
+    if (decodedToken == null) {
+      return decodedToken;
+    }
+    return +decodedToken.nameid;
+  }
+
+  getToken(): string {
+    return localStorage.getItem('token') ?? '';
+  }
+
   login(model: any): Observable<any> {
     return this.http.post(this.baseUrl + 'login', model).pipe(
       map((response: any) => {
@@ -53,7 +65,6 @@ export class AuthService {
     allowedRoles.forEach((element: string) => {
       if (userRoles.includes(element)) {
         isMatch = true;
-        return;
       }
     });
     return isMatch;

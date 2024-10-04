@@ -1,14 +1,17 @@
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using CloudinaryDotNet;
 using EasyConnect.API.Data;
 using EasyConnect.API.ExternalServicec.Cloudinary;
 using EasyConnect.API.ExternalServices.Cloudinary;
 using EasyConnect.API.Helpers;
 using EasyConnect.API.Models;
+using EasyConnect.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +31,22 @@ public static class DependencyInjection
     )
     {
         ArgumentNullException.ThrowIfNull(services);
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy(
+                name: "_myAllowSpecificOrigins",
+                builder =>
+                {
+                    builder
+                        .SetIsOriginAllowed((host) => true)
+                        .WithOrigins(Origins())
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                }
+            );
+        });
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         if (environment.IsDevelopment())
@@ -57,7 +76,7 @@ public static class DependencyInjection
             .AddSignInManager<SignInManager<User>>();
 
         // add authentication services for Jwt bearer
-        services
+        _ = services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -69,6 +88,35 @@ public static class DependencyInjection
                     ),
                     ValidateIssuer = false,
                     ValidateAudience = false
+                };
+
+                options.Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        context.Response.StatusCode = 401;
+                        context.Response.ContentType = "application/json";
+                        return context.Response.WriteAsync("You are not Authorized");
+                    },
+                    OnForbidden = context =>
+                    {
+                        context.Response.StatusCode = 403;
+                        context.Response.ContentType = "application/json";
+                        return context.Response.WriteAsync(
+                            "You are not authorized to access this resource"
+                        );
+                    },
                 };
             });
 
@@ -119,5 +167,14 @@ public static class DependencyInjection
             return cloudinary;
         });
         services.AddScoped<ICloudinaryService, CloudinaryService>();
+
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+        services.AddSignalR();
+    }
+
+    private static string[] Origins()
+    {
+        return ["http://localhost:4200"];
     }
 }

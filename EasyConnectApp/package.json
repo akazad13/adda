@@ -19,6 +19,7 @@
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
     "@auth0/angular-jwt": "^5.2.0",
+    "@microsoft/signalr": "^8.0.7",
     "@popperjs/core": "^2.11.8",
     "alertifyjs": "^1.14.0",
     "bootstrap": "^5.3.3",
@@ -26,6 +27,7 @@
     "font-awesome": "^4.7.0",
     "ng2-file-upload": "^7.0.1",
     "ngx-bootstrap": "^18.0.2",
+    "ngx-scrollbar": "^16.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"

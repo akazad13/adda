@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using EasyConnect.API.Helpers;
 using EasyConnect.API.Models;
@@ -21,6 +22,12 @@ namespace EasyConnect.API.Data
         {
             _context.Remove(entity);
         }
+
+        public void UpdateRange<T>(List<T> entities) where T : class
+        {
+            _context.UpdateRange(entities);
+        }
+
 
         public async Task<Bookmark> GetBookmark(int userId, int recipientId)
         {
@@ -196,6 +203,11 @@ namespace EasyConnect.API.Data
                 .OrderBy(m => m.MessageSent)
                 .ToListAsync();
             return messages;
+        }
+    
+        public async Task<List<Message>> GetWhere(Expression<Func<Message, bool>> expression)
+        {
+            return await _context.Messages.Where(expression).ToListAsync();
         }
     }
 }

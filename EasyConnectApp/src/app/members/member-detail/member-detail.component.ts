@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { MemberMessagesComponent } from './member-messages/member-messages.component';
 import { DatePipe } from '@angular/common';
+import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 
 @Component({
   selector: 'app-member-detail',
@@ -29,7 +30,7 @@ import { DatePipe } from '@angular/common';
       border-top: none;
     }
   `,
-  imports: [MemberMessagesComponent, TabsModule, DatePipe],
+  imports: [MemberMessagesComponent, TabsModule, DatePipe, DateAgoPipe],
   standalone: true,
 })
 export class MemberDetailComponent implements OnInit, OnDestroy {

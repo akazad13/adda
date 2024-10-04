@@ -2,6 +2,7 @@ using System.Net;
 using EasyConnect.API;
 using EasyConnect.API.Data;
 using EasyConnect.API.Helpers;
+using EasyConnect.API.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -39,9 +40,9 @@ else
     });
 }
 
-//  app.UseHttpsRedirection();
+app.UseCors("_myAllowSpecificOrigins");
 
-app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); // adding cors policy
+//  app.UseHttpsRedirection();
 
 app.UseRouting();
 
@@ -50,6 +51,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("hubs/chat");
 
 // Initialise and seed database
 using (var scope = app.Services.CreateScope())
@@ -59,4 +61,4 @@ using (var scope = app.Services.CreateScope())
     await initialiser.SeedAsync();
 }
 
-app.Run();
+await app.RunAsync();
