@@ -1,6 +1,6 @@
 # Easy Connect
 
-This repository contains a social app built using angular 17, and asp.net 8 with Entity Framework.
+This repository contains a social app built using angular 18, a standalone single-page application with asp.net 8 as backend API with Entity Framework.
 
 ## Getting Started
 
