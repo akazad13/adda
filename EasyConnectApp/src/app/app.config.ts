@@ -8,8 +8,14 @@ import { environment } from '../environments/environment';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideScrollbarOptions } from 'ngx-scrollbar';
 
-export function tokenGetter(): string {
-  return localStorage.getItem('token') ?? '';
+export function tokenGetter(): string | null {
+  let userStr = localStorage.getItem('user');
+  if (userStr != null) {
+    const user = JSON.parse(userStr);
+    if (user) return user.token;
+    return null;
+  }
+  return null;
 }
 
 export const appConfig: ApplicationConfig = {

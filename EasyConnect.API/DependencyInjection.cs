@@ -7,6 +7,8 @@ using EasyConnect.API.ExternalServicec.Cloudinary;
 using EasyConnect.API.ExternalServices.Cloudinary;
 using EasyConnect.API.Helpers;
 using EasyConnect.API.Models;
+using EasyConnect.API.Security.CurrentUserProvider;
+using EasyConnect.API.Security.TokenGenerator;
 using EasyConnect.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +21,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Shopizy.Infrastructure.Security.TokenGenerator;
 
 namespace EasyConnect.API;
 
@@ -76,6 +79,10 @@ public static class DependencyInjection
             .AddSignInManager<SignInManager<User>>();
 
         // add authentication services for Jwt bearer
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.Section));
+        services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
         _ = services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -84,10 +91,13 @@ public static class DependencyInjection
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.ASCII.GetBytes(configuration.GetSection("AppSettings:Token").Value)
+                        Encoding.ASCII.GetBytes(configuration.GetSection("JwtSettings:Secret").Value)
                     ),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = configuration.GetSection("JwtSettings:Issuer").Value,
+                    ValidAudience = configuration.GetSection("JwtSettings:Audience").Value,
                 };
 
                 options.Events = new JwtBearerEvents()
@@ -167,10 +177,10 @@ public static class DependencyInjection
             return cloudinary;
         });
         services.AddScoped<ICloudinaryService, CloudinaryService>();
-
-        services.AddScoped<ICurrentUserService, CurrentUserService>();
-
         services.AddSignalR();
+
+        services.AddScoped<IAuthService, AuthService>();
+        
     }
 
     private static string[] Origins()

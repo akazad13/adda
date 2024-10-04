@@ -17,4 +17,5 @@ export interface User {
   introduction?: string;
   lookingFor?: string;
   photos?: Photo[];
+  token?: string;
 }

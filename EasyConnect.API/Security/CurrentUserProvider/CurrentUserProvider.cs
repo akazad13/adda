@@ -1,32 +1,32 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace EasyConnect.API.Services;
+namespace EasyConnect.API.Security.CurrentUserProvider;
 
-public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICurrentUserService
+public class CurrentUserProvider(IHttpContextAccessor httpContextAccessor) : ICurrentUserProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-    public int UserId => UserIdString();
+    public int UserId => GetUserId();
     public string UserRole => UserRoleString() ?? "";
-    public string UserEmail => UserEmailString() ?? "";
+    public string UserName => GetUserName();
 
-    private string UserEmailString()
-    {
-        return _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Email);
-    }
 
     private string UserRoleString()
     {
         return _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Role);
     }
 
-    private int UserIdString()
+    private int GetUserId()
     {
         _ = int.TryParse(
             _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier),
             out int userid
         );
         return userid;
+    }
+    private string GetUserName()
+    {
+        return _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Name);
     }
 }

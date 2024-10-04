@@ -20,18 +20,17 @@ export class AppComponent {
   constructor(private readonly authService: AuthService, public loaderService: LoaderService) {}
 
   ngOnInit() {
-    const token = localStorage.getItem('token');
     const userStr = localStorage.getItem('user');
     let user!: User;
     if (userStr != null) {
       user = JSON.parse(userStr);
     }
-    if (token) {
-      this.authService.decodedToken = this.jwtHelper.decodeToken(token);
-    }
     if (user) {
       this.authService.currentUser = user;
       this.authService.changeMemberPhoto(user.photoUrl);
+      if (user.token) {
+        this.authService.decodedToken = this.jwtHelper.decodeToken(user.token);
+      }
     }
   }
 }

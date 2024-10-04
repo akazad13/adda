@@ -59,7 +59,6 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.authService.decodedToken = null;
     this.authService.currentUser = null;

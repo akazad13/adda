@@ -31,11 +31,7 @@ namespace EasyConnect.API.Helpers
             CreateMap<UserForUpdateDto, User>();
             CreateMap<PhotoForCreationDto, Photo>();
             CreateMap<Photo, PhotoForReturnDto>(); // from, to
-            CreateMap<User, UserForNavbarDto>()
-                .ForMember(
-                    dest => dest.PhotoUrl,
-                    opt => opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url)
-                );
+
             CreateMap<UserForRegisterDto, User>();
             CreateMap<MessageForCreationDto, Message>();
             CreateMap<Message, MessageToReturnDto>()

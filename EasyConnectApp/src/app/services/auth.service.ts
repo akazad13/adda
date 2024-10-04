@@ -32,7 +32,11 @@ export class AuthService {
   }
 
   getToken(): string {
-    return localStorage.getItem('token') ?? '';
+    const user = this.getStoredUser();
+    if (user == null) {
+      return user;
+    }
+    return user.token;
   }
 
   login(model: any): Observable<any> {
@@ -40,10 +44,9 @@ export class AuthService {
       map((response: any) => {
         const user = response;
         if (user) {
-          localStorage.setItem('token', user.token);
-          localStorage.setItem('user', JSON.stringify(user.user));
+          localStorage.setItem('user', JSON.stringify(user));
           this.decodedToken = this.jwtHelper.decodeToken(user.token);
-          this.currentUser = user.user;
+          this.currentUser = user;
           this.changeMemberPhoto(this.currentUser!.photoUrl);
         }
       })
@@ -55,7 +58,7 @@ export class AuthService {
   }
 
   loggedIn() {
-    const token = localStorage.getItem('token');
+    const token = this.getToken();
     return !this.jwtHelper.isTokenExpired(token);
   }
 
@@ -68,5 +71,10 @@ export class AuthService {
       }
     });
     return isMatch;
+  }
+
+  private getStoredUser() {
+    const storedUser = localStorage.getItem('user');
+    return storedUser == null ? null : JSON.parse(storedUser);
   }
 }

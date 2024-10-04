@@ -2,7 +2,7 @@
 using EasyConnect.API.Data;
 using EasyConnect.API.Dtos;
 using EasyConnect.API.Models;
-using EasyConnect.API.Services;
+using EasyConnect.API.Security.CurrentUserProvider;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -11,24 +11,24 @@ using System.Threading.Tasks;
 namespace EasyConnect.API.Hubs;
 [Authorize]
 public class ChatHub(
-    ICurrentUserService currentUserService,
+    ICurrentUserProvider currentUser,
      IMemberRepository repo,
     IMapper mapper
     ) : Hub
 {
-    private readonly ICurrentUserService _currentUserService = currentUserService;
+    private readonly ICurrentUserProvider _currentUser = currentUser;
     private readonly IMemberRepository _repo = repo;
     private readonly IMapper _mapper = mapper;
 
     public override async Task OnConnectedAsync()
     {
-        var sender = _currentUserService.UserId;
+        var sender = _currentUser.UserId;
         await Groups.AddToGroupAsync(Context.ConnectionId, $"{sender}");
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)
     {
-        var sender = $"{_currentUserService.UserId}";
+        var sender = $"{_currentUser.UserId}";
 
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"{sender}");
         await base.OnDisconnectedAsync(exception);
@@ -38,7 +38,7 @@ public class ChatHub(
     {
         try
         {
-            var userId = _currentUserService.UserId;
+            var userId = _currentUser.UserId;
             if (userId == createMessage.RecipientId)
             {
                 throw new HubException("You cannot send messages to yourself!");
@@ -71,7 +71,7 @@ public class ChatHub(
     {
         try
         {
-            var userId = _currentUserService.UserId;
+            var userId = _currentUser.UserId;
             if (userId == data.RecipientId)
             {
                 return;
