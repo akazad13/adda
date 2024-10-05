@@ -16,10 +16,10 @@ public class User : IdentityUser<int>
     public string Interests { get; set; }
     public string city { get; set; }
     public string Country { get; set; }
-    public ICollection<Photo> Photos { get; set; }
-    public ICollection<Bookmark> Bookmarkers { get; set; }
-    public ICollection<Bookmark> Bookmarkeds { get; set; }
-    public ICollection<Message> MessagesSent { get; set; }
-    public ICollection<Message> MessagesReceived { get; set; }
-    public ICollection<UserRole> UserRoles { get; set; }
+    public ICollection<Photo> Photos { get; }
+    public ICollection<Bookmark> Bookmarkers { get; }
+    public ICollection<Bookmark> Bookmarkeds { get; }
+    public ICollection<Message> MessagesSent { get; }
+    public ICollection<Message> MessagesReceived { get; }
+    public ICollection<UserRole> UserRoles { get; }
 }

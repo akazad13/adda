@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
-using Adda.API.Data;
 using Adda.API.Dtos;
 using Adda.API.Helpers;
 using Adda.API.Models;
+using Adda.API.Security.CurrentUserProvider;
 using Adda.API.Services.UserService;
+using AutoMapper;
+using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,19 +17,20 @@ namespace Adda.API.Controllers;
 [ApiController]
 [Route("api/users")]
 public class UsersController(
-    IMemberRepository repo,
     IMapper mapper,
-    IUserService userService) : ControllerBase
+    IUserService userService,
+    ICurrentUserProvider currentUser
+) : ControllerBase
 {
-    private readonly IMemberRepository _repo = repo;
     private readonly IMapper _mapper = mapper;
     private readonly IUserService _userService = userService;
+    private readonly ICurrentUserProvider _currentUser = currentUser;
 
     [HttpPost("register")]
     [AllowAnonymous]
     public async Task<IActionResult> RegisterAsync(UserForRegisterDto userForRegisterDto)
     {
-        ErrorOr.ErrorOr<User> user = await _userService.RegistrationAsync(userForRegisterDto);
+        ErrorOr<User> user = await _userService.RegistrationAsync(userForRegisterDto);
 
         if (!user.IsError)
         {
@@ -50,18 +51,18 @@ public class UsersController(
 
     public async Task<IActionResult> GetAsync([FromQuery] UserParams userParams)
     {
-        int currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-        userParams.UserId = currentUserId;
-
-        PageList<User> users = await _repo.GetUsersAsync(userParams);
-
-        IEnumerable<UserForListDto> usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+        ErrorOr<PageList<User>> users = await _userService.GetAsync(userParams);
+        if (users.IsError)
+        {
+            return BadRequest(users.Errors);
+        }
+        IEnumerable<UserForListDto> usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users.Value);
 
         Response.AddPagination(
-            users.CurrrentPage,
-            users.PageSize,
-            users.TotalCount,
-            users.TotalPages
+            users.Value.CurrrentPage,
+            users.Value.PageSize,
+            users.Value.TotalCount,
+            users.Value.TotalPages
         );
 
         return Ok(usersToReturn);
@@ -70,10 +71,8 @@ public class UsersController(
     [HttpGet("{id}", Name = "GetUser")]
     public async Task<IActionResult> GetAsync(int id)
     {
-        bool isCurrentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) == id;
-        User user = await _repo.GetUserAsync(id, isCurrentUser);
-
-        UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
+        ErrorOr<User> user = await _userService.GetAsync(id);
+        UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user.Value);
 
         return Ok(userToReturn);
     }
@@ -81,51 +80,33 @@ public class UsersController(
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateAsync(int id, UserForUpdateDto userForUpdateDto)
     {
-        if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+        if (id != _currentUser.UserId)
         {
             return Unauthorized();
         }
 
-        User userFromRepo = await _repo.GetUserAsync(id, true);
-
-        _mapper.Map(userForUpdateDto, userFromRepo); // (from, to)
-
-        if (await _repo.SaveAllAsync())
+        ErrorOr<Success> result = await _userService.UpdateAsync(id, userForUpdateDto);
+        if (result.IsError)
         {
-            return NoContent();
+            return BadRequest(result.Errors);
         }
-        return BadRequest($"Updating user {id} failed on save");
+        return NoContent();
     }
 
     [HttpPost("{id}/bookmark/{recipientId}")]
     public async Task<IActionResult> BookmakAsync(int id, int recipientId)
     {
-        if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+        if (id != _currentUser.UserId)
         {
             return Unauthorized();
         }
 
-        Bookmark bookmark = await _repo.GetBookmarkAsync(id, recipientId);
+        ErrorOr<Success> result = await _userService.BookmakAsync(id, recipientId);
 
-        if (bookmark != null)
+        if (result.IsError)
         {
-            return BadRequest("You already bookmark this user.");
+            return BadRequest("Failed to bookmark user");
         }
-
-        if (await _repo.GetUserAsync(recipientId, false) == null)
-        {
-            return NotFound();
-        }
-
-        var newBookmark = new Bookmark { BookmarkerId = id, BookmarkedId = recipientId };
-
-        _repo.Add<Bookmark>(newBookmark);
-
-        if (await _repo.SaveAllAsync())
-        {
-            return Ok();
-        }
-
-        return BadRequest("Failed to bookmark user");
+        return Ok();
     }
 }

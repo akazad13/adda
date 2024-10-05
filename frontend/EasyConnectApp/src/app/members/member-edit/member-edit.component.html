@@ -10,7 +10,7 @@
   <div class="row mb-4">
     <div class="col-sm-4">
       <div class="card">
-        <img class="card-img-top img-thumbnail" src="{{ photoUrl || '../../../assets/user.png' }}" alt="{{ user.knownAs }}" />
+        <img class="card-img-top img-thumbnail" src="{{ photoUrl || './user.png' }}" alt="{{ user.knownAs }}" />
         <div class="card-body">
           <div>
             <strong>Email:</strong>
@@ -26,7 +26,7 @@
           </div>
           <div>
             <strong>Last Active:</strong>
-            <P>{{ user.lastActive }}</P>
+            <P>{{ user.lastActive | dateAgo }}</P>
           </div>
           <div>
             <strong>Member since:</strong>

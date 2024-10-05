@@ -9,7 +9,7 @@ namespace Adda.API.Data;
 
 public interface IMemberRepository
 {
-    void Add<T>(T entity) where T : class;
+    Task AddAsync<T>(T entity) where T : class;
     void Delete<T>(T entity) where T : class;
     void UpdateRange<T>(IList<T> entities) where T : class;
     Task<bool> SaveAllAsync();

@@ -28,10 +28,9 @@ import { firstValueFrom } from 'rxjs';
 
     .pending-image-text {
       color: red;
-      position: absolute;
-      top: 35px;
-      left: 7px;
+      /* position: absolute; */
       text-align: center;
+      margin-bottom: 5px;
     }
 
     .not-approved {

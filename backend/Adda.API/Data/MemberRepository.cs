@@ -13,7 +13,7 @@ public class MemberRepository(DataContext context) : IMemberRepository
 {
     private readonly DataContext _context = context;
 
-    public void Add<T>(T entity) where T : class => _context.Add(entity);
+    public async Task AddAsync<T>(T entity) where T : class => await _context.AddAsync(entity);
 
     public void Delete<T>(T entity) where T : class => _context.Remove(entity);
 

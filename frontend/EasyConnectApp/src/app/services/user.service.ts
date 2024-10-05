@@ -102,4 +102,8 @@ export class UserService {
   deleteMessage(id: number, userId: number) {
     return this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + id, {});
   }
+
+  register(user: User): Observable<any> {
+    return this.http.post(this.baseUrl + 'users/register', user);
+  }
 }

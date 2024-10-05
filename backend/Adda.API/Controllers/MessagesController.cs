@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
 using Adda.API.Data;
 using Adda.API.Dtos;
 using Adda.API.Helpers;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Adda.API.Controllers;

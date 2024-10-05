@@ -9,6 +9,7 @@ import { UserService } from '../../services/user.service';
 import { PhotoEditorComponent } from './photo-editor/photo-editor.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { DatePipe, NgIf } from '@angular/common';
+import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 
 @Component({
   selector: 'app-member-edit',
@@ -29,7 +30,7 @@ import { DatePipe, NgIf } from '@angular/common';
     }
 
   `,
-  imports: [PhotoEditorComponent, TabsModule, FormsModule, DatePipe, NgIf],
+  imports: [PhotoEditorComponent, TabsModule, FormsModule, DatePipe, NgIf, DateAgoPipe],
   standalone: true,
 })
 export class MemberEditComponent implements OnInit, OnDestroy {

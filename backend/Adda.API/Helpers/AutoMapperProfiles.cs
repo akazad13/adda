@@ -1,7 +1,7 @@
 using System.Linq;
-using AutoMapper;
 using Adda.API.Dtos;
 using Adda.API.Models;
+using AutoMapper;
 
 namespace Adda.API.Helpers;
 

@@ -1,11 +1,11 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
 using Adda.API.Data;
 using Adda.API.Dtos;
 using Adda.API.ExternalServices.Cloudinary;
 using Adda.API.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Adda.API.Controllers;

@@ -8,6 +8,8 @@ import { User } from '../models/user';
 import { HasErrorPipe } from '../pipes/has-error.pipe';
 import { IsInvalidPipe } from '../pipes/is-invalid.pipe';
 import { NgIf } from '@angular/common';
+import { UserService } from '../services/user.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -24,6 +26,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
+    private readonly userService: UserService,
     private readonly alertify: AlertifyService,
     private readonly formBuilder: FormBuilder,
     private readonly router: Router
@@ -60,27 +63,23 @@ export class RegisterComponent implements OnInit {
     return g.get('password')?.value === g.get('confirmPassword')?.value ? null : { mismatch: true };
   }
 
-  register() {
+  async register(): Promise<void> {
     if (this.registerForm.valid) {
       this.user = { ...this.registerForm.value };
-      this.authService.register(this.user).subscribe(
-        () => {
-          this.alertify.success('registration successful');
-        },
-        (error) => {
-          this.alertify.error(error);
-        },
-        () => {
-          this.authService.login(this.user).subscribe(
-            () => {
-              this.router.navigate(['/members']);
-            },
-            (error) => {
-              this.alertify.error(error);
-            }
-          );
+
+      try {
+        await firstValueFrom(this.userService.register(this.user));
+        this.alertify.success('registration successful');
+      } catch (e: any) {
+        this.alertify.error(e.error.title);
+      } finally {
+        try {
+          await firstValueFrom(this.authService.login(this.user));
+          this.router.navigate(['/members']);
+        } catch (e: any) {
+          this.alertify.error(e.error.title);
         }
-      );
+      }
     }
   }
 

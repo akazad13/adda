@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using CloudinaryDotNet;
 using Adda.API.Data;
 using Adda.API.ExternalServicec.Cloudinary;
 using Adda.API.ExternalServices.Cloudinary;
@@ -10,6 +9,8 @@ using Adda.API.Models;
 using Adda.API.Security.CurrentUserProvider;
 using Adda.API.Security.TokenGenerator;
 using Adda.API.Services.AuthService;
+using Adda.API.Services.UserService;
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -22,7 +23,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Shopizy.Infrastructure.Security.TokenGenerator;
-using Adda.API.Services.UserService;
 
 namespace Adda.API;
 

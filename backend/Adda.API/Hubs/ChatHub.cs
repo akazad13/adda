@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AutoMapper;
 using Adda.API.Data;
 using Adda.API.Dtos;
 using Adda.API.Models;
 using Adda.API.Security.CurrentUserProvider;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
@@ -48,7 +48,7 @@ public class ChatHub(
 
             Message message = _mapper.Map<Message>(createMessage);
             message.MessageSent = DateTime.Now;
-            _repo.Add(message);
+            await _repo.AddAsync(message);
 
             if (await _repo.SaveAllAsync())
             {
