@@ -25,7 +25,7 @@ namespace EasyConnect.API.Controllers;
         [HttpGet("usersWithRoles")]
         public async Task<IActionResult> GetUsersWithRoles()
         {
-            var userList = await _repo.GetUsersWithRoles();
+        System.Collections.Generic.IEnumerable<object> userList = await _repo.GetUsersWithRoles();
             return Ok(userList);
         }
 
@@ -33,7 +33,7 @@ namespace EasyConnect.API.Controllers;
         [HttpGet("photosForModeration")]
         public async Task<IActionResult> GetPhotosForModeration()
         {
-            var photos = await _repo.GetAllPhotos();
+        System.Collections.Generic.IEnumerable<object> photos = await _repo.GetAllPhotos();
             return Ok(photos);
         }
 
@@ -41,7 +41,7 @@ namespace EasyConnect.API.Controllers;
         [HttpPut("photo/{photoId}")]
         public async Task<IActionResult> ApprovePhoto(int photoId)
         {
-            var photo = await _repo.GetPhoto(photoId);
+        Photo photo = await _repo.GetPhoto(photoId);
 
             photo.IsApproved = true;
 
@@ -56,7 +56,7 @@ namespace EasyConnect.API.Controllers;
         [HttpDelete("photo/{photoId}")]
         public async Task<IActionResult> DeletePhoto(int photoId)
         {
-            var photo = await _repo.GetPhoto(photoId);
+        Photo photo = await _repo.GetPhoto(photoId);
 
             if (photo.IsMain)
             {
@@ -65,7 +65,7 @@ namespace EasyConnect.API.Controllers;
 
             if (photo.PublicId != null)
             {
-                var result = await _cloudinaryService.DeletePhotoAsync(photo.PublicId);
+            ErrorOr.ErrorOr<ErrorOr.Success> result = await _cloudinaryService.DeletePhotoAsync(photo.PublicId);
 
                 if (!result.IsError)
                 {
@@ -89,14 +89,14 @@ namespace EasyConnect.API.Controllers;
         [HttpPost("editRoles/{userName}")]
         public async Task<IActionResult> EditRoles(string userName, RoleEditDto roleEditDto)
         {
-            var user = await _userManager.FindByNameAsync(userName);
+        User user = await _userManager.FindByNameAsync(userName);
 
-            var userRoles = await _userManager.GetRolesAsync(user);
+        System.Collections.Generic.IList<string> userRoles = await _userManager.GetRolesAsync(user);
 
-            var selectedRoles = roleEditDto.RoleName;
+        string[] selectedRoles = roleEditDto.RoleName;
 
             selectedRoles ??= [];
-            var result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));
+        IdentityResult result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));
 
             if (!result.Succeeded)
             {

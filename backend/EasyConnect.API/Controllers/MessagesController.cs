@@ -25,7 +25,7 @@ namespace EasyConnect.API.Controllers;
                 return Unauthorized();
             }
 
-            var messageFromRepo = await _repo.GetMessage(id);
+        Models.Message messageFromRepo = await _repo.GetMessage(id);
 
             if (messageFromRepo == null)
             {
@@ -48,8 +48,8 @@ namespace EasyConnect.API.Controllers;
 
             messageParams.UserId = userId;
 
-            var messagesFromRepo = await _repo.GetMessagesForUser(messageParams);
-            var messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
+        PageList<Models.Message> messagesFromRepo = await _repo.GetMessagesForUser(messageParams);
+        IEnumerable<MessageToReturnDto> messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
             Response.AddPagination(
                 messagesFromRepo.CurrrentPage,
                 messagesFromRepo.PageSize,
@@ -67,8 +67,8 @@ namespace EasyConnect.API.Controllers;
                 return Unauthorized();
             }
 
-            var messagesFromRepo = await _repo.GetMessageThread(userId, recipientId);
-            var messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
+        IEnumerable<Models.Message> messagesFromRepo = await _repo.GetMessageThread(userId, recipientId);
+        IEnumerable<MessageToReturnDto> messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
 
             return Ok(messages);
         }
@@ -81,7 +81,7 @@ namespace EasyConnect.API.Controllers;
                 return Unauthorized();
             }
 
-            var messageFromRepo = await _repo.GetMessage(id);
+        Models.Message messageFromRepo = await _repo.GetMessage(id);
 
             if (messageFromRepo == null)
             {

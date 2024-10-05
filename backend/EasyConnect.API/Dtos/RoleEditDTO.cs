@@ -1,7 +1,6 @@
-namespace EasyConnect.API.Dtos
+namespace EasyConnect.API.Dtos;
+
+public class RoleEditDto
 {
-    public class RoleEditDto
-    {
-        public string[] RoleName { get; set; }
-    }
+    public string[] RoleName { get; set; }
 }

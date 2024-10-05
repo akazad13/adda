@@ -15,15 +15,15 @@ namespace EasyConnect.API.Controllers;
 public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinaryService cloudinaryService) : ControllerBase
 {
     private readonly IMemberRepository _repo = repo;
-    private readonly IMapper _mapper = mapper; 
+    private readonly IMapper _mapper = mapper;
     private readonly ICloudinaryService _cloudinaryService = cloudinaryService;
 
     [HttpGet("{id}", Name = "GetPhoto")]
     public async Task<IActionResult> GetPhoto(int id)
     {
-        var photoFromRepo = await _repo.GetPhoto(id);
+        Photo photoFromRepo = await _repo.GetPhoto(id);
 
-        var photo = _mapper.Map<PhotoForReturnDto>(photoFromRepo);
+        PhotoForReturnDto photo = _mapper.Map<PhotoForReturnDto>(photoFromRepo);
 
         return Ok(photo);
     }
@@ -39,15 +39,15 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
             return Unauthorized();
         }
 
-        var userFromRepo = await _repo.GetUser(userId, true);
+        User userFromRepo = await _repo.GetUser(userId, true);
 
-        var file = photoForCreationDto.File;
+        Microsoft.AspNetCore.Http.IFormFile file = photoForCreationDto.File;
         if (file == null)
         {
             return BadRequest("No file was uploaded");
         }
-        
-        var res = await _cloudinaryService.UploadPhotoAsync(file);
+
+        ErrorOr.ErrorOr<PhotoUploadResult> res = await _cloudinaryService.UploadPhotoAsync(file);
 
         if (res.IsError)
         {
@@ -57,7 +57,7 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
         photoForCreationDto.Url = res.Value.Url.ToString();
         photoForCreationDto.PublicId = res.Value.PublicId;
 
-        var photo = _mapper.Map<Photo>(photoForCreationDto);
+        Photo photo = _mapper.Map<Photo>(photoForCreationDto);
 
         if (!userFromRepo.Photos.Any(u => u.IsMain))
         {
@@ -68,7 +68,7 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
 
         if (await _repo.SaveAll())
         {
-            var photoToReturn = _mapper.Map<PhotoForReturnDto>(photo);
+            PhotoForReturnDto photoToReturn = _mapper.Map<PhotoForReturnDto>(photo);
             return CreatedAtRoute(
                 "GetPhoto",
                 new { userId, id = photo.Id },
@@ -87,21 +87,21 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
             return Unauthorized();
         }
 
-        var user = await _repo.GetUser(userId, true);
+        User user = await _repo.GetUser(userId, true);
 
         if (!user.Photos.Any(p => p.Id == id))
         {
             return Unauthorized();
         }
 
-        var photoFromRepo = await _repo.GetPhoto(id);
+        Photo photoFromRepo = await _repo.GetPhoto(id);
 
         if (photoFromRepo.IsMain)
         {
             return BadRequest("This is already the main photo");
         }
 
-        var currentMainPhoto = await _repo.GetMainPhotoForUser(userId);
+        Photo currentMainPhoto = await _repo.GetMainPhotoForUser(userId);
         currentMainPhoto.IsMain = false;
 
         photoFromRepo.IsMain = true;
@@ -121,14 +121,14 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
             return Unauthorized();
         }
 
-        var user = await _repo.GetUser(userId, true);
+        User user = await _repo.GetUser(userId, true);
 
         if (!user.Photos.Any(p => p.Id == id))
         {
             return Unauthorized();
         }
 
-        var photoFromRepo = await _repo.GetPhoto(id);
+        Photo photoFromRepo = await _repo.GetPhoto(id);
 
         if (photoFromRepo.IsMain)
         {
@@ -137,7 +137,7 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
 
         if (photoFromRepo.PublicId != null)
         {
-            var res = await _cloudinaryService.DeletePhotoAsync(photoFromRepo.PublicId);
+            ErrorOr.ErrorOr<ErrorOr.Success> res = await _cloudinaryService.DeletePhotoAsync(photoFromRepo.PublicId);
 
             if (res.IsError)
             {

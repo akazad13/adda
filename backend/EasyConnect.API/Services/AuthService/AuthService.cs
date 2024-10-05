@@ -17,7 +17,7 @@ public class AuthService(IJwtTokenGenerator jwtTokenGenerator, UserManager<User>
     private readonly UserManager<User> _userManager = userManager;
     public async Task<ErrorOr<AuthResponse>> LoginAsync(UserForLoginDto request)
     {
-        var user = await _userManager.Users
+        User user = await _userManager.Users
             .Include(p => p.Photos)
             .SingleOrDefaultAsync(
                 u =>
@@ -28,10 +28,10 @@ public class AuthService(IJwtTokenGenerator jwtTokenGenerator, UserManager<User>
 
         if (user == null)
         {
-            return new ErrorOr<AuthResponse>();
+            return Error.Validation(description: "Invalid username or password!");
         }
 
-        var result = await _signInManager.CheckPasswordSignInAsync(
+        SignInResult result = await _signInManager.CheckPasswordSignInAsync(
             user,
             request.Password,
             false
@@ -39,13 +39,13 @@ public class AuthService(IJwtTokenGenerator jwtTokenGenerator, UserManager<User>
 
         if (result.Succeeded)
         {
-            var roles = await _userManager.GetRolesAsync(user);
-            var token = _jwtTokenGenerator.GenerateToken(user.Id, user.UserName, roles);
+            System.Collections.Generic.IList<string> roles = await _userManager.GetRolesAsync(user);
+            string token = _jwtTokenGenerator.GenerateToken(user.Id, user.UserName, roles);
             return new AuthResponse(user.Id, user.KnownAs, user.Gender, user.Photos.FirstOrDefault(p => p.IsMain)?.Url, token);
         }
         else
         {
-            return new ErrorOr<AuthResponse>();
+            return Error.Validation(description: "Invalid username or password!");
         }
     }
 

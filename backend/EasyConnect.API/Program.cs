@@ -10,11 +10,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAppInfrastructure(builder.Configuration, builder.Environment);
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
@@ -30,7 +30,7 @@ else
         {
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            var error = context.Features.Get<IExceptionHandlerFeature>();
+            IExceptionHandlerFeature error = context.Features.Get<IExceptionHandlerFeature>();
             if (error != null)
             {
                 context.Response.AddApplicationError(error.Error.Message);
@@ -54,9 +54,9 @@ app.MapControllers();
 app.MapHub<ChatHub>("hubs/chat");
 
 // Initialise and seed database
-using (var scope = app.Services.CreateScope())
+using (IServiceScope scope = app.Services.CreateScope())
 {
-    var initialiser = scope.ServiceProvider.GetRequiredService<Seed>();
+    Seed initialiser = scope.ServiceProvider.GetRequiredService<Seed>();
     await initialiser.InitialiseAsync();
     await initialiser.SeedAsync();
 }

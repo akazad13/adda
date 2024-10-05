@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -6,6 +7,9 @@ using EasyConnect.API.Data;
 using EasyConnect.API.Dtos;
 using EasyConnect.API.Helpers;
 using EasyConnect.API.Models;
+using EasyConnect.API.Services.AuthService;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -14,10 +18,41 @@ namespace EasyConnect.API.Controllers;
 [ServiceFilter(typeof(LogUserActivity))]
 [ApiController]
 [Route("api/users")]
-public class UsersController(IMemberRepository repo, IMapper mapper) : ControllerBase
+public class UsersController(IMemberRepository repo, IMapper mapper, UserManager<User> userManager,
+
+    IAuthService authService) : ControllerBase
 {
     private readonly IMemberRepository _repo = repo;
     private readonly IMapper _mapper = mapper;
+    private readonly UserManager<User> _userManager = userManager;
+    private readonly IAuthService _authService = authService;
+
+    [HttpPost("register")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
+    {
+        try {
+
+        User userToCreate = _mapper.Map<User>(userForRegisterDto);
+
+        IdentityResult result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
+
+        UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
+
+        if (result.Succeeded)
+        {
+            return CreatedAtRoute(
+                "GetUser",
+                new { Controller = "Users", id = userToCreate.Id },
+                userToReturn
+            ); // temp
+        }
+            return BadRequest(result.Errors);
+        }
+        catch(Exception e) {
+             return BadRequest(e.InnerException);
+        }
+    }
 
     [HttpGet]
     [SwaggerResponse(200, "Claims have been validated", typeof(IEnumerable<UserForListDto>))]
@@ -26,12 +61,12 @@ public class UsersController(IMemberRepository repo, IMapper mapper) : Controlle
 
     public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
     {
-        var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        int currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         userParams.UserId = currentUserId;
 
-        var users = await _repo.GetUsers(userParams);
+        PageList<User> users = await _repo.GetUsers(userParams);
 
-        var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+        IEnumerable<UserForListDto> usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
 
         Response.AddPagination(
             users.CurrrentPage,
@@ -46,10 +81,10 @@ public class UsersController(IMemberRepository repo, IMapper mapper) : Controlle
     [HttpGet("{id}", Name = "GetUser")]
     public async Task<IActionResult> GetUser(int id)
     {
-        var isCurrentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) == id;
-        var user = await _repo.GetUser(id, isCurrentUser);
+        bool isCurrentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) == id;
+        User user = await _repo.GetUser(id, isCurrentUser);
 
-        var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+        UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
         return Ok(userToReturn);
     }
@@ -62,7 +97,7 @@ public class UsersController(IMemberRepository repo, IMapper mapper) : Controlle
             return Unauthorized();
         }
 
-        var userFromRepo = await _repo.GetUser(id, true);
+        User userFromRepo = await _repo.GetUser(id, true);
 
         _mapper.Map(userForUpdateDto, userFromRepo); // (from, to)
 
@@ -81,7 +116,7 @@ public class UsersController(IMemberRepository repo, IMapper mapper) : Controlle
             return Unauthorized();
         }
 
-        var bookmark = await _repo.GetBookmark(id, recipientId);
+        Bookmark bookmark = await _repo.GetBookmark(id, recipientId);
 
         if (bookmark != null)
         {

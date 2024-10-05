@@ -22,13 +22,13 @@ public class ChatHub(
 
     public override async Task OnConnectedAsync()
     {
-        var sender = _currentUser.UserId;
+        int sender = _currentUser.UserId;
         await Groups.AddToGroupAsync(Context.ConnectionId, $"{sender}");
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)
     {
-        var sender = $"{_currentUser.UserId}";
+        string sender = $"{_currentUser.UserId}";
 
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"{sender}");
         await base.OnDisconnectedAsync(exception);
@@ -38,7 +38,7 @@ public class ChatHub(
     {
         try
         {
-            var userId = _currentUser.UserId;
+            int userId = _currentUser.UserId;
             if (userId == createMessage.RecipientId)
             {
                 throw new HubException("You cannot send messages to yourself!");
@@ -46,13 +46,13 @@ public class ChatHub(
 
             createMessage.SenderId = userId;
 
-            var message = _mapper.Map<Message>(createMessage);
+            Message message = _mapper.Map<Message>(createMessage);
             message.MessageSent = DateTime.Now;
             _repo.Add(message);
 
             if (await _repo.SaveAll())
             {
-                var messageToReturn = _mapper.Map<MessageToReturnDto>(message);
+                MessageToReturnDto messageToReturn = _mapper.Map<MessageToReturnDto>(message);
                 await Clients.Group($"{userId}").SendAsync("NewMessage", messageToReturn);
                 await Clients
                     .Group($"{createMessage.RecipientId}")
@@ -71,7 +71,7 @@ public class ChatHub(
     {
         try
         {
-            var userId = _currentUser.UserId;
+            int userId = _currentUser.UserId;
             if (userId == data.RecipientId)
             {
                 return;
@@ -88,7 +88,7 @@ public class ChatHub(
 
     private async Task MakeRead(long senderId, long receiverId)
     {
-        var unreadMessages = await _repo.GetWhere(
+        System.Collections.Generic.List<Message> unreadMessages = await _repo.GetWhere(
             x =>
                 x.RecipientId == receiverId
                 && x.SenderId == senderId

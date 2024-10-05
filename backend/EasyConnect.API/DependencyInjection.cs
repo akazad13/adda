@@ -51,7 +51,7 @@ public static class DependencyInjection
             );
         });
 
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        string connectionString = configuration.GetConnectionString("DefaultConnection");
         if (environment.IsDevelopment())
         {
             services.AddDbContext<DataContext>(x => x.UseSqlite(connectionString));
@@ -63,7 +63,7 @@ public static class DependencyInjection
             );
         }
 
-        var builder = services.AddIdentityCore<User>(opt =>
+        IdentityBuilder builder = services.AddIdentityCore<User>(opt =>
         {
             opt.Password.RequireDigit = false;
             opt.Password.RequiredLength = 4;
@@ -104,8 +104,8 @@ public static class DependencyInjection
                 {
                     OnMessageReceived = context =>
                     {
-                        var accessToken = context.Request.Query["access_token"];
-                        var path = context.HttpContext.Request.Path;
+                        Microsoft.Extensions.Primitives.StringValues accessToken = context.Request.Query["access_token"];
+                        PathString path = context.HttpContext.Request.Path;
 
                         if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
                         {
@@ -138,7 +138,7 @@ public static class DependencyInjection
         services
             .AddControllers(options =>
             {
-                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                AuthorizationPolicy policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
             })
             .AddNewtonsoftJson(opt =>
@@ -180,7 +180,7 @@ public static class DependencyInjection
         services.AddSignalR();
 
         services.AddScoped<IAuthService, AuthService>();
-        
+
     }
 
     private static string[] Origins()

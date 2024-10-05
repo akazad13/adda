@@ -1,8 +1,7 @@
-namespace EasyConnect.API.Dtos
+namespace EasyConnect.API.Dtos;
+
+public class UserForLoginDto
 {
-    public class UserForLoginDto
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-    }
+    public string Username { get; set; }
+    public string Password { get; set; }
 }
