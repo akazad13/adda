@@ -9,7 +9,7 @@ using EasyConnect.API.Helpers;
 using EasyConnect.API.Models;
 using EasyConnect.API.Security.CurrentUserProvider;
 using EasyConnect.API.Security.TokenGenerator;
-using EasyConnect.API.Services;
+using EasyConnect.API.Services.AuthService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;

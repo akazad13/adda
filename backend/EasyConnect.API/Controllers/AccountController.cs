@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EasyConnect.API.Dtos;
 using EasyConnect.API.Models;
-using EasyConnect.API.Services;
+using EasyConnect.API.Services.AuthService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace EasyConnect.API.Controllers;
 
 [ApiController]
-[Route("api/auth")]
+[Route("api/account")]
 [AllowAnonymous]
-public class AuthController(
+public class AccountController(
     IMapper mapper,
     UserManager<User> userManager,
     IAuthService authService
@@ -41,16 +41,5 @@ public class AuthController(
         }
 
         return BadRequest(result.Errors);
-    }
-
-    [HttpPost("login")]
-    public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
-    {
-        var result = await _authService.LoginAsync(userForLoginDto);
-
-        if(!result.IsError)
-            return Ok(result.Value);
-
-        return Unauthorized();
     }
 }

@@ -7,7 +7,7 @@ using ErrorOr;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace EasyConnect.API.Services;
+namespace EasyConnect.API.Services.AuthService;
 
 public class AuthService(IJwtTokenGenerator jwtTokenGenerator, UserManager<User> userManager,
     SignInManager<User> signInManager) : IAuthService

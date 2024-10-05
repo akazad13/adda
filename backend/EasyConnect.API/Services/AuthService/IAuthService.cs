@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using EasyConnect.API.Dtos;
 using ErrorOr;
 
-namespace EasyConnect.API.Services;
+namespace EasyConnect.API.Services.AuthService;
 
 public interface IAuthService
 {
