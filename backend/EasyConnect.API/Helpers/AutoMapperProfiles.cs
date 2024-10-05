@@ -1,7 +1,7 @@
-using AutoMapper;
-using EasyConnect.API.Models;
-using EasyConnect.API.Dtos;
 using System.Linq;
+using AutoMapper;
+using EasyConnect.API.Dtos;
+using EasyConnect.API.Models;
 
 namespace EasyConnect.API.Helpers;
 

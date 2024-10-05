@@ -1,12 +1,12 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Threading.Tasks;
+using AutoMapper;
 using EasyConnect.API.Data;
 using EasyConnect.API.Dtos;
 using EasyConnect.API.Models;
 using EasyConnect.API.Security.CurrentUserProvider;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using System;
-using System.Threading.Tasks;
 
 namespace EasyConnect.API.Hubs;
 [Authorize]
@@ -101,7 +101,7 @@ public class ChatHub(
             }
 
             _repo.UpdateRange(unreadMessages);
-           await _repo.SaveAll();
+            await _repo.SaveAll();
         }
     }
 

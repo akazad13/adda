@@ -31,7 +31,7 @@ public class UsersController(
     {
         ErrorOr.ErrorOr<User> user = await _userService.RegistrationAsync(userForRegisterDto);
 
-        if(!user.IsError)
+        if (!user.IsError)
         {
             UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
             return CreatedAtRoute(
@@ -117,7 +117,7 @@ public class UsersController(
             return NotFound();
         }
 
-        var newBookmark = new Bookmark { BookmarkerId = id, BookmarkedId= recipientId };
+        var newBookmark = new Bookmark { BookmarkerId = id, BookmarkedId = recipientId };
 
         _repo.Add<Bookmark>(newBookmark);
 

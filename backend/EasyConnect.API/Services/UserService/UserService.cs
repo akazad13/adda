@@ -15,7 +15,8 @@ public class UserService(IMapper mapper, UserManager<User> userManager) : IUserS
 
     public async Task<ErrorOr<User>> RegistrationAsync(UserForRegisterDto request)
     {
-        try {
+        try
+        {
 
             User userToCreate = _mapper.Map<User>(request);
 
@@ -28,8 +29,9 @@ public class UserService(IMapper mapper, UserManager<User> userManager) : IUserS
             }
             return Error.Failure(description: "Couldn't create user!");
         }
-        catch(Exception e) {
-             return Error.Failure(description: e.Message);
+        catch (Exception e)
+        {
+            return Error.Failure(description: e.Message);
         }
     }
- }
+}

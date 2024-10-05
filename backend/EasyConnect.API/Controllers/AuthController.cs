@@ -20,7 +20,7 @@ public class AuthController(
     {
         ErrorOr.ErrorOr<AuthResponse> result = await _authService.LoginAsync(userForLoginDto);
 
-        if(!result.IsError)
+        if (!result.IsError)
         {
             return Ok(result.Value);
         }

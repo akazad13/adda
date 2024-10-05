@@ -10,103 +10,103 @@ using Microsoft.AspNetCore.Mvc;
 namespace EasyConnect.API.Controllers;
 
 [ServiceFilter(typeof(LogUserActivity))]
-    [ApiController]
-    [Route("api/users/{userId}/messages")]
-    public class MessagesController(IMemberRepository repo, IMapper mapper) : ControllerBase
-    {
-        private readonly IMapper _mapper = mapper;
-        public IMemberRepository _repo { get; set; } = repo;
+[ApiController]
+[Route("api/users/{userId}/messages")]
+public class MessagesController(IMemberRepository repo, IMapper mapper) : ControllerBase
+{
+    private readonly IMapper _mapper = mapper;
+    public IMemberRepository _repo { get; set; } = repo;
 
-        [HttpGet("{id}", Name = "GetMessage")]
-        public async Task<IActionResult> GetMessage(int userId, int id)
+    [HttpGet("{id}", Name = "GetMessage")]
+    public async Task<IActionResult> GetMessage(int userId, int id)
+    {
+        if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-            {
-                return Unauthorized();
-            }
+            return Unauthorized();
+        }
 
         Models.Message messageFromRepo = await _repo.GetMessage(id);
 
-            if (messageFromRepo == null)
-            {
-                return NoContent();
-            }
-
-            return Ok(messageFromRepo);
+        if (messageFromRepo == null)
+        {
+            return NoContent();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetMessagesForUser(
-            int userId,
-            [FromQuery] MessageParams messageParams
-        )
-        {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-            {
-                return Unauthorized();
-            }
+        return Ok(messageFromRepo);
+    }
 
-            messageParams.UserId = userId;
+    [HttpGet]
+    public async Task<IActionResult> GetMessagesForUser(
+        int userId,
+        [FromQuery] MessageParams messageParams
+    )
+    {
+        if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+        {
+            return Unauthorized();
+        }
+
+        messageParams.UserId = userId;
 
         PageList<Models.Message> messagesFromRepo = await _repo.GetMessagesForUser(messageParams);
         IEnumerable<MessageToReturnDto> messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
-            Response.AddPagination(
-                messagesFromRepo.CurrrentPage,
-                messagesFromRepo.PageSize,
-                messagesFromRepo.TotalCount,
-                messagesFromRepo.TotalPages
-            );
-            return Ok(messages);
-        }
+        Response.AddPagination(
+            messagesFromRepo.CurrrentPage,
+            messagesFromRepo.PageSize,
+            messagesFromRepo.TotalCount,
+            messagesFromRepo.TotalPages
+        );
+        return Ok(messages);
+    }
 
-        [HttpGet("thread/{recipientId}")]
-        public async Task<IActionResult> GetMessageThread(int userId, int recipientId)
+    [HttpGet("thread/{recipientId}")]
+    public async Task<IActionResult> GetMessageThread(int userId, int recipientId)
+    {
+        if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-            {
-                return Unauthorized();
-            }
+            return Unauthorized();
+        }
 
         IEnumerable<Models.Message> messagesFromRepo = await _repo.GetMessageThread(userId, recipientId);
         IEnumerable<MessageToReturnDto> messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
 
-            return Ok(messages);
-        }
+        return Ok(messages);
+    }
 
-        [HttpPost("{id}")]
-        public async Task<IActionResult> DeleteMessage(int userId, int id)
+    [HttpPost("{id}")]
+    public async Task<IActionResult> DeleteMessage(int userId, int id)
+    {
+        if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-            {
-                return Unauthorized();
-            }
+            return Unauthorized();
+        }
 
         Models.Message messageFromRepo = await _repo.GetMessage(id);
 
-            if (messageFromRepo == null)
-            {
-                return BadRequest("Could not find user");
-            }
-
-            if (messageFromRepo.SenderId == userId)
-            {
-                messageFromRepo.SenderDeleted = true;
-            }
-            if (messageFromRepo.RecipientId == userId)
-            {
-                messageFromRepo.RecipientDeleted = true;
-            }
-
-            if (messageFromRepo.SenderDeleted && messageFromRepo.RecipientDeleted)
-            {
-                _repo.Delete(messageFromRepo);
-            }
-
-            if (await _repo.SaveAll())
-            {
-                return NoContent();
-            }
-
-            return BadRequest("Error deleting the message");
+        if (messageFromRepo == null)
+        {
+            return BadRequest("Could not find user");
         }
+
+        if (messageFromRepo.SenderId == userId)
+        {
+            messageFromRepo.SenderDeleted = true;
+        }
+        if (messageFromRepo.RecipientId == userId)
+        {
+            messageFromRepo.RecipientDeleted = true;
+        }
+
+        if (messageFromRepo.SenderDeleted && messageFromRepo.RecipientDeleted)
+        {
+            _repo.Delete(messageFromRepo);
+        }
+
+        if (await _repo.SaveAll())
+        {
+            return NoContent();
+        }
+
+        return BadRequest("Error deleting the message");
     }
+}

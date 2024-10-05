@@ -153,28 +153,21 @@ public class MemberRepository(DataContext context) : IMemberRepository
             .ThenInclude(p => p.Photos)
             .AsQueryable();
 
-        switch (messageParams.MessageContainer)
+        messages = messageParams.MessageContainer switch
         {
-            case "Inbox":
-                messages = messages.Where(
-                    m => m.RecipientId == messageParams.UserId && !m.RecipientDeleted
-                );
-                break;
-            case "Outbox":
-                messages = messages.Where(
-                    m => m.SenderId == messageParams.UserId && !m.SenderDeleted
-                );
-                break;
-            default:
-                messages = messages.Where(
-                    m =>
-                        m.RecipientId == messageParams.UserId
-                        && !m.IsRead
-                        && !m.RecipientDeleted
-                );
-                break;
-        }
-
+            "Inbox" => messages.Where(
+                                m => m.RecipientId == messageParams.UserId && !m.RecipientDeleted
+                            ),
+            "Outbox" => messages.Where(
+                                m => m.SenderId == messageParams.UserId && !m.SenderDeleted
+                            ),
+            _ => messages.Where(
+                                m =>
+                                    m.RecipientId == messageParams.UserId
+                                    && !m.IsRead
+                                    && !m.RecipientDeleted
+                            ),
+        };
         messages = messages.OrderByDescending(m => m.MessageSent);
 
         return await PageList<Message>.CreateAsync(
