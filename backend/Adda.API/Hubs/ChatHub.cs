@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Adda.API.Data;
 using Adda.API.Dtos;
 using Adda.API.Models;
+using Adda.API.Repositories.MessageRepository;
 using Adda.API.Security.CurrentUserProvider;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -12,12 +12,12 @@ namespace Adda.API.Hubs;
 [Authorize]
 public class ChatHub(
     ICurrentUserProvider currentUser,
-     IMemberRepository repo,
+    IMessageRepository messageRepository,
     IMapper mapper
     ) : Hub
 {
     private readonly ICurrentUserProvider _currentUser = currentUser;
-    private readonly IMemberRepository _repo = repo;
+    private readonly IMessageRepository _messageRepository = messageRepository;
     private readonly IMapper _mapper = mapper;
 
     public override async Task OnConnectedAsync()
@@ -48,9 +48,9 @@ public class ChatHub(
 
             Message message = _mapper.Map<Message>(createMessage);
             message.MessageSent = DateTime.Now;
-            await _repo.AddAsync(message);
+            await _messageRepository.AddAsync(message);
 
-            if (await _repo.SaveAllAsync())
+            if (await _messageRepository.SaveAllAsync())
             {
                 MessageToReturnDto messageToReturn = _mapper.Map<MessageToReturnDto>(message);
                 await Clients.Group($"{userId}").SendAsync("NewMessage", messageToReturn);
@@ -88,7 +88,7 @@ public class ChatHub(
 
     private async Task makeReadAsync(long senderId, long receiverId)
     {
-        System.Collections.Generic.List<Message> unreadMessages = await _repo.GetWhereAsync(
+        System.Collections.Generic.List<Message> unreadMessages = await _messageRepository.GetWhereAsync(
             x =>
                 x.RecipientId == receiverId
                 && x.SenderId == senderId
@@ -100,8 +100,8 @@ public class ChatHub(
                 unreadMessages[i].IsRead = true;
             }
 
-            _repo.UpdateRange(unreadMessages);
-            await _repo.SaveAllAsync();
+            _messageRepository.UpdateRange(unreadMessages);
+            await _messageRepository.SaveAllAsync();
         }
     }
 

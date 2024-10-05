@@ -1,9 +1,13 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Adda.API.Data;
 using Adda.API.Dtos;
 using Adda.API.ExternalServices.Cloudinary;
 using Adda.API.Models;
+using Adda.API.Services.PhotoService;
+using Adda.API.Services.UserService;
+using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,20 +16,18 @@ namespace Adda.API.Controllers;
 [ApiController]
 [Route("api/admin")]
 public class AdminController(
-    IAdminRepository repo,
-    UserManager<User> userManager,
-    ICloudinaryService cloudinaryService
-        ) : ControllerBase
+    IUserService userService,
+    IPhotoService photoService
+) : ControllerBase
 {
-    private readonly IAdminRepository _repo = repo;
-    private readonly UserManager<User> _userManager = userManager;
-    private readonly ICloudinaryService _cloudinaryService = cloudinaryService;
+    private readonly IUserService _userService = userService;
+    private readonly IPhotoService _photoService = photoService;
 
     [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("usersWithRoles")]
     public async Task<IActionResult> GetUsersWithRolesAsync()
     {
-        System.Collections.Generic.IEnumerable<object> userList = await _repo.GetUsersWithRolesAsync();
+        IEnumerable<object> userList = await _userService.GetUsersWithRolesAsync();
         return Ok(userList);
     }
 
@@ -33,7 +35,7 @@ public class AdminController(
     [HttpGet("photosForModeration")]
     public async Task<IActionResult> GetPhotosForModerationAsync()
     {
-        System.Collections.Generic.IEnumerable<object> photos = await _repo.GetAllPhotosAsync();
+        IEnumerable<object> photos = await _photoService.GetAllPhotosAsync();
         return Ok(photos);
     }
 
@@ -41,11 +43,9 @@ public class AdminController(
     [HttpPut("photo/{photoId}")]
     public async Task<IActionResult> ApprovePhotoAsync(int photoId)
     {
-        Photo photo = await _repo.GetPhotoAsync(photoId);
+        ErrorOr<Success> result = await _photoService.ApprovePhotoAsync(photoId);
 
-        photo.IsApproved = true;
-
-        if (await _repo.SaveAllAsync())
+        if (!result.IsError)
         {
             return NoContent();
         }
@@ -56,29 +56,9 @@ public class AdminController(
     [HttpDelete("photo/{photoId}")]
     public async Task<IActionResult> DeletePhotoAsync(int photoId)
     {
-        Photo photo = await _repo.GetPhotoAsync(photoId);
+        ErrorOr<Success> result = await _photoService.DeleteAsync(photoId);
 
-        if (photo.IsMain)
-        {
-            return BadRequest("You cannot delete your main photo");
-        }
-
-        if (photo.PublicId != null)
-        {
-            ErrorOr.ErrorOr<ErrorOr.Success> result = await _cloudinaryService.DeletePhotoAsync(photo.PublicId);
-
-            if (!result.IsError)
-            {
-                _repo.Delete(photo);
-            }
-        }
-
-        if (photo.PublicId == null)
-        {
-            _repo.Delete(photo);
-        }
-
-        if (await _repo.SaveAllAsync())
+        if (!result.IsError)
         {
             return Ok();
         }
@@ -89,27 +69,13 @@ public class AdminController(
     [HttpPost("editRoles/{userName}")]
     public async Task<IActionResult> EditRolesAsync(string userName, RoleEditDto roleEditDto)
     {
-        User user = await _userManager.FindByNameAsync(userName);
+        ErrorOr<IList<string>> result = await _userService.EditRolesAsync(userName, roleEditDto);
 
-        System.Collections.Generic.IList<string> userRoles = await _userManager.GetRolesAsync(user);
-
-        string[] selectedRoles = roleEditDto.RoleName;
-
-        selectedRoles ??= [];
-        IdentityResult result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));
-
-        if (!result.Succeeded)
-        {
-            return BadRequest("Failed to add to roles");
-        }
-
-        result = await _userManager.RemoveFromRolesAsync(user, userRoles.Except(selectedRoles));
-
-        if (!result.Succeeded)
+        if (result.IsError)
         {
             return BadRequest("Failed to remove the roles");
         }
 
-        return Ok(await _userManager.GetRolesAsync(user));
+        return Ok(result.Value);
     }
 }

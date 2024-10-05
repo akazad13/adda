@@ -18,13 +18,13 @@ namespace Adda.API.Controllers;
 [Route("api/users")]
 public class UsersController(
     IMapper mapper,
-    IUserService userService,
-    ICurrentUserProvider currentUser
+    ICurrentUserProvider currentUser,
+    IUserService userService
 ) : ControllerBase
 {
     private readonly IMapper _mapper = mapper;
-    private readonly IUserService _userService = userService;
     private readonly ICurrentUserProvider _currentUser = currentUser;
+    private readonly IUserService _userService = userService;
 
     [HttpPost("register")]
     [AllowAnonymous]
@@ -51,18 +51,15 @@ public class UsersController(
 
     public async Task<IActionResult> GetAsync([FromQuery] UserParams userParams)
     {
-        ErrorOr<PageList<User>> users = await _userService.GetAsync(userParams);
-        if (users.IsError)
-        {
-            return BadRequest(users.Errors);
-        }
-        IEnumerable<UserForListDto> usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users.Value);
+        PageList<User> users = await _userService.GetAsync(userParams);
+
+        IEnumerable<UserForListDto> usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
 
         Response.AddPagination(
-            users.Value.CurrrentPage,
-            users.Value.PageSize,
-            users.Value.TotalCount,
-            users.Value.TotalPages
+            users.CurrrentPage,
+            users.PageSize,
+            users.TotalCount,
+            users.TotalPages
         );
 
         return Ok(usersToReturn);

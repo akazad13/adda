@@ -1,31 +1,33 @@
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using Adda.API.Data;
 using Adda.API.Dtos;
-using Adda.API.ExternalServices.Cloudinary;
 using Adda.API.Models;
+using Adda.API.Security.CurrentUserProvider;
+using Adda.API.Services.PhotoService;
 using AutoMapper;
+using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Adda.API.Controllers;
 
 [ApiController]
 [Route("api/users/{userId}/photos")]
-public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinaryService cloudinaryService) : ControllerBase
+public class PhotosController(IMapper mapper, ICurrentUserProvider currentUser, IPhotoService photoService) : ControllerBase
 {
-    private readonly IMemberRepository _repo = repo;
     private readonly IMapper _mapper = mapper;
-    private readonly ICloudinaryService _cloudinaryService = cloudinaryService;
+    private readonly ICurrentUserProvider _currentUser = currentUser;
+    private readonly IPhotoService _photoService = photoService;
 
     [HttpGet("{id}", Name = "GetPhoto")]
     public async Task<IActionResult> GetAsync(int id)
     {
-        Photo photoFromRepo = await _repo.GetPhotoAsync(id);
+        ErrorOr<Photo> result = await _photoService.GetAsync(id);
 
-        PhotoForReturnDto photo = _mapper.Map<PhotoForReturnDto>(photoFromRepo);
-
-        return Ok(photo);
+        if (!result.IsError)
+        {
+            PhotoForReturnDto photo = _mapper.Map<PhotoForReturnDto>(result.Value);
+            return Ok(photo);
+        }
+        return BadRequest("Failed to get photo details");
     }
 
     [HttpPost]
@@ -34,44 +36,19 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
         [FromForm] PhotoForCreationDto photoForCreationDto
     )
     {
-        if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+        if (userId != _currentUser.UserId)
         {
             return Unauthorized();
         }
 
-        User userFromRepo = await _repo.GetUserAsync(userId, true);
+        ErrorOr<Photo> result = await _photoService.AddAsync(userId, photoForCreationDto.File);
 
-        Microsoft.AspNetCore.Http.IFormFile file = photoForCreationDto.File;
-        if (file == null)
+        if (!result.IsError)
         {
-            return BadRequest("No file was uploaded");
-        }
-
-        ErrorOr.ErrorOr<PhotoUploadResult> res = await _cloudinaryService.UploadPhotoAsync(file);
-
-        if (res.IsError)
-        {
-            return BadRequest(res.FirstError.Description);
-        }
-
-        photoForCreationDto.Url = res.Value.Url.ToString();
-        photoForCreationDto.PublicId = res.Value.PublicId;
-
-        Photo photo = _mapper.Map<Photo>(photoForCreationDto);
-
-        if (!userFromRepo.Photos.Any(u => u.IsMain))
-        {
-            photo.IsMain = true;
-        }
-
-        userFromRepo.Photos.Add(photo);
-
-        if (await _repo.SaveAllAsync())
-        {
-            PhotoForReturnDto photoToReturn = _mapper.Map<PhotoForReturnDto>(photo);
+            PhotoForReturnDto photoToReturn = _mapper.Map<PhotoForReturnDto>(result.Value);
             return CreatedAtRoute(
                 "GetPhoto",
-                new { userId, id = photo.Id },
+                new { userId, id = result.Value.Id },
                 photoToReturn
             );
         }
@@ -82,31 +59,14 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
     [HttpPost("{id}/setMain")]
     public async Task<IActionResult> SetMainPhotoAsync(int userId, int id)
     {
-        if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+        if (userId != _currentUser.UserId)
         {
             return Unauthorized();
         }
 
-        User user = await _repo.GetUserAsync(userId, true);
+        ErrorOr<Success> result = await _photoService.SetMainPhotoAsync(userId, id);
 
-        if (!user.Photos.Any(p => p.Id == id))
-        {
-            return Unauthorized();
-        }
-
-        Photo photoFromRepo = await _repo.GetPhotoAsync(id);
-
-        if (photoFromRepo.IsMain)
-        {
-            return BadRequest("This is already the main photo");
-        }
-
-        Photo currentMainPhoto = await _repo.GetMainPhotoForUserAsync(userId);
-        currentMainPhoto.IsMain = false;
-
-        photoFromRepo.IsMain = true;
-
-        if (await _repo.SaveAllAsync())
+        if (!result.IsError)
         {
             return NoContent();
         }
@@ -116,41 +76,14 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(int userId, int id)
     {
-        if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+        if (userId != _currentUser.UserId)
         {
             return Unauthorized();
         }
 
-        User user = await _repo.GetUserAsync(userId, true);
+        ErrorOr<Success> result = await _photoService.DeleteAsync(userId, id);
 
-        if (!user.Photos.Any(p => p.Id == id))
-        {
-            return Unauthorized();
-        }
-
-        Photo photoFromRepo = await _repo.GetPhotoAsync(id);
-
-        if (photoFromRepo.IsMain)
-        {
-            return BadRequest("You cannot delete your main photo");
-        }
-
-        if (photoFromRepo.PublicId != null)
-        {
-            ErrorOr.ErrorOr<ErrorOr.Success> res = await _cloudinaryService.DeletePhotoAsync(photoFromRepo.PublicId);
-
-            if (res.IsError)
-            {
-                _repo.Delete(photoFromRepo);
-            }
-        }
-
-        if (photoFromRepo.PublicId == null)
-        {
-            _repo.Delete(photoFromRepo);
-        }
-
-        if (await _repo.SaveAllAsync())
+        if (!result.IsError)
         {
             return Ok();
         }

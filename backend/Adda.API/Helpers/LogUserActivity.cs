@@ -1,7 +1,7 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Adda.API.Data;
+using Adda.API.Repositories.UserRepository;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,9 +19,9 @@ public class LogUserActivity : IAsyncActionFilter
         int userId = int.Parse(
             resultContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value
         );
-        IMemberRepository repo =
-            resultContext.HttpContext.RequestServices.GetService<IMemberRepository>();
-        Models.User user = await repo.GetUserAsync(userId, true);
+        IUserRepository repo =
+            resultContext.HttpContext.RequestServices.GetService<IUserRepository>();
+        Models.User user = await repo.GetAsync(userId, true);
         user.LastActive = DateTime.Now;
         await repo.SaveAllAsync();
     }

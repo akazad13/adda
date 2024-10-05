@@ -1,5 +1,3 @@
-using System;
-
 namespace Adda.API.Dtos;
 
 public class MessageForCreationDto
