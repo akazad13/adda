@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -7,9 +6,8 @@ using EasyConnect.API.Data;
 using EasyConnect.API.Dtos;
 using EasyConnect.API.Helpers;
 using EasyConnect.API.Models;
-using EasyConnect.API.Services.AuthService;
+using EasyConnect.API.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -18,40 +16,31 @@ namespace EasyConnect.API.Controllers;
 [ServiceFilter(typeof(LogUserActivity))]
 [ApiController]
 [Route("api/users")]
-public class UsersController(IMemberRepository repo, IMapper mapper, UserManager<User> userManager,
-
-    IAuthService authService) : ControllerBase
+public class UsersController(
+    IMemberRepository repo,
+    IMapper mapper,
+    IUserService userService) : ControllerBase
 {
     private readonly IMemberRepository _repo = repo;
     private readonly IMapper _mapper = mapper;
-    private readonly UserManager<User> _userManager = userManager;
-    private readonly IAuthService _authService = authService;
+    private readonly IUserService _userService = userService;
 
     [HttpPost("register")]
     [AllowAnonymous]
-    public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
+    public async Task<IActionResult> RegisterAsync(UserForRegisterDto userForRegisterDto)
     {
-        try {
+        ErrorOr.ErrorOr<User> user = await _userService.RegistrationAsync(userForRegisterDto);
 
-        User userToCreate = _mapper.Map<User>(userForRegisterDto);
-
-        IdentityResult result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
-
-        UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
-
-        if (result.Succeeded)
+        if(!user.IsError)
         {
+            UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
             return CreatedAtRoute(
                 "GetUser",
-                new { Controller = "Users", id = userToCreate.Id },
+                new { Controller = "Users", id = userToReturn.Id },
                 userToReturn
             ); // temp
         }
-            return BadRequest(result.Errors);
-        }
-        catch(Exception e) {
-             return BadRequest(e.InnerException);
-        }
+        return BadRequest(user.Errors);
     }
 
     [HttpGet]

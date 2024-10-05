@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyConnect.API.Dtos;
@@ -17,6 +18,8 @@ public class AuthService(IJwtTokenGenerator jwtTokenGenerator, UserManager<User>
     private readonly UserManager<User> _userManager = userManager;
     public async Task<ErrorOr<AuthResponse>> LoginAsync(UserForLoginDto request)
     {
+        try {
+
         User user = await _userManager.Users
             .Include(p => p.Photos)
             .SingleOrDefaultAsync(
@@ -46,6 +49,11 @@ public class AuthService(IJwtTokenGenerator jwtTokenGenerator, UserManager<User>
         else
         {
             return Error.Validation(description: "Invalid username or password!");
+        }
+        }
+        catch (Exception ex)
+        {
+            return Error.Validation(description: ex.Message);
         }
     }
 
