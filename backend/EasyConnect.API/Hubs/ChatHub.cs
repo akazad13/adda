@@ -34,7 +34,7 @@ public class ChatHub(
         await base.OnDisconnectedAsync(exception);
     }
 
-    public async Task SendMessage(MessageForCreationDto createMessage)
+    public async Task SendMessageAsync(MessageForCreationDto createMessage)
     {
         try
         {
@@ -50,7 +50,7 @@ public class ChatHub(
             message.MessageSent = DateTime.Now;
             _repo.Add(message);
 
-            if (await _repo.SaveAll())
+            if (await _repo.SaveAllAsync())
             {
                 MessageToReturnDto messageToReturn = _mapper.Map<MessageToReturnDto>(message);
                 await Clients.Group($"{userId}").SendAsync("NewMessage", messageToReturn);
@@ -59,7 +59,7 @@ public class ChatHub(
                     .SendAsync("NewMessage", messageToReturn);
             }
 
-            await MakeRead(createMessage.RecipientId, userId);
+            await makeReadAsync(createMessage.RecipientId, userId);
         }
         catch (Exception exception)
         {
@@ -67,7 +67,7 @@ public class ChatHub(
         }
     }
 
-    public async Task ReadThreadMessage(ReadMessageThread data)
+    public async Task ReadThreadMessageAsync(ReadMessageThread data)
     {
         try
         {
@@ -76,7 +76,7 @@ public class ChatHub(
             {
                 return;
             }
-            await MakeRead(data.RecipientId, userId);
+            await makeReadAsync(data.RecipientId, userId);
         }
         catch (Exception exception)
         {
@@ -86,9 +86,9 @@ public class ChatHub(
 
     #region Private Methods
 
-    private async Task MakeRead(long senderId, long receiverId)
+    private async Task makeReadAsync(long senderId, long receiverId)
     {
-        System.Collections.Generic.List<Message> unreadMessages = await _repo.GetWhere(
+        System.Collections.Generic.List<Message> unreadMessages = await _repo.GetWhereAsync(
             x =>
                 x.RecipientId == receiverId
                 && x.SenderId == senderId
@@ -101,7 +101,7 @@ public class ChatHub(
             }
 
             _repo.UpdateRange(unreadMessages);
-            await _repo.SaveAll();
+            await _repo.SaveAllAsync();
         }
     }
 

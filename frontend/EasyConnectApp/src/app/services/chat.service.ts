@@ -41,7 +41,7 @@ export class ChatService {
 
   async sendMessage(serderId: number, recipientId: number, content: string) {
     return this.hubConnection
-      .invoke('SendMessage', {
+      .invoke('SendMessageAsync', {
         SenderId: serderId,
         RecipientId: recipientId,
         Content: content,
@@ -49,6 +49,6 @@ export class ChatService {
       .catch((error) => console.log(error));
   }
   async readThreadMessage(recipientId: number) {
-    return this.hubConnection.invoke('ReadThreadMessage', { RecipientId: +recipientId }).catch((error) => console.log(error));
+    return this.hubConnection.invoke('ReadThreadMessageAsync', { RecipientId: +recipientId }).catch((error) => console.log(error));
   }
 }

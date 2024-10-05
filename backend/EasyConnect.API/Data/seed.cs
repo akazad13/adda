@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyConnect.API.Models;
+using EasyConnect.API.Security.Roles;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -33,7 +34,7 @@ public class Seed(
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while initialising the database.");
+            _logger.DatabaseInitializationError(ex);
             throw;
         }
     }
@@ -46,7 +47,7 @@ public class Seed(
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while seeding the database.");
+            _logger.DatabaseSeedingError(ex);
             throw;
         }
     }
@@ -55,37 +56,38 @@ public class Seed(
     {
         if (!await _userManager.Users.AnyAsync())
         {
-            string userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
+            string userData = await System.IO.File.ReadAllTextAsync("Data/UserSeedData.json");
             List<User> users = JsonConvert.DeserializeObject<List<User>>(userData);
 
             // create some roles
 
             var roles = new List<Role>
             {
-                new() { Name = "Member" },
-                new() { Name = "Admin" },
-                new() { Name = "Moderator" }
+                new() { Name = RoleOption.Member },
+                new() { Name = RoleOption.Admin },
+                new() { Name = RoleOption.Moderator }
             };
 
             foreach (Role role in roles)
             {
-                await _roleManager.CreateAsync(role);
+                _ = await _roleManager.CreateAsync(role);
             }
 
             foreach (User user in users)
             {
-                if (user.Photos.Any())
+                if (user.Photos.Count != 0)
                 {
                     user.Photos.First().IsApproved = true;
                 }
-                await _userManager.CreateAsync(user, "password");
-                await _userManager.AddToRoleAsync(user, "Member");
+                _ = await _userManager.CreateAsync(user, "password");
+                _ = await _userManager.AddToRoleAsync(user, RoleOption.Member);
             }
 
             // create admin user
+            const string adminUsername = "Admin";
             var adminUser = new User
             {
-                UserName = "Admin",
+                UserName = adminUsername,
                 Email = "admin@gmail.com",
                 Gender = "male",
                 KnownAs = "Admin"
@@ -94,8 +96,8 @@ public class Seed(
             IdentityResult result = await _userManager.CreateAsync(adminUser, "password");
             if (result.Succeeded)
             {
-                User admin = await _userManager.FindByNameAsync("Admin");
-                await _userManager.AddToRolesAsync(admin, new[] { "Admin", "Moderator" });
+                User admin = await _userManager.FindByNameAsync(adminUsername);
+                _ = await _userManager.AddToRolesAsync(admin, new[] { RoleOption.Admin, RoleOption.Moderator });
             }
         }
     }
