@@ -23,29 +23,29 @@ public class AdminController(
 
     [Authorize(Policy = "RequireAdminRole")]
     [HttpGet("usersWithRoles")]
-    public async Task<IActionResult> GetUsersWithRoles()
+    public async Task<IActionResult> GetUsersWithRolesAsync()
     {
-        System.Collections.Generic.IEnumerable<object> userList = await _repo.GetUsersWithRoles();
+        System.Collections.Generic.IEnumerable<object> userList = await _repo.GetUsersWithRolesAsync();
         return Ok(userList);
     }
 
     [Authorize(Policy = "ModeratePhotoRole")]
     [HttpGet("photosForModeration")]
-    public async Task<IActionResult> GetPhotosForModeration()
+    public async Task<IActionResult> GetPhotosForModerationAsync()
     {
-        System.Collections.Generic.IEnumerable<object> photos = await _repo.GetAllPhotos();
+        System.Collections.Generic.IEnumerable<object> photos = await _repo.GetAllPhotosAsync();
         return Ok(photos);
     }
 
     [Authorize(Policy = "ModeratePhotoRole")]
     [HttpPut("photo/{photoId}")]
-    public async Task<IActionResult> ApprovePhoto(int photoId)
+    public async Task<IActionResult> ApprovePhotoAsync(int photoId)
     {
-        Photo photo = await _repo.GetPhoto(photoId);
+        Photo photo = await _repo.GetPhotoAsync(photoId);
 
         photo.IsApproved = true;
 
-        if (await _repo.SaveAll())
+        if (await _repo.SaveAllAsync())
         {
             return NoContent();
         }
@@ -54,9 +54,9 @@ public class AdminController(
 
     [Authorize(Policy = "ModeratePhotoRole")]
     [HttpDelete("photo/{photoId}")]
-    public async Task<IActionResult> DeletePhoto(int photoId)
+    public async Task<IActionResult> DeletePhotoAsync(int photoId)
     {
-        Photo photo = await _repo.GetPhoto(photoId);
+        Photo photo = await _repo.GetPhotoAsync(photoId);
 
         if (photo.IsMain)
         {
@@ -78,7 +78,7 @@ public class AdminController(
             _repo.Delete(photo);
         }
 
-        if (await _repo.SaveAll())
+        if (await _repo.SaveAllAsync())
         {
             return Ok();
         }
@@ -87,7 +87,7 @@ public class AdminController(
 
     [Authorize(Policy = "RequireAdminRole")]
     [HttpPost("editRoles/{userName}")]
-    public async Task<IActionResult> EditRoles(string userName, RoleEditDto roleEditDto)
+    public async Task<IActionResult> EditRolesAsync(string userName, RoleEditDto roleEditDto)
     {
         User user = await _userManager.FindByNameAsync(userName);
 

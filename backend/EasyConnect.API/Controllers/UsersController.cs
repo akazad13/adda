@@ -48,12 +48,12 @@ public class UsersController(
     [SwaggerResponse(400)]
     [SwaggerResponse(500)]
 
-    public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
+    public async Task<IActionResult> GetAsync([FromQuery] UserParams userParams)
     {
         int currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         userParams.UserId = currentUserId;
 
-        PageList<User> users = await _repo.GetUsers(userParams);
+        PageList<User> users = await _repo.GetUsersAsync(userParams);
 
         IEnumerable<UserForListDto> usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
 
@@ -68,10 +68,10 @@ public class UsersController(
     }
 
     [HttpGet("{id}", Name = "GetUser")]
-    public async Task<IActionResult> GetUser(int id)
+    public async Task<IActionResult> GetAsync(int id)
     {
         bool isCurrentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) == id;
-        User user = await _repo.GetUser(id, isCurrentUser);
+        User user = await _repo.GetUserAsync(id, isCurrentUser);
 
         UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
@@ -79,18 +79,18 @@ public class UsersController(
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
+    public async Task<IActionResult> UpdateAsync(int id, UserForUpdateDto userForUpdateDto)
     {
         if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
         {
             return Unauthorized();
         }
 
-        User userFromRepo = await _repo.GetUser(id, true);
+        User userFromRepo = await _repo.GetUserAsync(id, true);
 
         _mapper.Map(userForUpdateDto, userFromRepo); // (from, to)
 
-        if (await _repo.SaveAll())
+        if (await _repo.SaveAllAsync())
         {
             return NoContent();
         }
@@ -98,21 +98,21 @@ public class UsersController(
     }
 
     [HttpPost("{id}/bookmark/{recipientId}")]
-    public async Task<IActionResult> BookmakUser(int id, int recipientId)
+    public async Task<IActionResult> BookmakAsync(int id, int recipientId)
     {
         if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
         {
             return Unauthorized();
         }
 
-        Bookmark bookmark = await _repo.GetBookmark(id, recipientId);
+        Bookmark bookmark = await _repo.GetBookmarkAsync(id, recipientId);
 
         if (bookmark != null)
         {
             return BadRequest("You already bookmark this user.");
         }
 
-        if (await _repo.GetUser(recipientId, false) == null)
+        if (await _repo.GetUserAsync(recipientId, false) == null)
         {
             return NotFound();
         }
@@ -121,7 +121,7 @@ public class UsersController(
 
         _repo.Add<Bookmark>(newBookmark);
 
-        if (await _repo.SaveAll())
+        if (await _repo.SaveAllAsync())
         {
             return Ok();
         }

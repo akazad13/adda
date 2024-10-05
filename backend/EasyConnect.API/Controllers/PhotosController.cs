@@ -19,9 +19,9 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
     private readonly ICloudinaryService _cloudinaryService = cloudinaryService;
 
     [HttpGet("{id}", Name = "GetPhoto")]
-    public async Task<IActionResult> GetPhoto(int id)
+    public async Task<IActionResult> GetAsync(int id)
     {
-        Photo photoFromRepo = await _repo.GetPhoto(id);
+        Photo photoFromRepo = await _repo.GetPhotoAsync(id);
 
         PhotoForReturnDto photo = _mapper.Map<PhotoForReturnDto>(photoFromRepo);
 
@@ -29,7 +29,7 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPhotoForUser(
+    public async Task<IActionResult> AddPhotoForUserAsync(
         int userId,
         [FromForm] PhotoForCreationDto photoForCreationDto
     )
@@ -39,7 +39,7 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
             return Unauthorized();
         }
 
-        User userFromRepo = await _repo.GetUser(userId, true);
+        User userFromRepo = await _repo.GetUserAsync(userId, true);
 
         Microsoft.AspNetCore.Http.IFormFile file = photoForCreationDto.File;
         if (file == null)
@@ -66,7 +66,7 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
 
         userFromRepo.Photos.Add(photo);
 
-        if (await _repo.SaveAll())
+        if (await _repo.SaveAllAsync())
         {
             PhotoForReturnDto photoToReturn = _mapper.Map<PhotoForReturnDto>(photo);
             return CreatedAtRoute(
@@ -80,33 +80,33 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
     }
 
     [HttpPost("{id}/setMain")]
-    public async Task<IActionResult> SetMainPhoto(int userId, int id)
+    public async Task<IActionResult> SetMainPhotoAsync(int userId, int id)
     {
         if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
         {
             return Unauthorized();
         }
 
-        User user = await _repo.GetUser(userId, true);
+        User user = await _repo.GetUserAsync(userId, true);
 
         if (!user.Photos.Any(p => p.Id == id))
         {
             return Unauthorized();
         }
 
-        Photo photoFromRepo = await _repo.GetPhoto(id);
+        Photo photoFromRepo = await _repo.GetPhotoAsync(id);
 
         if (photoFromRepo.IsMain)
         {
             return BadRequest("This is already the main photo");
         }
 
-        Photo currentMainPhoto = await _repo.GetMainPhotoForUser(userId);
+        Photo currentMainPhoto = await _repo.GetMainPhotoForUserAsync(userId);
         currentMainPhoto.IsMain = false;
 
         photoFromRepo.IsMain = true;
 
-        if (await _repo.SaveAll())
+        if (await _repo.SaveAllAsync())
         {
             return NoContent();
         }
@@ -114,21 +114,21 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletePhoto(int userId, int id)
+    public async Task<IActionResult> DeleteAsync(int userId, int id)
     {
         if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
         {
             return Unauthorized();
         }
 
-        User user = await _repo.GetUser(userId, true);
+        User user = await _repo.GetUserAsync(userId, true);
 
         if (!user.Photos.Any(p => p.Id == id))
         {
             return Unauthorized();
         }
 
-        Photo photoFromRepo = await _repo.GetPhoto(id);
+        Photo photoFromRepo = await _repo.GetPhotoAsync(id);
 
         if (photoFromRepo.IsMain)
         {
@@ -150,7 +150,7 @@ public class PhotosController(IMemberRepository repo, IMapper mapper, ICloudinar
             _repo.Delete(photoFromRepo);
         }
 
-        if (await _repo.SaveAll())
+        if (await _repo.SaveAllAsync())
         {
             return Ok();
         }

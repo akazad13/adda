@@ -21,8 +21,8 @@ public class LogUserActivity : IAsyncActionFilter
         );
         IMemberRepository repo =
             resultContext.HttpContext.RequestServices.GetService<IMemberRepository>();
-        Models.User user = await repo.GetUser(userId, true);
+        Models.User user = await repo.GetUserAsync(userId, true);
         user.LastActive = DateTime.Now;
-        await repo.SaveAll();
+        await repo.SaveAllAsync();
     }
 }

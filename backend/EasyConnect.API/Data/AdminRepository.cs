@@ -10,9 +10,7 @@ public class AdminRepository(DataContext context) : IAdminRepository
 {
     private readonly DataContext _context = context;
 
-    public async Task<IEnumerable<object>> GetAllPhotos()
-    {
-        return await _context.Photos
+    public async Task<IEnumerable<object>> GetAllPhotosAsync() => await _context.Photos
             .IgnoreQueryFilters()
             .Where(p => !p.IsApproved)
             .Select(
@@ -26,11 +24,8 @@ public class AdminRepository(DataContext context) : IAdminRepository
                     }
             )
             .ToListAsync();
-    }
 
-    public async Task<IEnumerable<object>> GetUsersWithRoles()
-    {
-        return await _context.Users
+    public async Task<IEnumerable<object>> GetUsersWithRolesAsync() => await _context.Users
             .OrderBy(x => x.UserName)
             .Select(
                 user =>
@@ -46,22 +41,12 @@ public class AdminRepository(DataContext context) : IAdminRepository
                     }
             )
             .ToListAsync();
-    }
 
-    public async Task<Photo> GetPhoto(int photoId)
-    {
-        return await _context.Photos
+    public async Task<Photo> GetPhotoAsync(int photoId) => await _context.Photos
             .IgnoreQueryFilters()
             .FirstOrDefaultAsync(p => p.Id == photoId);
-    }
 
-    public async Task<bool> SaveAll()
-    {
-        return await _context.SaveChangesAsync() > 0;
-    }
+    public async Task<bool> SaveAllAsync() => await _context.SaveChangesAsync() > 0;
 
-    public void Delete<T>(T entity) where T : class
-    {
-        _context.Remove(entity);
-    }
+    public void Delete<T>(T entity) where T : class => _context.Remove(entity);
 }

@@ -6,9 +6,9 @@ namespace EasyConnect.API.Data;
 
 public interface IAdminRepository
 {
-    Task<IEnumerable<object>> GetUsersWithRoles();
-    Task<IEnumerable<object>> GetAllPhotos();
-    Task<Photo> GetPhoto(int photoId);
-    Task<bool> SaveAll();
+    Task<IEnumerable<object>> GetUsersWithRolesAsync();
+    Task<IEnumerable<object>> GetAllPhotosAsync();
+    Task<Photo> GetPhotoAsync(int photoId);
+    Task<bool> SaveAllAsync();
     void Delete<T>(T entity) where T : class;
 }

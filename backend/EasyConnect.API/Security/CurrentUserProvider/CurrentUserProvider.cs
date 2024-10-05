@@ -12,10 +12,7 @@ public class CurrentUserProvider(IHttpContextAccessor httpContextAccessor) : ICu
     public string UserName => GetUserName();
 
 
-    private string UserRoleString()
-    {
-        return _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Role);
-    }
+    private string UserRoleString() => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Role);
 
     private int GetUserId()
     {
@@ -25,8 +22,5 @@ public class CurrentUserProvider(IHttpContextAccessor httpContextAccessor) : ICu
         );
         return userid;
     }
-    private string GetUserName()
-    {
-        return _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Name);
-    }
+    private string GetUserName() => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Name);
 }

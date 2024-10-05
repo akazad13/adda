@@ -183,8 +183,5 @@ public static class DependencyInjection
 
     }
 
-    private static string[] Origins()
-    {
-        return ["http://localhost:4200"];
-    }
+    private static string[] Origins() => ["http://localhost:4200"];
 }

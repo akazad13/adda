@@ -18,14 +18,14 @@ public class MessagesController(IMemberRepository repo, IMapper mapper) : Contro
     public IMemberRepository _repo { get; set; } = repo;
 
     [HttpGet("{id}", Name = "GetMessage")]
-    public async Task<IActionResult> GetMessage(int userId, int id)
+    public async Task<IActionResult> GetAsync(int userId, int id)
     {
         if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
         {
             return Unauthorized();
         }
 
-        Models.Message messageFromRepo = await _repo.GetMessage(id);
+        Models.Message messageFromRepo = await _repo.GetMessageAsync(id);
 
         if (messageFromRepo == null)
         {
@@ -36,7 +36,7 @@ public class MessagesController(IMemberRepository repo, IMapper mapper) : Contro
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetMessagesForUser(
+    public async Task<IActionResult> GetMessagesForUserAsync(
         int userId,
         [FromQuery] MessageParams messageParams
     )
@@ -48,7 +48,7 @@ public class MessagesController(IMemberRepository repo, IMapper mapper) : Contro
 
         messageParams.UserId = userId;
 
-        PageList<Models.Message> messagesFromRepo = await _repo.GetMessagesForUser(messageParams);
+        PageList<Models.Message> messagesFromRepo = await _repo.GetMessagesForUserAsync(messageParams);
         IEnumerable<MessageToReturnDto> messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
         Response.AddPagination(
             messagesFromRepo.CurrrentPage,
@@ -60,28 +60,28 @@ public class MessagesController(IMemberRepository repo, IMapper mapper) : Contro
     }
 
     [HttpGet("thread/{recipientId}")]
-    public async Task<IActionResult> GetMessageThread(int userId, int recipientId)
+    public async Task<IActionResult> GetMessageThreadAsync(int userId, int recipientId)
     {
         if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
         {
             return Unauthorized();
         }
 
-        IEnumerable<Models.Message> messagesFromRepo = await _repo.GetMessageThread(userId, recipientId);
+        IEnumerable<Models.Message> messagesFromRepo = await _repo.GetMessageThreadAsync(userId, recipientId);
         IEnumerable<MessageToReturnDto> messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
 
         return Ok(messages);
     }
 
     [HttpPost("{id}")]
-    public async Task<IActionResult> DeleteMessage(int userId, int id)
+    public async Task<IActionResult> DeleteAsync(int userId, int id)
     {
         if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
         {
             return Unauthorized();
         }
 
-        Models.Message messageFromRepo = await _repo.GetMessage(id);
+        Models.Message messageFromRepo = await _repo.GetMessageAsync(id);
 
         if (messageFromRepo == null)
         {
@@ -102,7 +102,7 @@ public class MessagesController(IMemberRepository repo, IMapper mapper) : Contro
             _repo.Delete(messageFromRepo);
         }
 
-        if (await _repo.SaveAll())
+        if (await _repo.SaveAllAsync())
         {
             return NoContent();
         }

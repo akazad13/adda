@@ -13,37 +13,22 @@ public class MemberRepository(DataContext context) : IMemberRepository
 {
     private readonly DataContext _context = context;
 
-    public void Add<T>(T entity) where T : class
-    {
-        _context.Add(entity);
-    }
+    public void Add<T>(T entity) where T : class => _context.Add(entity);
 
-    public void Delete<T>(T entity) where T : class
-    {
-        _context.Remove(entity);
-    }
+    public void Delete<T>(T entity) where T : class => _context.Remove(entity);
 
-    public void UpdateRange<T>(List<T> entities) where T : class
-    {
-        _context.UpdateRange(entities);
-    }
+    public void UpdateRange<T>(IList<T> entities) where T : class => _context.UpdateRange(entities);
 
 
-    public async Task<Bookmark> GetBookmark(int userId, int recipientId)
-    {
-        return await _context.Bookmarks.FirstOrDefaultAsync(
+    public async Task<Bookmark> GetBookmarkAsync(int userId, int recipientId) => await _context.Bookmarks.FirstOrDefaultAsync(
             u => u.BookmarkerId == userId && u.BookmarkedId == recipientId
         );
-    }
 
-    public async Task<Photo> GetMainPhotoForUser(int userId)
-    {
-        return await _context.Photos
+    public async Task<Photo> GetMainPhotoForUserAsync(int userId) => await _context.Photos
             .Where(u => u.UserId == userId)
             .FirstOrDefaultAsync(p => p.IsMain);
-    }
 
-    public async Task<Photo> GetPhoto(int id)
+    public async Task<Photo> GetPhotoAsync(int id)
     {
         Photo photo = await _context.Photos
             .IgnoreQueryFilters()
@@ -51,7 +36,7 @@ public class MemberRepository(DataContext context) : IMemberRepository
         return photo;
     }
 
-    public async Task<User> GetUser(int id, bool isCurrentUser)
+    public async Task<User> GetUserAsync(int id, bool isCurrentUser)
     {
         User user;
         if (isCurrentUser)
@@ -71,7 +56,7 @@ public class MemberRepository(DataContext context) : IMemberRepository
         return user;
     }
 
-    public async Task<PageList<User>> GetUsers(UserParams userParams)
+    public async Task<PageList<User>> GetUsersAsync(UserParams userParams)
     {
         IQueryable<User> users = _context.Users
             .Include(p => p.Photos)
@@ -82,13 +67,13 @@ public class MemberRepository(DataContext context) : IMemberRepository
 
         if (userParams.Bookmarkers)
         {
-            IEnumerable<int> userBookmarks = await GetUserBookmarks(userParams.UserId, userParams.Bookmarkers);
+            IEnumerable<int> userBookmarks = await getUserBookmarksAsync(userParams.UserId, userParams.Bookmarkers);
             users = users.Where(u => userBookmarks.Contains(u.Id));
         }
 
         if (userParams.Bookmarkeds)
         {
-            IEnumerable<int> userBookmarkeds = await GetUserBookmarks(userParams.UserId, userParams.Bookmarkers);
+            IEnumerable<int> userBookmarkeds = await getUserBookmarksAsync(userParams.UserId, userParams.Bookmarkers);
             users = users.Where(u => userBookmarkeds.Contains(u.Id));
         }
 
@@ -118,7 +103,7 @@ public class MemberRepository(DataContext context) : IMemberRepository
         );
     }
 
-    private async Task<IEnumerable<int>> GetUserBookmarks(int id, bool bookmarkers)
+    private async Task<IEnumerable<int>> getUserBookmarksAsync(int id, bool bookmarkers)
     {
         User user = await _context.Users
             .Include(x => x.Bookmarkers)
@@ -134,17 +119,11 @@ public class MemberRepository(DataContext context) : IMemberRepository
         }
     }
 
-    public async Task<bool> SaveAll()
-    {
-        return await _context.SaveChangesAsync() > 0;
-    }
+    public async Task<bool> SaveAllAsync() => await _context.SaveChangesAsync() > 0;
 
-    public async Task<Message> GetMessage(int id)
-    {
-        return await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
-    }
+    public async Task<Message> GetMessageAsync(int id) => await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
 
-    public async Task<PageList<Message>> GetMessagesForUser(MessageParams messageParams)
+    public async Task<PageList<Message>> GetMessagesForUserAsync(MessageParams messageParams)
     {
         IQueryable<Message> messages = _context.Messages
             .Include(m => m.Sender)
@@ -177,7 +156,7 @@ public class MemberRepository(DataContext context) : IMemberRepository
         );
     }
 
-    public async Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
+    public async Task<IEnumerable<Message>> GetMessageThreadAsync(int userId, int recipientId)
     {
         List<Message> messages = await _context.Messages
             .Include(m => m.Sender)
@@ -198,8 +177,5 @@ public class MemberRepository(DataContext context) : IMemberRepository
         return messages;
     }
 
-    public async Task<List<Message>> GetWhere(Expression<Func<Message, bool>> expression)
-    {
-        return await _context.Messages.Where(expression).ToListAsync();
-    }
+    public async Task<List<Message>> GetWhereAsync(Expression<Func<Message, bool>> expression) => await _context.Messages.Where(expression).ToListAsync();
 }

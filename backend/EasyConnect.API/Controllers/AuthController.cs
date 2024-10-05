@@ -16,7 +16,7 @@ public class AuthController(
     private readonly IAuthService _authService = authService;
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
+    public async Task<IActionResult> LoginAsync(UserForLoginDto userForLoginDto)
     {
         ErrorOr.ErrorOr<AuthResponse> result = await _authService.LoginAsync(userForLoginDto);
 

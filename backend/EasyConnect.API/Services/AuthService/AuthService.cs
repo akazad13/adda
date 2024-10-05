@@ -58,8 +58,5 @@ public class AuthService(IJwtTokenGenerator jwtTokenGenerator, UserManager<User>
         }
     }
 
-    public Task<ErrorOr<UserForDetailedDto>> RegistrationAsync(UserForRegisterDto request)
-    {
-        throw new System.NotImplementedException();
-    }
+    public Task<ErrorOr<UserForDetailedDto>> RegistrationAsync(UserForRegisterDto request) => throw new System.NotImplementedException();
 }
