@@ -1,4 +1,4 @@
-# Easy Connect
+# Adda
 
 This repository contains a social app built using angular 18, a standalone single-page application with asp.net 8 as backend API with Entity Framework.
 
