@@ -9,11 +9,11 @@ namespace Adda.API.Services.UserService;
 
 public interface IUserService
 {
-    Task<ErrorOr<User>> RegistrationAsync(UserForRegisterDto request);
+    Task<ErrorOr<User>> RegistrationAsync(RegistrationRequest request);
     Task<PageList<User>> GetAsync(UserParams filterOptions);
     Task<ErrorOr<User>> GetAsync(int id);
-    Task<ErrorOr<Success>> UpdateAsync(int id, UserForUpdateDto userForUpdateDto);
+    Task<ErrorOr<Success>> UpdateAsync(int id, UserUpdateRequest request);
     Task<ErrorOr<Success>> BookmakAsync(int id, int recipientId);
     Task<IEnumerable<object>> GetUsersWithRolesAsync();
-    Task<ErrorOr<IList<string>>> EditRolesAsync(string userName, RoleEditDto roleEditDto);
+    Task<ErrorOr<IList<string>>> EditRolesAsync(string userName, EditRoleRequest request);
 }

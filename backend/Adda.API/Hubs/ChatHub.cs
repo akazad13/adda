@@ -34,7 +34,7 @@ public class ChatHub(
         await base.OnDisconnectedAsync(exception);
     }
 
-    public async Task SendMessageAsync(MessageForCreationDto createMessage)
+    public async Task SendMessageAsync(CreateMessageRequest createMessage)
     {
         try
         {
@@ -52,7 +52,7 @@ public class ChatHub(
 
             if (await _messageRepository.SaveAllAsync())
             {
-                MessageToReturnDto messageToReturn = _mapper.Map<MessageToReturnDto>(message);
+                MessageResponse messageToReturn = _mapper.Map<MessageResponse>(message);
                 await Clients.Group($"{userId}").SendAsync("NewMessage", messageToReturn);
                 await Clients
                     .Group($"{createMessage.RecipientId}")

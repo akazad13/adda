@@ -2,7 +2,7 @@ using System;
 
 namespace Adda.API.Dtos;
 
-public class PhotosForDetailedDto
+public class PhotosDetails
 {
     public int Id { get; set; }
     public string Url { get; set; }

@@ -52,7 +52,7 @@ public class MessagesController(IMapper mapper, ICurrentUserProvider currentUser
         messageParams.UserId = userId;
 
         PageList<Message> messagesFromRepo = await _messageService.GetMessagesForUserAsync(messageParams);
-        IEnumerable<MessageToReturnDto> messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
+        IEnumerable<MessageResponse> messages = _mapper.Map<IEnumerable<MessageResponse>>(messagesFromRepo);
         Response.AddPagination(
             messagesFromRepo.CurrrentPage,
             messagesFromRepo.PageSize,
@@ -71,7 +71,7 @@ public class MessagesController(IMapper mapper, ICurrentUserProvider currentUser
         }
 
         IEnumerable<Message> messagesFromRepo = await _messageService.GetMessageThreadAsync(userId, recipientId);
-        IEnumerable<MessageToReturnDto> messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
+        IEnumerable<MessageResponse> messages = _mapper.Map<IEnumerable<MessageResponse>>(messagesFromRepo);
 
         return Ok(messages);
     }

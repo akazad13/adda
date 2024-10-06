@@ -9,26 +9,26 @@ public class AutoMapperProfiles : Profile
 {
     public AutoMapperProfiles()
     {
-        CreateMap<User, UserForListDto>()
+        CreateMap<User, UserListDetails>()
             .ForMember(
                 dest => dest.PhotoUrl,
                 opt => opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url)
             )
             .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
-        CreateMap<User, UserForDetailedDto>()
+        CreateMap<User, UserDetails>()
             .ForMember(
                 dest => dest.PhotoUrl,
                 opt => opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url)
             )
             .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
-        CreateMap<Photo, PhotosForDetailedDto>();
-        CreateMap<UserForUpdateDto, User>();
-        CreateMap<PhotoForCreationDto, Photo>();
-        CreateMap<Photo, PhotoForReturnDto>(); // from, to
+        CreateMap<Photo, PhotosDetails>();
+        CreateMap<UserUpdateRequest, User>();
+        CreateMap<CreatePhotoRequest, Photo>();
+        CreateMap<Photo, PhotoResponse>();
 
-        CreateMap<UserForRegisterDto, User>();
-        CreateMap<MessageForCreationDto, Message>();
-        CreateMap<Message, MessageToReturnDto>()
+        CreateMap<RegistrationRequest, User>();
+        CreateMap<MessageResponse, Message>();
+        CreateMap<Message, MessageResponse>()
             .ForMember(
                 m => m.SenderPhotoUrl,
                 opt => opt.MapFrom(src => src.Sender.Photos.FirstOrDefault(p => p.IsMain).Url)

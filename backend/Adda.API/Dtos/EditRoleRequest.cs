@@ -1,6 +1,6 @@
 namespace Adda.API.Dtos;
 
-public class RoleEditDto
+public class EditRoleRequest
 {
     public string[] RoleName { get; set; }
 }

@@ -2,7 +2,7 @@ using System;
 
 namespace Adda.API.Dtos;
 
-public class MessageToReturnDto
+public class MessageResponse
 {
     public int Id { get; set; }
     public int SenderId { get; set; }

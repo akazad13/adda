@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Adda.API.Dtos;
 
-public class UserForDetailedDto
+public class UserDetails
 {
     public int Id { get; set; }
     public string Username { get; set; }
@@ -19,5 +19,5 @@ public class UserForDetailedDto
     public string city { get; set; }
     public string Country { get; set; }
     public string PhotoUrl { get; set; }
-    public ICollection<PhotosForDetailedDto> Photos { get; }
+    public ICollection<PhotosDetails> Photos { get; }
 }

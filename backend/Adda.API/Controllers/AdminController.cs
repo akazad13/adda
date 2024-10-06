@@ -1,15 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Adda.API.Data;
 using Adda.API.Dtos;
-using Adda.API.ExternalServices.Cloudinary;
-using Adda.API.Models;
 using Adda.API.Services.PhotoService;
 using Adda.API.Services.UserService;
 using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Adda.API.Controllers;
@@ -67,9 +62,9 @@ public class AdminController(
 
     [Authorize(Policy = "RequireAdminRole")]
     [HttpPost("editRoles/{userName}")]
-    public async Task<IActionResult> EditRolesAsync(string userName, RoleEditDto roleEditDto)
+    public async Task<IActionResult> EditRolesAsync(string userName, EditRoleRequest request)
     {
-        ErrorOr<IList<string>> result = await _userService.EditRolesAsync(userName, roleEditDto);
+        ErrorOr<IList<string>> result = await _userService.EditRolesAsync(userName, request);
 
         if (result.IsError)
         {

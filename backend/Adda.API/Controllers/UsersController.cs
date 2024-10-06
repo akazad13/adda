@@ -28,13 +28,13 @@ public class UsersController(
 
     [HttpPost("register")]
     [AllowAnonymous]
-    public async Task<IActionResult> RegisterAsync(UserForRegisterDto userForRegisterDto)
+    public async Task<IActionResult> RegisterAsync(RegistrationRequest request)
     {
-        ErrorOr<User> user = await _userService.RegistrationAsync(userForRegisterDto);
+        ErrorOr<User> user = await _userService.RegistrationAsync(request);
 
         if (!user.IsError)
         {
-            UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            UserDetails userToReturn = _mapper.Map<UserDetails>(user);
             return CreatedAtRoute(
                 "GetUser",
                 new { Controller = "Users", id = userToReturn.Id },
@@ -45,7 +45,7 @@ public class UsersController(
     }
 
     [HttpGet]
-    [SwaggerResponse(200, "Claims have been validated", typeof(IEnumerable<UserForListDto>))]
+    [SwaggerResponse(200, "Claims have been validated", typeof(IEnumerable<UserListDetails>))]
     [SwaggerResponse(400)]
     [SwaggerResponse(500)]
 
@@ -53,7 +53,7 @@ public class UsersController(
     {
         PageList<User> users = await _userService.GetAsync(userParams);
 
-        IEnumerable<UserForListDto> usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+        IEnumerable<UserListDetails> usersToReturn = _mapper.Map<IEnumerable<UserListDetails>>(users);
 
         Response.AddPagination(
             users.CurrrentPage,
@@ -69,20 +69,20 @@ public class UsersController(
     public async Task<IActionResult> GetAsync(int id)
     {
         ErrorOr<User> user = await _userService.GetAsync(id);
-        UserForDetailedDto userToReturn = _mapper.Map<UserForDetailedDto>(user.Value);
+        UserDetails userToReturn = _mapper.Map<UserDetails>(user.Value);
 
         return Ok(userToReturn);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateAsync(int id, UserForUpdateDto userForUpdateDto)
+    public async Task<IActionResult> UpdateAsync(int id, UserUpdateRequest request)
     {
         if (id != _currentUser.UserId)
         {
             return Unauthorized();
         }
 
-        ErrorOr<Success> result = await _userService.UpdateAsync(id, userForUpdateDto);
+        ErrorOr<Success> result = await _userService.UpdateAsync(id, request);
         if (result.IsError)
         {
             return BadRequest(result.Errors);

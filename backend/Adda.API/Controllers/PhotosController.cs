@@ -24,7 +24,7 @@ public class PhotosController(IMapper mapper, ICurrentUserProvider currentUser, 
 
         if (!result.IsError)
         {
-            PhotoForReturnDto photo = _mapper.Map<PhotoForReturnDto>(result.Value);
+            PhotoResponse photo = _mapper.Map<PhotoResponse>(result.Value);
             return Ok(photo);
         }
         return BadRequest("Failed to get photo details");
@@ -33,7 +33,7 @@ public class PhotosController(IMapper mapper, ICurrentUserProvider currentUser, 
     [HttpPost]
     public async Task<IActionResult> AddPhotoForUserAsync(
         int userId,
-        [FromForm] PhotoForCreationDto photoForCreationDto
+        [FromForm] CreatePhotoRequest request
     )
     {
         if (userId != _currentUser.UserId)
@@ -41,11 +41,11 @@ public class PhotosController(IMapper mapper, ICurrentUserProvider currentUser, 
             return Unauthorized();
         }
 
-        ErrorOr<Photo> result = await _photoService.AddAsync(userId, photoForCreationDto.File);
+        ErrorOr<Photo> result = await _photoService.AddAsync(userId, request.File);
 
         if (!result.IsError)
         {
-            PhotoForReturnDto photoToReturn = _mapper.Map<PhotoForReturnDto>(result.Value);
+            PhotoResponse photoToReturn = _mapper.Map<PhotoResponse>(result.Value);
             return CreatedAtRoute(
                 "GetPhoto",
                 new { userId, id = result.Value.Id },

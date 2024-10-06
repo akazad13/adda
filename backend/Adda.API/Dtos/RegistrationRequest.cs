@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Adda.API.Dtos;
 
-public class UserForRegisterDto
+public class RegistrationRequest
 {
-    public UserForRegisterDto()
+    public RegistrationRequest()
     {
         Created = DateTime.Now;
         LastActive = DateTime.Now;

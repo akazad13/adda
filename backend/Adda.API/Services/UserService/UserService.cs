@@ -56,7 +56,7 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
         return await _userRepository.GetAsync(id, isCurrentUser);
     }
 
-    public async Task<ErrorOr<User>> RegistrationAsync(UserForRegisterDto request)
+    public async Task<ErrorOr<User>> RegistrationAsync(RegistrationRequest request)
     {
         try
         {
@@ -78,11 +78,11 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
         }
     }
 
-    public async Task<ErrorOr<Success>> UpdateAsync(int id, UserForUpdateDto userForUpdateDto)
+    public async Task<ErrorOr<Success>> UpdateAsync(int id, UserUpdateRequest request)
     {
         User userFromRepo = await _userRepository.GetAsync(id, true);
 
-        _mapper.Map(userForUpdateDto, userFromRepo); // (from, to)
+        _mapper.Map(request, userFromRepo); // (from, to)
 
         if (await _userRepository.SaveAllAsync())
         {
@@ -96,7 +96,7 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
         return await _userRepository.GetUsersWithRolesAsync();
     }
 
-    public async Task<ErrorOr<IList<string>>> EditRolesAsync(string userName, RoleEditDto roleEditDto)
+    public async Task<ErrorOr<IList<string>>> EditRolesAsync(string userName, EditRoleRequest request)
     {
         try
         {
@@ -104,7 +104,7 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
 
             IList<string> userRoles = await _userManager.GetRolesAsync(user);
 
-            string[] selectedRoles = roleEditDto.RoleName;
+            string[] selectedRoles = request.RoleName;
 
             selectedRoles ??= [];
             IdentityResult result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));

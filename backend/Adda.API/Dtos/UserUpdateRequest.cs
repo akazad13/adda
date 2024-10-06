@@ -1,6 +1,6 @@
 namespace Adda.API.Dtos;
 
-public class UserForUpdateDto
+public class UserUpdateRequest
 {
     public string Introduction { get; set; }
     public string LookingFor { get; set; }

@@ -1,6 +1,6 @@
 namespace Adda.API.Dtos;
 
-public class MessageForCreationDto
+public class CreateMessageRequest
 {
     public int SenderId { get; set; }
     public int RecipientId { get; set; }
