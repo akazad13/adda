@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Adda.API.Data;
 using Adda.API.Helpers;
 using Adda.API.Models;
@@ -13,22 +9,24 @@ public class UserRepository(DataContext context) : BaseRepository(context), IUse
 {
     private readonly DataContext _context = context;
 
-    public async Task<User> GetAsync(int id, bool isCurrentUser)
+    public async Task<User?> GetAsync(int id)
     {
-        User user;
+        return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+    }
+
+    public async Task<User?> GetAsync(int id, bool isCurrentUser)
+    {
         if (isCurrentUser)
         {
-            user = await _context.Users
+            return await _context.Users
                 .Include(p => p.Photos)
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
         else
         {
-            user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(u => u.Id == id);
         }
-
-        return user;
     }
 
     public async Task<PageList<User>> GetAsync(UserParams userParams)
@@ -86,6 +84,11 @@ public class UserRepository(DataContext context) : BaseRepository(context), IUse
             .Include(x => x.Bookmarkers)
             .Include(x => x.Bookmarkeds)
             .FirstOrDefaultAsync(u => u.Id == id);
+        if (user == null)
+        {
+            return new List<int>();
+        }
+
         if (bookmarkers)
         {
             return user.Bookmarkers.Where(u => u.BookmarkedId == id).Select(i => i.BookmarkerId);
@@ -95,7 +98,7 @@ public class UserRepository(DataContext context) : BaseRepository(context), IUse
             return user.Bookmarkeds.Where(u => u.BookmarkerId == id).Select(i => i.BookmarkedId);
         }
     }
-    public async Task<Bookmark> GetBookmarkAsync(int userId, int recipientId)
+    public async Task<Bookmark?> GetBookmarkAsync(int userId, int recipientId)
     {
         return await _context.Bookmarks.FirstOrDefaultAsync(
             u => u.BookmarkerId == userId && u.BookmarkedId == recipientId

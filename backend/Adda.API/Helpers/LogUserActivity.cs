@@ -1,9 +1,7 @@
-using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
+using Adda.API.Models;
 using Adda.API.Repositories.UserRepository;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Adda.API.Helpers;
 
@@ -16,13 +14,24 @@ public class LogUserActivity : IAsyncActionFilter
     {
         ActionExecutedContext resultContext = await next();
 
+        if (resultContext.RouteData.Values["action"]?.ToString() == "Register")
+        {
+            return;
+        }
+
         int userId = int.Parse(
             resultContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value
         );
         IUserRepository repo =
-            resultContext.HttpContext.RequestServices.GetService<IUserRepository>();
-        Models.User user = await repo.GetAsync(userId, true);
-        user.LastActive = DateTime.Now;
-        await repo.SaveAllAsync();
+            resultContext.HttpContext.RequestServices.GetService<IUserRepository>()
+            ?? throw new InvalidOperationException(
+                "IUserRepository is not registered in the service provider."
+            );
+        User? user = await repo.GetAsync(userId);
+        if (user != null)
+        {
+            user.LastActive = DateTime.Now;
+            _ = await repo.SaveAllAsync();
+        }
     }
 }

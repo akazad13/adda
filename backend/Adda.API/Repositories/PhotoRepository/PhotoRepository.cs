@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Adda.API.Data;
 using Adda.API.Models;
 using Microsoft.EntityFrameworkCore;

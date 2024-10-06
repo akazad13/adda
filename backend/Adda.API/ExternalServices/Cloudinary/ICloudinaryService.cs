@@ -1,6 +1,4 @@
-using System.Threading.Tasks;
 using ErrorOr;
-using Microsoft.AspNetCore.Http;
 
 namespace Adda.API.ExternalServices.Cloudinary;
 

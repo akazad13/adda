@@ -1,4 +1,3 @@
-using System.Linq;
 using Adda.API.Dtos;
 using Adda.API.Models;
 using AutoMapper;
@@ -16,6 +15,7 @@ public class AutoMapperProfiles : Profile
             )
             .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
         CreateMap<User, UserDetails>()
+            .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Photos))
             .ForMember(
                 dest => dest.PhotoUrl,
                 opt => opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url)
@@ -23,11 +23,10 @@ public class AutoMapperProfiles : Profile
             .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
         CreateMap<Photo, PhotosDetails>();
         CreateMap<UserUpdateRequest, User>();
-        CreateMap<CreatePhotoRequest, Photo>();
         CreateMap<Photo, PhotoResponse>();
 
         CreateMap<RegistrationRequest, User>();
-        CreateMap<MessageResponse, Message>();
+        CreateMap<CreateMessageRequest, Message>();
         CreateMap<Message, MessageResponse>()
             .ForMember(
                 m => m.SenderPhotoUrl,

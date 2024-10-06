@@ -1,5 +1,3 @@
-using System;
-
 namespace Adda.API.Models;
 
 public class Photo

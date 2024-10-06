@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Adda.API.ExternalServices.Cloudinary;
 using Adda.API.Models;
 using Adda.API.Repositories.PhotoRepository;
 using Adda.API.Repositories.UserRepository;
 using ErrorOr;
-using Microsoft.AspNetCore.Http;
 
 namespace Adda.API.Services.PhotoService;
 
@@ -21,11 +16,16 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
     {
         try
         {
-            User userFromRepo = await _userRepository.GetAsync(userId, true);
-
             if (file == null)
             {
                 return Error.Failure("No file was uploaded");
+            }
+
+            User? userFromRepo = await _userRepository.GetAsync(userId, true);
+
+            if(userFromRepo == null)
+            {
+                return Error.Failure("User not found");
             }
 
             ErrorOr<PhotoUploadResult> res = await _cloudinaryService.UploadPhotoAsync(
@@ -83,9 +83,9 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
     {
         try
         {
-            User user = await _userRepository.GetAsync(userId, true);
+            User? user = await _userRepository.GetAsync(userId, true);
 
-            if (!user.Photos.Any(p => p.Id == id))
+            if (user == null || !user.Photos.Any(p => p.Id == id))
             {
                 return Error.Failure(description: "Can not find the photo");
             }
@@ -171,9 +171,9 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
 
     public async Task<ErrorOr<Success>> SetMainPhotoAsync(int userId, int id)
     {
-        User user = await _userRepository.GetAsync(userId, true);
+        User? user = await _userRepository.GetAsync(userId, true);
 
-        if (!user.Photos.Any(p => p.Id == id))
+        if (user == null || !user.Photos.Any(p => p.Id == id))
         {
             return Error.Failure(description: "Can not find the photo");
         }

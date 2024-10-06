@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Adda.API.Dtos;
 using Adda.API.Models;
 using Adda.API.Security.TokenGenerator;

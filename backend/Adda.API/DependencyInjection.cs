@@ -1,7 +1,5 @@
-using System;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using Adda.API.Data;
 using Adda.API.ExternalServicec.Cloudinary;
 using Adda.API.ExternalServices.Cloudinary;
@@ -19,14 +17,9 @@ using Adda.API.Services.UserService;
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Shopizy.Infrastructure.Security.TokenGenerator;
 
@@ -157,21 +150,7 @@ public static class DependencyInjection
                              context.Token = accessToken;
                          }
                          return Task.CompletedTask;
-                     },
-                     OnAuthenticationFailed = context =>
-                     {
-                         context.Response.StatusCode = 401;
-                         context.Response.ContentType = "application/json";
-                         return context.Response.WriteAsync("You are not Authorized");
-                     },
-                     OnForbidden = context =>
-                     {
-                         context.Response.StatusCode = 403;
-                         context.Response.ContentType = "application/json";
-                         return context.Response.WriteAsync(
-                             "You are not authorized to access this resource"
-                         );
-                     },
+                     }
                  };
              });
 
@@ -185,7 +164,7 @@ public static class DependencyInjection
     )
     {
 
-        string connectionString = configuration.GetConnectionString("DefaultConnection");
+        string connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
         if (environment.IsDevelopment())
         {
             services.AddDbContext<DataContext>(x => x.UseSqlite(connectionString));

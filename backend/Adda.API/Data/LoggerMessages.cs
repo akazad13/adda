@@ -1,6 +1,3 @@
-using System;
-using Microsoft.Extensions.Logging;
-
 namespace Adda.API.Data;
 
 public static partial class LoggerMessages

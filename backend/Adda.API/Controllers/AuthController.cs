@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Adda.API.Dtos;
 using Adda.API.Services.AuthService;
 using Microsoft.AspNetCore.Authorization;

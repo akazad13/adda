@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Adda.API.Models;
 
 namespace Adda.API.Repositories.PhotoRepository;

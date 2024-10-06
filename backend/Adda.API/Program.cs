@@ -3,12 +3,7 @@ using Adda.API;
 using Adda.API.Data;
 using Adda.API.Helpers;
 using Adda.API.Hubs;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -24,13 +19,13 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseExceptionHandler(builder =>
+    _ = app.UseExceptionHandler(static builder =>
     {
-        builder.Run(async context =>
+        builder.Run(static async context =>
         {
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            IExceptionHandlerFeature error = context.Features.Get<IExceptionHandlerFeature>();
+            IExceptionHandlerFeature? error = context.Features.Get<IExceptionHandlerFeature>();
             if (error != null)
             {
                 context.Response.AddApplicationError(error.Error.Message);

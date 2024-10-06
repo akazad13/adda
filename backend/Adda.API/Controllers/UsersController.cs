@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Adda.API.Dtos;
 using Adda.API.Helpers;
 using Adda.API.Models;
@@ -26,22 +24,22 @@ public class UsersController(
     private readonly ICurrentUserProvider _currentUser = currentUser;
     private readonly IUserService _userService = userService;
 
-    [HttpPost("register")]
     [AllowAnonymous]
+    [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync(RegistrationRequest request)
     {
-        ErrorOr<User> user = await _userService.RegistrationAsync(request);
+        ErrorOr<User> result = await _userService.RegistrationAsync(request);
 
-        if (!user.IsError)
+        if (!result.IsError)
         {
-            UserDetails userToReturn = _mapper.Map<UserDetails>(user);
+            UserDetails userToReturn = _mapper.Map<UserDetails>(result.Value);
             return CreatedAtRoute(
                 "GetUser",
                 new { Controller = "Users", id = userToReturn.Id },
                 userToReturn
             ); // temp
         }
-        return BadRequest(user.Errors);
+        return BadRequest(result.Errors[0].Description);
     }
 
     [HttpGet]
@@ -102,7 +100,7 @@ public class UsersController(
 
         if (result.IsError)
         {
-            return BadRequest("Failed to bookmark user");
+            return BadRequest(result.Errors[0].Description);
         }
         return Ok();
     }

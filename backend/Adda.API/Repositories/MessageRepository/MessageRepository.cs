@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Adda.API.Data;
 using Adda.API.Helpers;
 using Adda.API.Models;

@@ -1,8 +1,5 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Adda.API.Models;
 using ErrorOr;
-using Microsoft.AspNetCore.Http;
 
 namespace Adda.API.Services.PhotoService;
 

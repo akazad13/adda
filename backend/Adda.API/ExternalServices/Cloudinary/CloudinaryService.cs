@@ -1,9 +1,6 @@
-using System;
-using System.Threading.Tasks;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using ErrorOr;
-using Microsoft.AspNetCore.Http;
 
 namespace Adda.API.ExternalServices.Cloudinary;
 

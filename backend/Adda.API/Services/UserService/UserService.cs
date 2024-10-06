@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Adda.API.Dtos;
 using Adda.API.Helpers;
 using Adda.API.Models;
 using Adda.API.Repositories.UserRepository;
 using Adda.API.Security.CurrentUserProvider;
+using Adda.API.Security.Roles;
 using AutoMapper;
 using ErrorOr;
 using Microsoft.AspNetCore.Identity;
@@ -22,16 +19,16 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
 
     public async Task<ErrorOr<Success>> BookmakAsync(int id, int recipientId)
     {
-        Bookmark bookmark = await _userRepository.GetBookmarkAsync(id, recipientId);
+        Bookmark? bookmark = await _userRepository.GetBookmarkAsync(id, recipientId);
 
         if (bookmark != null)
         {
-            return Error.Conflict("You already bookmark this user.");
+            return Error.Conflict(description: "You already bookmark this user.");
         }
 
         if (await _userRepository.GetAsync(recipientId, false) == null)
         {
-            return Error.Validation("Please select a valid user.");
+            return Error.Validation(description: "Please select a valid user.");
         }
 
         var newBookmark = new Bookmark { BookmarkerId = id, BookmarkedId = recipientId };
@@ -42,7 +39,7 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
         {
             return Result.Success;
         }
-        return Error.Validation("Unable to perform the operation.");
+        return Error.Validation(description: "Unable to perform the operation.");
     }
     public async Task<PageList<User>> GetAsync(UserParams filterOptions)
     {
@@ -60,6 +57,12 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
     {
         try
         {
+            User? user = await _userManager.FindByNameAsync(request.Username);
+
+            if(user != null)
+            {
+                return Error.Validation(description: "Username already exists.");
+            }
 
             User userToCreate = _mapper.Map<User>(request);
 
@@ -67,6 +70,7 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
 
             if (result.Succeeded)
             {
+                _ = await _userManager.AddToRolesAsync(userToCreate, [RoleOption.Member]);
                 return userToCreate;
 
             }
@@ -80,7 +84,12 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
 
     public async Task<ErrorOr<Success>> UpdateAsync(int id, UserUpdateRequest request)
     {
-        User userFromRepo = await _userRepository.GetAsync(id, true);
+        User? userFromRepo = await _userRepository.GetAsync(id, true);
+
+        if(userFromRepo == null)
+        {
+            return Error.Failure(description: "User not found.");
+        }
 
         _mapper.Map(request, userFromRepo); // (from, to)
 
@@ -100,7 +109,12 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
     {
         try
         {
-            User user = await _userManager.FindByNameAsync(userName);
+            User? user = await _userManager.FindByNameAsync(userName);
+
+            if(user == null)
+            {
+                return Error.Failure(description: "User not found.");
+            }
 
             IList<string> userRoles = await _userManager.GetRolesAsync(user);
 

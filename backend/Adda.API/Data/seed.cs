@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Adda.API.Models;
 using Adda.API.Security.Roles;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace Adda.API.Data;
@@ -56,8 +51,8 @@ public class Seed(
     {
         if (!await _userManager.Users.AnyAsync())
         {
-            string userData = await System.IO.File.ReadAllTextAsync("Data/UserSeedData.json");
-            List<User> users = JsonConvert.DeserializeObject<List<User>>(userData);
+            string userData = await File.ReadAllTextAsync("Data/UserSeedData.json");
+            List<User>? users = userData is not null ? JsonConvert.DeserializeObject<List<User>>(userData) : [];
 
             // create some roles
 
@@ -96,7 +91,7 @@ public class Seed(
             IdentityResult result = await _userManager.CreateAsync(adminUser, "password");
             if (result.Succeeded)
             {
-                User admin = await _userManager.FindByNameAsync(adminUsername);
+                User? admin = await _userManager.FindByNameAsync(adminUsername);
                 _ = await _userManager.AddToRolesAsync(admin, new[] { RoleOption.Admin, RoleOption.Moderator });
             }
         }

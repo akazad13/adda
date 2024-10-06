@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Adda.API.Dtos;
+﻿using Adda.API.Dtos;
 using Adda.API.Models;
 using Adda.API.Repositories.MessageRepository;
 using Adda.API.Security.CurrentUserProvider;
@@ -26,7 +24,7 @@ public class ChatHub(
         await Groups.AddToGroupAsync(Context.ConnectionId, $"{sender}");
     }
 
-    public override async Task OnDisconnectedAsync(Exception exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
         string sender = $"{_currentUser.UserId}";
 
@@ -88,7 +86,7 @@ public class ChatHub(
 
     private async Task makeReadAsync(long senderId, long receiverId)
     {
-        System.Collections.Generic.List<Message> unreadMessages = await _messageRepository.GetWhereAsync(
+        List<Message> unreadMessages = await _messageRepository.GetWhereAsync(
             x =>
                 x.RecipientId == receiverId
                 && x.SenderId == senderId

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Adda.API.Security.TokenGenerator;
 
 public interface IJwtTokenGenerator

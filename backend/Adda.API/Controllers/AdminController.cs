@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Adda.API.Dtos;
 using Adda.API.Services.PhotoService;
 using Adda.API.Services.UserService;

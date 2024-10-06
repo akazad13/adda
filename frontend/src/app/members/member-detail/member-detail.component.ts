@@ -86,7 +86,7 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
       await firstValueFrom(this.userService.bookmark(this.authService.decodedToken.nameid, id));
       this.alertify.success('You have bookmarked: ' + this.user.knownAs);
     } catch (e: any) {
-      this.alertify.error(e.statusText);
+      this.alertify.error(e.error);
     }
   }
 }

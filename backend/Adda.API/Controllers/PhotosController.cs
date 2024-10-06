@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Adda.API.Dtos;
 using Adda.API.Models;
 using Adda.API.Security.CurrentUserProvider;

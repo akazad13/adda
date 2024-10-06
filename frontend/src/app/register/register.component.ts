@@ -70,15 +70,14 @@ export class RegisterComponent implements OnInit {
       try {
         await firstValueFrom(this.userService.register(this.user));
         this.alertify.success('registration successful');
-      } catch (e: any) {
-        this.alertify.error(e.error.title);
-      } finally {
         try {
           await firstValueFrom(this.authService.login(this.user));
           this.router.navigate(['/members']);
         } catch (e: any) {
           this.alertify.error(e.error.title);
         }
+      } catch (e: any) {
+        this.alertify.error(e.error);
       }
     }
   }
