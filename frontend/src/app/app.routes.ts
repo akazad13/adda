@@ -13,6 +13,7 @@ import { ListsComponent } from './lists/lists.component';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { ListsResolver } from './resolver/lists.resolver';
 import { MessagesResolver } from './resolver/messages';
+import { RegisterComponent } from './register/register.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -38,5 +39,6 @@ export const routes: Routes = [
       { path: 'admin', component: AdminPanelComponent, data: { roles: ['Admin', 'Moderator'] } },
     ],
   },
+  { path: 'register', component: RegisterComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

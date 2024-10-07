@@ -50,6 +50,7 @@
         [(ngModel)]="model.password"
       />
       <button class="btn btn-success" [disabled]="!loginFrom.valid" type="submit">Login</button>
+      <button class="btn btn-secondary ms-3" type="button" [routerLink]="['/register']">Register</button>
     </form>
   </div>
 </nav>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, AbstractControlOptions, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { Router } from '@angular/router';
@@ -20,7 +20,6 @@ import { firstValueFrom } from 'rxjs';
 })
 export class RegisterComponent implements OnInit {
   user!: User;
-  @Output() cancelRegister = new EventEmitter<boolean>();
   registerForm!: FormGroup;
   bsConfig!: Partial<BsDatepickerConfig>; // adding partial, make all the required field partial
 
@@ -87,6 +86,6 @@ export class RegisterComponent implements OnInit {
   }
 
   cancel() {
-    this.cancelRegister.emit(false);
+    this.router.navigate(['/']);
   }
 }
