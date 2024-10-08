@@ -1,6 +1,6 @@
 # Adda
 
-This repository contains a social app built using angular 18, a standalone single-page application with asp.net 8 as backend API with Entity Framework.
+This repository contains a social app built using angular 18, a standalone single-page application with asp.net 8 as backend API with Entity Framework and SQLite/MySQL database.
 
 ## Getting Started
 
