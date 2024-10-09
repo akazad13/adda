@@ -14,7 +14,9 @@ public class MessageRepository(DataContext context) : BaseRepository(context), I
 
     public async Task<PageList<Message>> GetMessagesForUserAsync(MessageParams messageParams)
     {
-        IQueryable<Message> messages = _context.Messages
+        ArgumentNullException.ThrowIfNull(messageParams);
+
+        var messages = _context.Messages
             .Include(m => m.Sender)
             .ThenInclude(p => p.Photos)
             .Include(m => m.Recipient)
@@ -48,7 +50,7 @@ public class MessageRepository(DataContext context) : BaseRepository(context), I
 
     public async Task<IEnumerable<Message>> GetMessageThreadAsync(int userId, int recipientId)
     {
-        List<Message> messages = await _context.Messages
+        var messages = await _context.Messages
             .Include(m => m.Sender)
             .ThenInclude(p => p.Photos)
             .Include(m => m.Recipient)

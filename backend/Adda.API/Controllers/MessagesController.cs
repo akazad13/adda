@@ -26,7 +26,7 @@ public class MessagesController(IMapper mapper, ICurrentUserProvider currentUser
             return Unauthorized();
         }
 
-        Message messageFromRepo = await _messageService.GetAsync(id);
+        var messageFromRepo = await _messageService.GetAsync(id);
 
         if (messageFromRepo == null)
         {
@@ -49,8 +49,8 @@ public class MessagesController(IMapper mapper, ICurrentUserProvider currentUser
 
         messageParams.UserId = userId;
 
-        PageList<Message> messagesFromRepo = await _messageService.GetMessagesForUserAsync(messageParams);
-        IEnumerable<MessageResponse> messages = _mapper.Map<IEnumerable<MessageResponse>>(messagesFromRepo);
+        var messagesFromRepo = await _messageService.GetMessagesForUserAsync(messageParams);
+        var messages = _mapper.Map<IEnumerable<MessageResponse>>(messagesFromRepo);
         Response.AddPagination(
             messagesFromRepo.CurrrentPage,
             messagesFromRepo.PageSize,
@@ -68,8 +68,8 @@ public class MessagesController(IMapper mapper, ICurrentUserProvider currentUser
             return Unauthorized();
         }
 
-        IEnumerable<Message> messagesFromRepo = await _messageService.GetMessageThreadAsync(userId, recipientId);
-        IEnumerable<MessageResponse> messages = _mapper.Map<IEnumerable<MessageResponse>>(messagesFromRepo);
+        var messagesFromRepo = await _messageService.GetMessageThreadAsync(userId, recipientId);
+        var messages = _mapper.Map<IEnumerable<MessageResponse>>(messagesFromRepo);
 
         return Ok(messages);
     }
@@ -82,7 +82,7 @@ public class MessagesController(IMapper mapper, ICurrentUserProvider currentUser
             return Unauthorized();
         }
 
-        ErrorOr<Success> result = await _messageService.DeleteAsync(userId, id);
+        var result = await _messageService.DeleteAsync(userId, id);
 
         if (!result.IsError)
         {

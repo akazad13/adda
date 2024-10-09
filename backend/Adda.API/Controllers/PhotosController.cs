@@ -19,7 +19,7 @@ public class PhotosController(IMapper mapper, ICurrentUserProvider currentUser, 
     [HttpGet("{id}", Name = "GetPhoto")]
     public async Task<IActionResult> GetAsync(int id)
     {
-        ErrorOr<Photo> result = await _photoService.GetAsync(id);
+        var result = await _photoService.GetAsync(id);
 
         if (!result.IsError)
         {
@@ -40,7 +40,7 @@ public class PhotosController(IMapper mapper, ICurrentUserProvider currentUser, 
             return Unauthorized();
         }
 
-        ErrorOr<Photo> result = await _photoService.AddAsync(userId, request.File);
+        var result = await _photoService.AddAsync(userId, request.File);
 
         if (!result.IsError)
         {
@@ -63,7 +63,7 @@ public class PhotosController(IMapper mapper, ICurrentUserProvider currentUser, 
             return Unauthorized();
         }
 
-        ErrorOr<Success> result = await _photoService.SetMainPhotoAsync(userId, id);
+        var result = await _photoService.SetMainPhotoAsync(userId, id);
 
         if (!result.IsError)
         {
@@ -80,7 +80,7 @@ public class PhotosController(IMapper mapper, ICurrentUserProvider currentUser, 
             return Unauthorized();
         }
 
-        ErrorOr<Success> result = await _photoService.DeleteAsync(userId, id);
+        var result = await _photoService.DeleteAsync(userId, id);
 
         if (!result.IsError)
         {

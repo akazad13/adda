@@ -311,7 +311,8 @@ dotnet_naming_style.asyncsuffix_public.capitalization = pascal_case
 
 dotnet_diagnostic.IDE0003.severity = warning    # IDE0003: Name can be simplified
 dotnet_diagnostic.IDE0005.severity = suggestion # IDE0005: Using directive is unnecessary
-dotnet_diagnostic.IDE0008.severity = suggestion # IDE0008: Use explicit type instead of var
+dotnet_diagnostic.IDE0007.severity = warning    # IDE0007: Use var instead of explicit type
+dotnet_diagnostic.IDE0008.severity = none       # IDE0008: Use explicit type instead of var
 dotnet_diagnostic.IDE0017.severity = warning    # IDE0017 Object initialization can be simplified
 dotnet_diagnostic.IDE0018.severity = warning    # IDE0018: Variable declaration can be inlined
 dotnet_diagnostic.IDE0019.severity = warning    # IDE0019: Use pattern matching to avoid 'as' followed by a 'null' check

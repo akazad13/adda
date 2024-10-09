@@ -38,7 +38,7 @@ public static class DependencyInjection
         services
             .AddControllers(options =>
             {
-                AuthorizationPolicy policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
             })
             .AddNewtonsoftJson(opt =>
@@ -178,7 +178,7 @@ public static class DependencyInjection
 
         services.AddScoped<Seed>();
 
-        IdentityBuilder builder = services.AddIdentityCore<User>(opt =>
+        var builder = services.AddIdentityCore<User>(opt =>
         {
             opt.Password.RequireDigit = false;
             opt.Password.RequiredLength = 4;

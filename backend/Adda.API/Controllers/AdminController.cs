@@ -1,7 +1,6 @@
 using Adda.API.Dtos;
 using Adda.API.Services.PhotoService;
 using Adda.API.Services.UserService;
-using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +19,7 @@ public class AdminController(
     [HttpGet("usersWithRoles")]
     public async Task<IActionResult> GetUsersWithRolesAsync()
     {
-        IEnumerable<object> userList = await _userService.GetUsersWithRolesAsync();
+        var userList = await _userService.GetUsersWithRolesAsync();
         return Ok(userList);
     }
 
@@ -36,7 +35,7 @@ public class AdminController(
     [HttpPut("photo/{photoId}")]
     public async Task<IActionResult> ApprovePhotoAsync(int photoId)
     {
-        ErrorOr<Success> result = await _photoService.ApprovePhotoAsync(photoId);
+        var result = await _photoService.ApprovePhotoAsync(photoId);
 
         if (!result.IsError)
         {
@@ -49,7 +48,7 @@ public class AdminController(
     [HttpDelete("photo/{photoId}")]
     public async Task<IActionResult> DeletePhotoAsync(int photoId)
     {
-        ErrorOr<Success> result = await _photoService.DeleteAsync(photoId);
+        var result = await _photoService.DeleteAsync(photoId);
 
         if (!result.IsError)
         {
@@ -62,7 +61,7 @@ public class AdminController(
     [HttpPost("editRoles/{userName}")]
     public async Task<IActionResult> EditRolesAsync(string userName, EditRoleRequest request)
     {
-        ErrorOr<IList<string>> result = await _userService.EditRolesAsync(userName, request);
+        var result = await _userService.EditRolesAsync(userName, request);
 
         if (result.IsError)
         {

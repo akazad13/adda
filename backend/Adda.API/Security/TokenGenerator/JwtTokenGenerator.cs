@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Shopizy.Infrastructure.Security.TokenGenerator;
@@ -10,8 +11,8 @@ namespace Adda.API.Security.TokenGenerator;
 public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptoins) : IJwtTokenGenerator
 {
     private readonly JwtSettings _jwtSettings = jwtOptoins.Value;
-
     public string GenerateToken(
+
         int userId,
         string username,
         IList<string> roles
@@ -24,9 +25,12 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptoins) : IJwtTokenGene
             new(ClaimTypes.Name, username),
         };
 
-        foreach (string role in roles)
+        if(roles != null)
         {
-            claims.Add(new(ClaimTypes.Role, role));
+            foreach (string role in roles)
+            {
+                claims.Add(new(ClaimTypes.Role, role));
+            }
         }
 
         var creds = new SigningCredentials(
@@ -46,7 +50,7 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptoins) : IJwtTokenGene
         };
 
         var jwtTokenHandler = new JwtSecurityTokenHandler();
-        JwtSecurityToken jwtToken = jwtTokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+        var jwtToken = jwtTokenHandler.CreateJwtSecurityToken(tokenDescriptor);
         string token = jwtTokenHandler.WriteToken(jwtToken);
         return token;
     }

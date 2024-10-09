@@ -44,13 +44,13 @@ public class ChatHub(
 
             createMessage.SenderId = userId;
 
-            Message message = _mapper.Map<Message>(createMessage);
+            var message = _mapper.Map<Message>(createMessage);
             message.MessageSent = DateTime.Now;
             await _messageRepository.AddAsync(message);
 
             if (await _messageRepository.SaveAllAsync())
             {
-                MessageResponse messageToReturn = _mapper.Map<MessageResponse>(message);
+                var messageToReturn = _mapper.Map<MessageResponse>(message);
                 await Clients.Group($"{userId}").SendAsync("NewMessage", messageToReturn);
                 await Clients
                     .Group($"{createMessage.RecipientId}")

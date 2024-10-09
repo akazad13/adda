@@ -7,6 +7,8 @@ public static class Extensions
 {
     public static void AddApplicationError(this HttpResponse response, string message)
     {
+        ArgumentNullException.ThrowIfNull(response);
+
         response.Headers.Append("Application-Error", message);
         response.Headers.Append("Access-Control-Expose-Headers", "Application-Error");
         response.Headers.Append("Access-Control-Allow-Origin", "*");
@@ -30,6 +32,8 @@ public static class Extensions
         int totalPages
     )
     {
+        ArgumentNullException.ThrowIfNull(response);
+
         var paginationHeader = new PaginationHeader(
             currentPage,
             itemsPerPage,

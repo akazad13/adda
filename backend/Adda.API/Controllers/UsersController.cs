@@ -28,7 +28,7 @@ public class UsersController(
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync(RegistrationRequest request)
     {
-        ErrorOr<User> result = await _userService.RegistrationAsync(request);
+        var result = await _userService.RegistrationAsync(request);
 
         if (!result.IsError)
         {
@@ -49,9 +49,9 @@ public class UsersController(
 
     public async Task<IActionResult> GetAsync([FromQuery] UserParams userParams)
     {
-        PageList<User> users = await _userService.GetAsync(userParams);
+        var users = await _userService.GetAsync(userParams);
 
-        IEnumerable<UserListDetails> usersToReturn = _mapper.Map<IEnumerable<UserListDetails>>(users);
+        var usersToReturn = _mapper.Map<IEnumerable<UserListDetails>>(users);
 
         Response.AddPagination(
             users.CurrrentPage,
@@ -66,8 +66,8 @@ public class UsersController(
     [HttpGet("{id}", Name = "GetUser")]
     public async Task<IActionResult> GetAsync(int id)
     {
-        ErrorOr<User> user = await _userService.GetAsync(id);
-        UserDetails userToReturn = _mapper.Map<UserDetails>(user.Value);
+        var user = await _userService.GetAsync(id);
+        var userToReturn = _mapper.Map<UserDetails>(user.Value);
 
         return Ok(userToReturn);
     }
@@ -80,7 +80,7 @@ public class UsersController(
             return Unauthorized();
         }
 
-        ErrorOr<Success> result = await _userService.UpdateAsync(id, request);
+        var result = await _userService.UpdateAsync(id, request);
         if (result.IsError)
         {
             return BadRequest(result.Errors);
@@ -96,7 +96,7 @@ public class UsersController(
             return Unauthorized();
         }
 
-        ErrorOr<Success> result = await _userService.BookmakAsync(id, recipientId);
+        var result = await _userService.BookmakAsync(id, recipientId);
 
         if (result.IsError)
         {

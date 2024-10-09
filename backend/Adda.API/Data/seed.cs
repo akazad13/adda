@@ -52,7 +52,7 @@ public class Seed(
         if (!await _userManager.Users.AnyAsync())
         {
             string userData = await File.ReadAllTextAsync("Data/UserSeedData.json");
-            List<User>? users = userData is not null ? JsonConvert.DeserializeObject<List<User>>(userData) : [];
+            var users = userData is not null ? JsonConvert.DeserializeObject<List<User>>(userData) : [];
 
             // create some roles
 
@@ -63,12 +63,12 @@ public class Seed(
                 new() { Name = RoleOption.Moderator }
             };
 
-            foreach (Role role in roles)
+            foreach (var role in roles)
             {
                 _ = await _roleManager.CreateAsync(role);
             }
 
-            foreach (User user in users)
+            foreach (var user in users)
             {
                 if (user.Photos.Count != 0)
                 {
@@ -88,10 +88,10 @@ public class Seed(
                 KnownAs = "Admin"
             };
 
-            IdentityResult result = await _userManager.CreateAsync(adminUser, "password");
+            var result = await _userManager.CreateAsync(adminUser, "password");
             if (result.Succeeded)
             {
-                User? admin = await _userManager.FindByNameAsync(adminUsername);
+                var admin = await _userManager.FindByNameAsync(adminUsername);
                 _ = await _userManager.AddToRolesAsync(admin, new[] { RoleOption.Admin, RoleOption.Moderator });
             }
         }

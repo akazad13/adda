@@ -21,14 +21,14 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
                 return Error.Failure("No file was uploaded");
             }
 
-            User? userFromRepo = await _userRepository.GetAsync(userId, true);
+            var userFromRepo = await _userRepository.GetAsync(userId, true);
 
-            if(userFromRepo == null)
+            if (userFromRepo == null)
             {
                 return Error.Failure("User not found");
             }
 
-            ErrorOr<PhotoUploadResult> res = await _cloudinaryService.UploadPhotoAsync(
+            var res = await _cloudinaryService.UploadPhotoAsync(
                 file
             );
 
@@ -37,7 +37,7 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
                 return Error.Failure(res.FirstError.Description);
             }
 
-            Photo photo = new()
+            var photo = new Photo()
             {
                 Url = res.Value.Url,
                 PublicId = res.Value.PublicId,
@@ -68,7 +68,7 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
 
     public async Task<ErrorOr<Success>> ApprovePhotoAsync(int photoId)
     {
-        Photo photo = await _photoRepository.GetPhotoAsync(photoId);
+        var photo = await _photoRepository.GetPhotoAsync(photoId);
 
         photo.IsApproved = true;
 
@@ -83,14 +83,14 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
     {
         try
         {
-            User? user = await _userRepository.GetAsync(userId, true);
+            var user = await _userRepository.GetAsync(userId, true);
 
             if (user == null || !user.Photos.Any(p => p.Id == id))
             {
                 return Error.Failure(description: "Can not find the photo");
             }
 
-            Photo photoFromRepo = await _photoRepository.GetAsync(id);
+            var photoFromRepo = await _photoRepository.GetAsync(id);
 
             if (photoFromRepo.IsMain)
             {
@@ -99,7 +99,7 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
 
             if (photoFromRepo.PublicId != null)
             {
-                ErrorOr<Success> res = await _cloudinaryService.DeletePhotoAsync(photoFromRepo.PublicId);
+                var res = await _cloudinaryService.DeletePhotoAsync(photoFromRepo.PublicId);
 
                 if (!res.IsError)
                 {
@@ -125,7 +125,7 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
 
     public async Task<ErrorOr<Success>> DeleteAsync(int photoId)
     {
-        Photo photo = await _photoRepository.GetPhotoAsync(photoId);
+        var photo = await _photoRepository.GetPhotoAsync(photoId);
 
         if (photo.IsMain)
         {
@@ -134,7 +134,7 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
 
         if (photo.PublicId != null)
         {
-            ErrorOr<Success> result = await _cloudinaryService.DeletePhotoAsync(photo.PublicId);
+            var result = await _cloudinaryService.DeletePhotoAsync(photo.PublicId);
 
             if (!result.IsError)
             {
@@ -171,21 +171,21 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
 
     public async Task<ErrorOr<Success>> SetMainPhotoAsync(int userId, int id)
     {
-        User? user = await _userRepository.GetAsync(userId, true);
+        var user = await _userRepository.GetAsync(userId, true);
 
         if (user == null || !user.Photos.Any(p => p.Id == id))
         {
             return Error.Failure(description: "Can not find the photo");
         }
 
-        Photo photoFromRepo = await _photoRepository.GetAsync(id);
+        var photoFromRepo = await _photoRepository.GetAsync(id);
 
         if (photoFromRepo.IsMain)
         {
             return Error.Validation(description: "This is already the main photo");
         }
 
-        Photo currentMainPhoto = await _photoRepository.GetMainPhotoForUserAsync(userId);
+        var currentMainPhoto = await _photoRepository.GetMainPhotoForUserAsync(userId);
         currentMainPhoto.IsMain = false;
 
         photoFromRepo.IsMain = true;

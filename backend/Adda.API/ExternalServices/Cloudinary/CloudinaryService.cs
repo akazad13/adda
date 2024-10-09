@@ -14,15 +14,17 @@ public class CloudinaryService(
     {
         try
         {
+            ArgumentNullException.ThrowIfNull(file);
+
             if (file.Length > 0)
             {
-                using System.IO.Stream stream = file.OpenReadStream();
+                using var stream = file.OpenReadStream();
                 var uploadParams = new ImageUploadParams()
                 {
                     File = new FileDescription(file.Name, stream),
                     Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face")
                 };
-                ImageUploadResult uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
                 return uploadResult.Error switch
                 {
@@ -43,7 +45,7 @@ public class CloudinaryService(
         try
         {
             var deleteParams = new DeletionParams(publicId);
-            DeletionResult result = await _cloudinary.DestroyAsync(deleteParams);
+            var result = await _cloudinary.DestroyAsync(deleteParams);
 
             return result.Result switch
             {

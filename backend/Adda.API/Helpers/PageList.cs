@@ -25,7 +25,7 @@ public class PageList<T> : List<T>
     )
     {
         int count = await source.CountAsync();
-        List<T> item = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        var item = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         return new PageList<T>(item, count, pageNumber, pageSize);
     }
 }

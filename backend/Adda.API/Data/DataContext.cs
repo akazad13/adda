@@ -25,6 +25,8 @@ public class DataContext(DbContextOptions<DataContext> options)
     {
         base.OnModelCreating(builder);
 
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.Entity<User>().ToTable(name: "Users");
         builder.Entity<Role>().ToTable(name: "Roles");
         builder.Entity<IdentityUserClaim<int>>().ToTable("UserClaims");

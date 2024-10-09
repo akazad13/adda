@@ -31,7 +31,9 @@ public class UserRepository(DataContext context) : BaseRepository(context), IUse
 
     public async Task<PageList<User>> GetAsync(UserParams userParams)
     {
-        IQueryable<User> users = _context.Users
+        ArgumentNullException.ThrowIfNull(userParams);
+
+        var users = _context.Users
             .Include(p => p.Photos)
             .OrderByDescending(u => u.LastActive)
             .AsQueryable();
@@ -40,7 +42,7 @@ public class UserRepository(DataContext context) : BaseRepository(context), IUse
 
         if (userParams.Bookmarkers)
         {
-            IEnumerable<int> userBookmarks = await getUserBookmarksAsync(
+            var userBookmarks = await getUserBookmarksAsync(
                 userParams.UserId,
                 userParams.Bookmarkers
             );
@@ -49,7 +51,7 @@ public class UserRepository(DataContext context) : BaseRepository(context), IUse
 
         if (userParams.Bookmarkeds)
         {
-            IEnumerable<int> userBookmarkeds = await getUserBookmarksAsync(
+            var userBookmarkeds = await getUserBookmarksAsync(
                 userParams.UserId,
                 userParams.Bookmarkers
             );
@@ -58,8 +60,8 @@ public class UserRepository(DataContext context) : BaseRepository(context), IUse
 
         if (userParams.MinAge != 18 || userParams.MaxAge != 99)
         {
-            DateTime minDob = DateTime.Today.AddYears(-userParams.MaxAge);
-            DateTime maxDob = DateTime.Today.AddYears(-userParams.MinAge + 1);
+            var minDob = DateTime.Today.AddYears(-userParams.MaxAge);
+            var maxDob = DateTime.Today.AddYears(-userParams.MinAge + 1);
             users = users.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
         }
 
@@ -80,7 +82,7 @@ public class UserRepository(DataContext context) : BaseRepository(context), IUse
 
     private async Task<IEnumerable<int>> getUserBookmarksAsync(int id, bool bookmarkers)
     {
-        User user = await _context.Users
+        var user = await _context.Users
             .Include(x => x.Bookmarkers)
             .Include(x => x.Bookmarkeds)
             .FirstOrDefaultAsync(u => u.Id == id);

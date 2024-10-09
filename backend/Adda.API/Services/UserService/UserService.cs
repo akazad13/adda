@@ -19,7 +19,7 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
 
     public async Task<ErrorOr<Success>> BookmakAsync(int id, int recipientId)
     {
-        Bookmark? bookmark = await _userRepository.GetBookmarkAsync(id, recipientId);
+        var bookmark = await _userRepository.GetBookmarkAsync(id, recipientId);
 
         if (bookmark != null)
         {
@@ -44,7 +44,7 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
     public async Task<PageList<User>> GetAsync(UserParams filterOptions)
     {
         filterOptions.UserId = _currentUser.UserId;
-        PageList<User> users = await _userRepository.GetAsync(filterOptions);
+        var users = await _userRepository.GetAsync(filterOptions);
         return users;
     }
     public async Task<ErrorOr<User>> GetAsync(int id)
@@ -57,16 +57,16 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
     {
         try
         {
-            User? user = await _userManager.FindByNameAsync(request.Username);
+            var user = await _userManager.FindByNameAsync(request.Username);
 
-            if(user != null)
+            if (user != null)
             {
                 return Error.Validation(description: "Username already exists.");
             }
 
-            User userToCreate = _mapper.Map<User>(request);
+            var userToCreate = _mapper.Map<User>(request);
 
-            IdentityResult result = await _userManager.CreateAsync(userToCreate, request.Password);
+            var result = await _userManager.CreateAsync(userToCreate, request.Password);
 
             if (result.Succeeded)
             {
@@ -84,9 +84,9 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
 
     public async Task<ErrorOr<Success>> UpdateAsync(int id, UserUpdateRequest request)
     {
-        User? userFromRepo = await _userRepository.GetAsync(id, true);
+        var userFromRepo = await _userRepository.GetAsync(id, true);
 
-        if(userFromRepo == null)
+        if (userFromRepo == null)
         {
             return Error.Failure(description: "User not found.");
         }
@@ -109,19 +109,19 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
     {
         try
         {
-            User? user = await _userManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByNameAsync(userName);
 
-            if(user == null)
+            if (user == null)
             {
                 return Error.Failure(description: "User not found.");
             }
 
-            IList<string> userRoles = await _userManager.GetRolesAsync(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
 
             string[] selectedRoles = request.RoleName;
 
             selectedRoles ??= [];
-            IdentityResult result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));
+            var result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));
 
             if (!result.Succeeded)
             {

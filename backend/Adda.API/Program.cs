@@ -25,7 +25,7 @@ else
         {
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            IExceptionHandlerFeature? error = context.Features.Get<IExceptionHandlerFeature>();
+            var error = context.Features.Get<IExceptionHandlerFeature>();
             if (error != null)
             {
                 context.Response.AddApplicationError(error.Error.Message);
@@ -51,7 +51,7 @@ app.MapHub<ChatHub>("hubs/chat");
 // Initialise and seed database
 using (IServiceScope scope = app.Services.CreateScope())
 {
-    Seed initialiser = scope.ServiceProvider.GetRequiredService<Seed>();
+    var initialiser = scope.ServiceProvider.GetRequiredService<Seed>();
     await initialiser.InitialiseAsync();
     await initialiser.SeedAsync();
 }

@@ -28,7 +28,7 @@ public class MessageService(IMessageRepository messageRepository) : IMessageServ
     public async Task<ErrorOr<Success>> DeleteAsync(int userId, int id)
     {
 
-        Message messageFromRepo = await _messageRepository.GetMessageAsync(id);
+        var messageFromRepo = await _messageRepository.GetMessageAsync(id);
 
         if (messageFromRepo == null)
         {
