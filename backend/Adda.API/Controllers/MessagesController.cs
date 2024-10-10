@@ -1,10 +1,8 @@
 using Adda.API.Dtos;
 using Adda.API.Helpers;
-using Adda.API.Models;
 using Adda.API.Security.CurrentUserProvider;
 using Adda.API.Services.MessageService;
 using AutoMapper;
-using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Adda.API.Controllers;

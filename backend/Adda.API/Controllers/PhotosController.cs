@@ -1,9 +1,7 @@
 using Adda.API.Dtos;
-using Adda.API.Models;
 using Adda.API.Security.CurrentUserProvider;
 using Adda.API.Services.PhotoService;
 using AutoMapper;
-using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Adda.API.Controllers;

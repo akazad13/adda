@@ -22,8 +22,7 @@ public class AuthService(IJwtTokenGenerator jwtTokenGenerator, UserManager<User>
                 .Include(p => p.Photos)
                 .SingleOrDefaultAsync(
                     u => u.UserName.Equals(
-                            request.Username,
-                            StringComparison.Ordinal
+                            request.Username
                     )
                 );
 
