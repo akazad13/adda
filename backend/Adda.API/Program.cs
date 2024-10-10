@@ -45,11 +45,15 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.MapControllers();
 app.MapHub<ChatHub>("hubs/chat");
+
+app.MapFallbackToController("Index", "FallBack");
 
 // Initialise and seed database
 using (IServiceScope scope = app.Services.CreateScope())
