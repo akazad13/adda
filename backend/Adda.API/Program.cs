@@ -19,6 +19,9 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
     _ = app.UseExceptionHandler(static builder =>
     {
         builder.Run(static async context =>
@@ -37,7 +40,7 @@ else
 
 app.UseCors("_myAllowSpecificOrigins");
 
-//  app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseRouting();
 
