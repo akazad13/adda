@@ -22,7 +22,7 @@ public class Seed(
     {
         try
         {
-            if (_context.Database.IsMySql() || _context.Database.IsSqlite())
+            if (_context.Database.IsMySql())
             {
                 await _context.Database.MigrateAsync();
             }

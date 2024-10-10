@@ -165,16 +165,10 @@ public static class DependencyInjection
     {
 
         string connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-        if (environment.IsDevelopment())
-        {
-            services.AddDbContext<DataContext>(x => x.UseSqlite(connectionString));
-        }
-        else
-        {
-            services.AddDbContext<DataContext>(
-               x => x.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-           );
-        }
+
+        services.AddDbContext<DataContext>(
+            x => x.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+        );
 
         services.AddScoped<Seed>();
 

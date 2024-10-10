@@ -14,7 +14,7 @@ public class User : IdentityUser<int>
     public string? Interests { get; set; }
     public string? city { get; set; }
     public string? Country { get; set; }
-    public ICollection<Photo>? Photos { get; }
+    public ICollection<Photo>? Photos { get; set; }
     public ICollection<Bookmark>? Bookmarkers { get; }
     public ICollection<Bookmark>? Bookmarkeds { get; }
     public ICollection<Message>? MessagesSent { get; }

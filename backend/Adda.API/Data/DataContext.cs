@@ -81,5 +81,6 @@ public class DataContext(DbContextOptions<DataContext> options)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<Photo>().HasQueryFilter(p => p.IsApproved);
+        builder.Entity<Photo>().Property(p => p.PublicId).IsRequired(false);
     }
 }
