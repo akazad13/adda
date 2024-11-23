@@ -41,7 +41,7 @@ public class UsersController(
     }
 
     [HttpGet]
-    [SwaggerResponse(200, "Claims have been validated", typeof(IEnumerable<UserListDetails>))]
+    [SwaggerResponse(200, null, typeof(IEnumerable<UserListDetails>))]
     [SwaggerResponse(400)]
     [SwaggerResponse(500)]
 
