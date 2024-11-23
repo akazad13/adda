@@ -400,4 +400,3 @@ FodyWeavers.xsd
 # User Input
 **/*.db
 **/*.db-*
-wwwroot
