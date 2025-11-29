@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { PhotoEditorComponent } from './photo-editor/photo-editor.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 
 @Component({
@@ -30,7 +30,7 @@ import { DateAgoPipe } from '../../pipes/date-ago.pipe';
     }
 
   `,
-    imports: [PhotoEditorComponent, TabsModule, FormsModule, DatePipe, NgIf, DateAgoPipe]
+    imports: [PhotoEditorComponent, TabsModule, FormsModule, DatePipe, DateAgoPipe]
 })
 export class MemberEditComponent implements OnInit, OnDestroy {
   constructor(

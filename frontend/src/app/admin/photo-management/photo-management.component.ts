@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Photo } from '../../models/photo';
 import { AdminService } from '../../services/admin.service';
 import { AlertifyService } from '../../services/alertify.service';
-import { NgFor } from '@angular/common';
+
 import { firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-photo-management',
     templateUrl: './photo-management.component.html',
     styles: ``,
-    imports: [NgFor]
+    imports: []
 })
 export class PhotoManagementComponent implements OnInit {
   photos: Photo[] = [];

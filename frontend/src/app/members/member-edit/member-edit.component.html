@@ -2,9 +2,11 @@
   <div class="row">
     <div class="col-sm-4"><h1>Your Profile</h1></div>
     <div class="col-sm-8">
-      <div *ngIf="editForm.dirty" class="alert alert-info">
-        <strong>Information:</strong> You have made changes. Any unsaved changes will be lost!
-      </div>
+      @if (editForm.dirty) {
+        <div class="alert alert-info">
+          <strong>Information:</strong> You have made changes. Any unsaved changes will be lost!
+        </div>
+      }
     </div>
   </div>
   <div class="row mb-4">

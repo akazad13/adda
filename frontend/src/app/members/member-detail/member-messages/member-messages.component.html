@@ -3,40 +3,51 @@
 
   <div class="card-body">
     <ng-scrollbar #scrollbarRef="ngScrollbar" class="chat-scrollbar">
-      <div *ngIf="messages?.length === 0">No message yet.... say hi by using the message box below</div>
+      @if (messages?.length === 0) {
+        <div>No message yet.... say hi by using the message box below</div>
+      }
 
       <ul class="chat">
-        <li *ngFor="let message of messages">
-          <!-- to them -->
-          <div *ngIf="message.senderId === recipientId">
-            <div class="chat-body">
-              <p>{{ message.content }}</p>
-              <div class="header">
-                <small class="text-muted">
-                  <span class="fa fa-clock-o"> {{ message.messageSent | dateAgo }}</span>
-                </small>
+        @for (message of messages; track message) {
+          <li>
+            <!-- to them -->
+            @if (message.senderId === recipientId) {
+              <div>
+                <div class="chat-body">
+                  <p>{{ message.content }}</p>
+                  <div class="header">
+                    <small class="text-muted">
+                      <span class="fa fa-clock-o"> {{ message.messageSent | dateAgo }}</span>
+                    </small>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-
-          <!-- to me -->
-          <div *ngIf="message.senderId !== recipientId">
-            <div class="chat-body text-end">
-              <p>{{ message.content }}</p>
-              <div class="header">
-                <small class="text-muted">
-                  <span class="fa fa-clock-o"> {{ message.messageSent | dateAgo }}</span>
-                  <span *ngIf="!message.isRead" class="ms-2" style="color: lightgray">
-                    <i class="fa fa-check" aria-hidden="true"></i>
-                  </span>
-                  <span *ngIf="message.isRead" class="text-success ms-2">
-                    <i class="fa fa-check" aria-hidden="true"></i> <i class="fa fa-check" aria-hidden="true"></i
-                  ></span>
-                </small>
+            }
+            <!-- to me -->
+            @if (message.senderId !== recipientId) {
+              <div>
+                <div class="chat-body text-end">
+                  <p>{{ message.content }}</p>
+                  <div class="header">
+                    <small class="text-muted">
+                      <span class="fa fa-clock-o"> {{ message.messageSent | dateAgo }}</span>
+                      @if (!message.isRead) {
+                        <span class="ms-2" style="color: lightgray">
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                        </span>
+                      }
+                      @if (message.isRead) {
+                        <span class="text-success ms-2">
+                          <i class="fa fa-check" aria-hidden="true"></i> <i class="fa fa-check" aria-hidden="true"></i
+                        ></span>
+                      }
+                    </small>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </li>
+            }
+          </li>
+        }
       </ul>
     </ng-scrollbar>
   </div>
@@ -50,11 +61,11 @@
           type="text"
           class="form-control input-sm"
           placeholder="send a private message"
-        />
-        <div class="input-group-append">
-          <button class="btn btn-primary" [disabled]="!messageForm.valid">Send</button>
+          />
+          <div class="input-group-append">
+            <button class="btn btn-primary" [disabled]="!messageForm.valid">Send</button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>

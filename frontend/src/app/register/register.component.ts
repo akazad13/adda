@@ -7,7 +7,7 @@ import { AlertifyService } from '../services/alertify.service';
 import { User } from '../models/user';
 import { HasErrorPipe } from '../pipes/has-error.pipe';
 import { IsInvalidPipe } from '../pipes/is-invalid.pipe';
-import { NgIf } from '@angular/common';
+
 import { UserService } from '../services/user.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -15,7 +15,7 @@ import { firstValueFrom } from 'rxjs';
     selector: 'app-register',
     templateUrl: './register.component.html',
     styles: ``,
-    imports: [HasErrorPipe, IsInvalidPipe, BsDatepickerModule, ReactiveFormsModule, NgIf]
+    imports: [HasErrorPipe, IsInvalidPipe, BsDatepickerModule, ReactiveFormsModule]
 })
 export class RegisterComponent implements OnInit {
   user!: User;

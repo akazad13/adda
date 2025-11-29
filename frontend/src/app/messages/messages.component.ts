@@ -5,7 +5,7 @@ import { UserService } from '../services/user.service';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AlertifyService } from '../services/alertify.service';
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { firstValueFrom } from 'rxjs';
@@ -21,7 +21,7 @@ import { firstValueFrom } from 'rxjs';
       max-height: 50px;
     }
   `,
-    imports: [NgIf, NgFor, NgClass, DatePipe, FormsModule, PaginationModule, RouterLink]
+    imports: [NgClass, DatePipe, FormsModule, PaginationModule, RouterLink]
 })
 export class MessagesComponent implements OnInit {
   messages: Message[] | null = null;

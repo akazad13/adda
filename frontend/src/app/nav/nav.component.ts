@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { AlertifyService } from '../services/alertify.service';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
+
 import { HasRoleDirective } from '../directives/hasRole.directive';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
@@ -23,7 +23,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
       display: inline;
     }
   `,
-    imports: [FormsModule, RouterLink, NgIf, HasRoleDirective, BsDropdownModule]
+    imports: [FormsModule, RouterLink, HasRoleDirective, BsDropdownModule]
 })
 export class NavComponent implements OnInit, OnDestroy {
   model: any = {};

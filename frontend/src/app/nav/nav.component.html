@@ -2,55 +2,60 @@
   <div class="container">
     <a class="navbar-brand" [routerLink]="['/home']"
       ><img src="./logo.svg" alt="Adda logo" style="border: none; max-height: 30px; margin-right: 5px" /> Adda</a
-    >
+      >
 
-    <ul *ngIf="loggedIn()" class="navbar-nav me-auto">
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/members']">Members</a>
-      </li>
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/lists']">My Bookmarks</a>
-      </li>
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/messages']">Messages</a>
-      </li>
-      <li *appHasRole="['Admin', 'Moderator']" class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/admin']">Admin</a>
-      </li>
-    </ul>
+      @if (loggedIn()) {
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" [routerLink]="['/members']">Members</a>
+          </li>
+          <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" [routerLink]="['/lists']">My Bookmarks</a>
+          </li>
+          <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" [routerLink]="['/messages']">Messages</a>
+          </li>
+          <li *appHasRole="['Admin', 'Moderator']" class="nav-item" routerLinkActive="active">
+            <a class="nav-link" [routerLink]="['/admin']">Admin</a>
+          </li>
+        </ul>
+      }
 
-    <div *ngIf="loggedIn()" class="dropdown" dropdown>
-      <span class="me-1">
-        <img src="{{ photoUrl || './user.png' }}" alt="{{ authService.currentUser?.knownAs }}" />
-      </span>
-      <a class="dropdown-toggle text-light" dropdownToggle> Welcome {{ authService.decodedToken?.unique_name }} </a>
+      @if (loggedIn()) {
+        <div class="dropdown" dropdown>
+          <span class="me-1">
+            <img src="{{ photoUrl || './user.png' }}" alt="{{ authService.currentUser?.knownAs }}" />
+          </span>
+          <a class="dropdown-toggle text-light" dropdownToggle> Welcome {{ authService.decodedToken?.unique_name }} </a>
+          <div class="dropdown-menu mt-3" *dropdownMenu>
+            <a class="dropdown-item" [routerLink]="['/member/edit']"><i class="fa fa-user"></i> Edit Profile</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" (click)="logout()"><i class="fa fa-sign-out"></i> Logout</a>
+          </div>
+        </div>
+      }
 
-      <div class="dropdown-menu mt-3" *dropdownMenu>
-        <a class="dropdown-item" [routerLink]="['/member/edit']"><i class="fa fa-user"></i> Edit Profile</a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item" (click)="logout()"><i class="fa fa-sign-out"></i> Logout</a>
-      </div>
-    </div>
-
-    <form *ngIf="!loggedIn()" #loginFrom="ngForm" class="d-flex flex-row align-items-center flex-wrap" (ngSubmit)="login()">
-      <input
-        class="form-control my-1 me-sm-2 w-auto"
-        type="text"
-        name="username"
-        placeholder="Username"
-        required
-        [(ngModel)]="model.username"
-      />
-      <input
-        class="form-control my-1 me-sm-2 w-auto"
-        type="password"
-        name="password"
-        placeholder="Password"
-        required
-        [(ngModel)]="model.password"
-      />
-      <button class="btn btn-success" [disabled]="!loginFrom.valid" type="submit">Login</button>
-      <button class="btn btn-secondary ms-3" type="button" [routerLink]="['/register']">Register</button>
-    </form>
-  </div>
-</nav>
+      @if (!loggedIn()) {
+        <form #loginFrom="ngForm" class="d-flex flex-row align-items-center flex-wrap" (ngSubmit)="login()">
+          <input
+            class="form-control my-1 me-sm-2 w-auto"
+            type="text"
+            name="username"
+            placeholder="Username"
+            required
+            [(ngModel)]="model.username"
+            />
+            <input
+              class="form-control my-1 me-sm-2 w-auto"
+              type="password"
+              name="password"
+              placeholder="Password"
+              required
+              [(ngModel)]="model.password"
+              />
+              <button class="btn btn-success" [disabled]="!loginFrom.valid" type="submit">Login</button>
+              <button class="btn btn-secondary ms-3" type="button" [routerLink]="['/register']">Register</button>
+            </form>
+          }
+        </div>
+      </nav>

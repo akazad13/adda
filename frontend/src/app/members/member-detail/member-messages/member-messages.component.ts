@@ -4,7 +4,7 @@ import { AlertifyService } from '../../../services/alertify.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
 import { FormsModule } from '@angular/forms';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { DateAgoPipe } from '../../../pipes/date-ago.pipe';
 import { firstValueFrom } from 'rxjs';
 import { ChatService } from '../../../services/chat.service';
@@ -46,7 +46,7 @@ import { NgScrollbar } from 'ngx-scrollbar';
       --scrollbar-thumb-color: rgba(0, 0, 0, 0.4)
     }
   `,
-    imports: [FormsModule, DatePipe, NgIf, NgFor, DateAgoPipe, NgScrollbar]
+    imports: [FormsModule, DatePipe, DateAgoPipe, NgScrollbar]
 })
 export class MemberMessagesComponent implements OnInit, OnDestroy {
   @ViewChild(NgScrollbar) scrollable!: NgScrollbar;

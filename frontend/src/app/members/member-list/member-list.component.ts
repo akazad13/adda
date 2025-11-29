@@ -5,7 +5,7 @@ import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { AlertifyService } from '../../services/alertify.service';
 import { PaginatedResult, Pagination } from '../../models/pagination';
-import { NgClass, NgFor } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { FormsModule } from '@angular/forms';
 import { MemberCardComponent } from './member-card/member-card.component';
@@ -14,7 +14,7 @@ import { MemberCardComponent } from './member-card/member-card.component';
     selector: 'app-member-list',
     templateUrl: './member-list.component.html',
     styles: ``,
-    imports: [PaginationModule, FormsModule, NgClass, NgFor, MemberCardComponent]
+    imports: [PaginationModule, FormsModule, NgClass, MemberCardComponent]
 })
 export class MemberListComponent implements OnInit, OnDestroy {
   users: User[] = [];

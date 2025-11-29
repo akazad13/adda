@@ -5,7 +5,7 @@ import { Photo } from '../../../models/photo';
 import { AlertifyService } from '../../../services/alertify.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
-import { DecimalPipe, NgClass, NgFor, NgIf, NgStyle, SlicePipe } from '@angular/common';
+import { DecimalPipe, NgClass, NgStyle, SlicePipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -37,7 +37,7 @@ import { firstValueFrom } from 'rxjs';
       opacity: 0.2;
     }
   `,
-    imports: [NgIf, NgStyle, FileUploadModule, DecimalPipe, SlicePipe, NgClass, NgFor]
+    imports: [NgStyle, FileUploadModule, DecimalPipe, SlicePipe, NgClass]
 })
 export class PhotoEditorComponent implements OnInit {
   @Input() photos!: Photo[];

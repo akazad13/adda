@@ -6,7 +6,7 @@
         btnRadio="unread"
         (click)="loadMessages('unread')"
         [ngClass]="messageContainer == 'unread' ? 'active' : ''"
-      >
+        >
         <i class="fa fa-envelope"></i> Unread
       </button>
       <button
@@ -14,7 +14,7 @@
         btnRadio="Inbox"
         (click)="loadMessages('Inbox')"
         [ngClass]="messageContainer == 'Inbox' ? 'active' : ''"
-      >
+        >
         <i class="fa fa-envelope-open"></i> Inbox
       </button>
       <button
@@ -22,53 +22,62 @@
         btnRadio="Outbox"
         (click)="loadMessages('Outbox')"
         [ngClass]="messageContainer == 'Outbox' ? 'active' : ''"
-      >
+        >
         <i class="fa fa-paper-plane"></i> Outbox
       </button>
     </div>
   </div>
 
-  <div class="row" *ngIf="messages?.length == 0">
-    <h3>No messages</h3>
-  </div>
+  @if (messages?.length == 0) {
+    <div class="row">
+      <h3>No messages</h3>
+    </div>
+  }
 
-  <div class="row" *ngIf="messages!.length > 0">
-    <table class="table table-hover" style="cursor: pointer">
-      <caption></caption>
-      <thead>
-        <tr class="table-dark">
-          <th style="width: 40%">Message</th>
-          <th style="width: 20%">From / To</th>
-          <th style="width: 20%">Sent / Received</th>
-          <th style="width: 20%"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let message of messages"
-          [routerLink]="['/members', messageContainer == 'Outbox' ? message.recipientId : message.senderId]"
-          [queryParams]="{ tab: 3 }"
-          class="table-light"
-        >
-          <td>{{ message.content }}</td>
-          <td>
-            <div *ngIf="messageContainer != 'Outbox'">
-              <img src="{{ message.senderPhotoUrl }}" class="img-circle rounded-circle me-1" alt="{{ message.senderKnownAs }}" />
-              <strong>{{ message.senderKnownAs }}</strong>
-            </div>
-            <div *ngIf="messageContainer == 'Outbox'">
-              <img src="{{ message.recipientPhotoUrl }}" class="img-circle rounded-circle me-1" alt="{{ message.recipientKnownAs }}" />
-              <strong>{{ message.recipientKnownAs }}</strong>
-            </div>
-          </td>
-          <td>{{ message.messageSent | date : 'mediumDate' }}</td>
-          <td>
-            <button class="btn btn-danger" (click)="$event.stopPropagation()" (click)="deleteMessage(message.id)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  @if (messages!.length > 0) {
+    <div class="row">
+      <table class="table table-hover" style="cursor: pointer">
+        <caption></caption>
+        <thead>
+          <tr class="table-dark">
+            <th style="width: 40%">Message</th>
+            <th style="width: 20%">From / To</th>
+            <th style="width: 20%">Sent / Received</th>
+            <th style="width: 20%"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (message of messages; track message) {
+            <tr
+              [routerLink]="['/members', messageContainer == 'Outbox' ? message.recipientId : message.senderId]"
+              [queryParams]="{ tab: 3 }"
+              class="table-light"
+              >
+              <td>{{ message.content }}</td>
+              <td>
+                @if (messageContainer != 'Outbox') {
+                  <div>
+                    <img src="{{ message.senderPhotoUrl }}" class="img-circle rounded-circle me-1" alt="{{ message.senderKnownAs }}" />
+                    <strong>{{ message.senderKnownAs }}</strong>
+                  </div>
+                }
+                @if (messageContainer == 'Outbox') {
+                  <div>
+                    <img src="{{ message.recipientPhotoUrl }}" class="img-circle rounded-circle me-1" alt="{{ message.recipientKnownAs }}" />
+                    <strong>{{ message.recipientKnownAs }}</strong>
+                  </div>
+                }
+              </td>
+              <td>{{ message.messageSent | date : 'mediumDate' }}</td>
+              <td>
+                <button class="btn btn-danger" (click)="$event.stopPropagation()" (click)="deleteMessage(message.id)">Delete</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
 </div>
 
 <div class="d-flex justify-content-center">
@@ -82,6 +91,6 @@
     nextText="&rsaquo;"
     firstText="&laquo;"
     lastText="&raquo;"
-  >
+    >
   </pagination>
 </div>

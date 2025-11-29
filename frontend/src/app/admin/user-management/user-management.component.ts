@@ -4,14 +4,14 @@ import { RolesModalComponent } from '../roles-modal/roles-modal.component';
 import { User } from '../../models/user';
 import { AdminService } from '../../services/admin.service';
 import { AlertifyService } from '../../services/alertify.service';
-import { NgFor } from '@angular/common';
+
 import { firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-user-management',
     templateUrl: './user-management.component.html',
     styles: ``,
-    imports: [NgFor],
+    imports: [],
     providers: [BsModalService]
 })
 export class UserManagementComponent implements OnInit {

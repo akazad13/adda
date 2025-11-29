@@ -11,12 +11,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users" class="">
-          <td>{{ user.id }}</td>
-          <td>{{ user.userName }}</td>
-          <td>{{ user.roles }}</td>
-          <td><button class="btn btn-info" (click)="editRolesModal(user)">Edit Roles</button></td>
-        </tr>
+        @for (user of users; track user) {
+          <tr class="">
+            <td>{{ user.id }}</td>
+            <td>{{ user.userName }}</td>
+            <td>{{ user.roles }}</td>
+            <td><button class="btn btn-info" (click)="editRolesModal(user)">Edit Roles</button></td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
