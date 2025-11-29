@@ -11,11 +11,10 @@ import { NgClass, NgFor } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-lists',
-  templateUrl: './lists.component.html',
-  styles: ``,
-  imports: [FormsModule, PaginationModule, MemberCardComponent, NgFor, NgClass],
-  standalone: true,
+    selector: 'app-lists',
+    templateUrl: './lists.component.html',
+    styles: ``,
+    imports: [FormsModule, PaginationModule, MemberCardComponent, NgFor, NgClass]
 })
 export class ListsComponent implements OnInit {
   users: User[] | null = null;

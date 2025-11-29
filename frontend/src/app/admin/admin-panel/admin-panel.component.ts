@@ -5,11 +5,10 @@ import { UserManagementComponent } from '../user-management/user-management.comp
 import { HasRoleDirective } from '../../directives/hasRole.directive';
 
 @Component({
-  selector: 'app-admin-panel',
-  templateUrl: './admin-panel.component.html',
-  styles: ``,
-  imports: [PhotoManagementComponent, TabsModule, UserManagementComponent, HasRoleDirective],
-  standalone: true,
+    selector: 'app-admin-panel',
+    templateUrl: './admin-panel.component.html',
+    styles: ``,
+    imports: [PhotoManagementComponent, TabsModule, UserManagementComponent, HasRoleDirective]
 })
 export class AdminPanelComponent {
   constructor() {}

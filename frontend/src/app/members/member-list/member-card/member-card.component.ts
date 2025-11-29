@@ -7,9 +7,9 @@ import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-member-card',
-  templateUrl: './member-card.component.html',
-  styles: `
+    selector: 'app-member-card',
+    templateUrl: './member-card.component.html',
+    styles: `
     .card:hover img {
     transform: scale(1.2, 1.2);
     transition-duration: 500ms;
@@ -47,8 +47,7 @@ import { firstValueFrom } from 'rxjs';
     transition: all 0.3s ease-in-out;
   }
   `,
-  imports: [RouterLink],
-  standalone: true,
+    imports: [RouterLink]
 })
 export class MemberCardComponent implements OnInit {
   @Input()

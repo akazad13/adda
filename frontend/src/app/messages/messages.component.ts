@@ -11,9 +11,9 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-messages',
-  templateUrl: './messages.component.html',
-  styles: `
+    selector: 'app-messages',
+    templateUrl: './messages.component.html',
+    styles: `
     table {
       margin-top: 15px;
     }
@@ -21,8 +21,7 @@ import { firstValueFrom } from 'rxjs';
       max-height: 50px;
     }
   `,
-  imports: [NgIf, NgFor, NgClass, DatePipe, FormsModule, PaginationModule, RouterLink],
-  standalone: true,
+    imports: [NgIf, NgFor, NgClass, DatePipe, FormsModule, PaginationModule, RouterLink]
 })
 export class MessagesComponent implements OnInit {
   messages: Message[] | null = null;

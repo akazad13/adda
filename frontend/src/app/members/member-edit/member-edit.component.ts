@@ -12,9 +12,9 @@ import { DatePipe, NgIf } from '@angular/common';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 
 @Component({
-  selector: 'app-member-edit',
-  templateUrl: './member-edit.component.html',
-  styles: `
+    selector: 'app-member-edit',
+    templateUrl: './member-edit.component.html',
+    styles: `
    .img-thumbnail {
       margin: 25px;
       width: 85%;
@@ -30,8 +30,7 @@ import { DateAgoPipe } from '../../pipes/date-ago.pipe';
     }
 
   `,
-  imports: [PhotoEditorComponent, TabsModule, FormsModule, DatePipe, NgIf, DateAgoPipe],
-  standalone: true,
+    imports: [PhotoEditorComponent, TabsModule, FormsModule, DatePipe, NgIf, DateAgoPipe]
 })
 export class MemberEditComponent implements OnInit, OnDestroy {
   constructor(

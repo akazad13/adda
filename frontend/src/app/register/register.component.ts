@@ -12,11 +12,10 @@ import { UserService } from '../services/user.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styles: ``,
-  imports: [HasErrorPipe, IsInvalidPipe, BsDatepickerModule, ReactiveFormsModule, NgIf],
-  standalone: true,
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styles: ``,
+    imports: [HasErrorPipe, IsInvalidPipe, BsDatepickerModule, ReactiveFormsModule, NgIf]
 })
 export class RegisterComponent implements OnInit {
   user!: User;

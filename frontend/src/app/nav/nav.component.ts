@@ -9,9 +9,9 @@ import { HasRoleDirective } from '../directives/hasRole.directive';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @Component({
-  selector: 'app-nav',
-  templateUrl: './nav.component.html',
-  styles: `
+    selector: 'app-nav',
+    templateUrl: './nav.component.html',
+    styles: `
     .dropdown-toggle,
     .dropdown-item {
       cursor: pointer;
@@ -23,8 +23,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
       display: inline;
     }
   `,
-  imports: [FormsModule, RouterLink, NgIf, HasRoleDirective, BsDropdownModule],
-  standalone: true,
+    imports: [FormsModule, RouterLink, NgIf, HasRoleDirective, BsDropdownModule]
 })
 export class NavComponent implements OnInit, OnDestroy {
   model: any = {};

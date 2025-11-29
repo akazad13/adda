@@ -11,9 +11,9 @@ import { DatePipe } from '@angular/common';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 
 @Component({
-  selector: 'app-member-detail',
-  templateUrl: './member-detail.component.html',
-  styles: `
+    selector: 'app-member-detail',
+    templateUrl: './member-detail.component.html',
+    styles: `
     .img-thumbnail {
       margin: 25px;
       width: 85%;
@@ -30,8 +30,7 @@ import { DateAgoPipe } from '../../pipes/date-ago.pipe';
       border-top: none;
     }
   `,
-  imports: [MemberMessagesComponent, TabsModule, DatePipe, DateAgoPipe],
-  standalone: true,
+    imports: [MemberMessagesComponent, TabsModule, DatePipe, DateAgoPipe]
 })
 export class MemberDetailComponent implements OnInit, OnDestroy {
   @ViewChild('memberTabs', { static: true }) memberTabs!: TabsetComponent;

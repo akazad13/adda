@@ -5,11 +5,10 @@ import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-roles-modal',
-  templateUrl: './roles-modal.component.html',
-  styles: ``,
-  imports: [NgFor, FormsModule],
-  standalone: true,
+    selector: 'app-roles-modal',
+    templateUrl: './roles-modal.component.html',
+    styles: ``,
+    imports: [NgFor, FormsModule]
 })
 export class RolesModalComponent implements OnInit {
   @Output() updateSelectedRoles = new EventEmitter();

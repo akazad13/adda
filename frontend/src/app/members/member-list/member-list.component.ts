@@ -11,11 +11,10 @@ import { FormsModule } from '@angular/forms';
 import { MemberCardComponent } from './member-card/member-card.component';
 
 @Component({
-  selector: 'app-member-list',
-  templateUrl: './member-list.component.html',
-  styles: ``,
-  imports: [PaginationModule, FormsModule, NgClass, NgFor, MemberCardComponent],
-  standalone: true,
+    selector: 'app-member-list',
+    templateUrl: './member-list.component.html',
+    styles: ``,
+    imports: [PaginationModule, FormsModule, NgClass, NgFor, MemberCardComponent]
 })
 export class MemberListComponent implements OnInit, OnDestroy {
   users: User[] = [];

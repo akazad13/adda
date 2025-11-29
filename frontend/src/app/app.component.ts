@@ -8,11 +8,10 @@ import { LoderComponent } from './shared/loader.component';
 import { NavComponent } from './nav/nav.component';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
-  imports: [RouterOutlet, LoderComponent, NavComponent],
-  standalone: true,
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css',
+    imports: [RouterOutlet, LoderComponent, NavComponent]
 })
 export class AppComponent {
   jwtHelper = new JwtHelperService();

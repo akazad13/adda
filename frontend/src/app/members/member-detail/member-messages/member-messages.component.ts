@@ -10,9 +10,9 @@ import { firstValueFrom } from 'rxjs';
 import { ChatService } from '../../../services/chat.service';
 import { NgScrollbar } from 'ngx-scrollbar';
 @Component({
-  selector: 'app-member-messages',
-  templateUrl: './member-messages.component.html',
-  styles: `
+    selector: 'app-member-messages',
+    templateUrl: './member-messages.component.html',
+    styles: `
     .card {
       border: none;
     }
@@ -46,8 +46,7 @@ import { NgScrollbar } from 'ngx-scrollbar';
       --scrollbar-thumb-color: rgba(0, 0, 0, 0.4)
     }
   `,
-  imports: [FormsModule, DatePipe, NgIf, NgFor, DateAgoPipe, NgScrollbar],
-  standalone: true,
+    imports: [FormsModule, DatePipe, NgIf, NgFor, DateAgoPipe, NgScrollbar]
 })
 export class MemberMessagesComponent implements OnInit, OnDestroy {
   @ViewChild(NgScrollbar) scrollable!: NgScrollbar;

@@ -9,9 +9,9 @@ import { DecimalPipe, NgClass, NgFor, NgIf, NgStyle, SlicePipe } from '@angular/
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-photo-editor',
-  templateUrl: './photo-editor.component.html',
-  styles: `
+    selector: 'app-photo-editor',
+    templateUrl: './photo-editor.component.html',
+    styles: `
     img.img-thumbnail {
       height: 100px;
       min-width: 100px !important;
@@ -37,8 +37,7 @@ import { firstValueFrom } from 'rxjs';
       opacity: 0.2;
     }
   `,
-  imports: [NgIf, NgStyle, FileUploadModule, DecimalPipe, SlicePipe, NgClass, NgFor],
-  standalone: true,
+    imports: [NgIf, NgStyle, FileUploadModule, DecimalPipe, SlicePipe, NgClass, NgFor]
 })
 export class PhotoEditorComponent implements OnInit {
   @Input() photos!: Photo[];

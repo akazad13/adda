@@ -6,11 +6,10 @@ import { NgFor } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-photo-management',
-  templateUrl: './photo-management.component.html',
-  styles: ``,
-  imports: [NgFor],
-  standalone: true,
+    selector: 'app-photo-management',
+    templateUrl: './photo-management.component.html',
+    styles: ``,
+    imports: [NgFor]
 })
 export class PhotoManagementComponent implements OnInit {
   photos: Photo[] = [];

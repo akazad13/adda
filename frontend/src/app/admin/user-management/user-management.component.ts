@@ -8,12 +8,11 @@ import { NgFor } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-user-management',
-  templateUrl: './user-management.component.html',
-  styles: ``,
-  imports: [NgFor],
-  providers: [BsModalService],
-  standalone: true,
+    selector: 'app-user-management',
+    templateUrl: './user-management.component.html',
+    styles: ``,
+    imports: [NgFor],
+    providers: [BsModalService]
 })
 export class UserManagementComponent implements OnInit {
   bsModalRef!: BsModalRef;
