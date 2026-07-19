@@ -2,7 +2,7 @@
 using Adda.API.Models;
 using Adda.API.Repositories.MessageRepository;
 using Adda.API.Security.CurrentUserProvider;
-using AutoMapper;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
@@ -10,13 +10,11 @@ namespace Adda.API.Hubs;
 [Authorize]
 public class ChatHub(
     ICurrentUserProvider currentUser,
-    IMessageRepository messageRepository,
-    IMapper mapper
+    IMessageRepository messageRepository
     ) : Hub
 {
     private readonly ICurrentUserProvider _currentUser = currentUser;
     private readonly IMessageRepository _messageRepository = messageRepository;
-    private readonly IMapper _mapper = mapper;
 
     public override async Task OnConnectedAsync()
     {
@@ -44,13 +42,13 @@ public class ChatHub(
 
             createMessage.SenderId = userId;
 
-            var message = _mapper.Map<Message>(createMessage);
+            var message = createMessage.Adapt<Message>();
             message.MessageSent = DateTime.Now;
             await _messageRepository.AddAsync(message);
 
             if (await _messageRepository.SaveAllAsync())
             {
-                var messageToReturn = _mapper.Map<MessageResponse>(message);
+                var messageToReturn = message.Adapt<MessageResponse>();
                 await Clients.Group($"{userId}").SendAsync("NewMessage", messageToReturn);
                 await Clients
                     .Group($"{createMessage.RecipientId}")

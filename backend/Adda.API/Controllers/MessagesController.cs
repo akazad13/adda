@@ -2,7 +2,7 @@ using Adda.API.Dtos;
 using Adda.API.Helpers;
 using Adda.API.Security.CurrentUserProvider;
 using Adda.API.Services.MessageService;
-using AutoMapper;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Adda.API.Controllers;
@@ -10,9 +10,8 @@ namespace Adda.API.Controllers;
 [ServiceFilter(typeof(LogUserActivity))]
 [ApiController]
 [Route("api/users/{userId}/messages")]
-public class MessagesController(IMapper mapper, ICurrentUserProvider currentUser, IMessageService messageService) : ControllerBase
+public class MessagesController(ICurrentUserProvider currentUser, IMessageService messageService) : ControllerBase
 {
-    private readonly IMapper _mapper = mapper;
     private readonly ICurrentUserProvider _currentUser = currentUser;
     private readonly IMessageService _messageService = messageService;
 
@@ -48,7 +47,7 @@ public class MessagesController(IMapper mapper, ICurrentUserProvider currentUser
         messageParams.UserId = userId;
 
         var messagesFromRepo = await _messageService.GetMessagesForUserAsync(messageParams);
-        var messages = _mapper.Map<IEnumerable<MessageResponse>>(messagesFromRepo);
+        var messages = messagesFromRepo.Adapt<IEnumerable<MessageResponse>>();
         Response.AddPagination(
             messagesFromRepo.CurrrentPage,
             messagesFromRepo.PageSize,
@@ -67,7 +66,7 @@ public class MessagesController(IMapper mapper, ICurrentUserProvider currentUser
         }
 
         var messagesFromRepo = await _messageService.GetMessageThreadAsync(userId, recipientId);
-        var messages = _mapper.Map<IEnumerable<MessageResponse>>(messagesFromRepo);
+        var messages = messagesFromRepo.Adapt<IEnumerable<MessageResponse>>();
 
         return Ok(messages);
     }

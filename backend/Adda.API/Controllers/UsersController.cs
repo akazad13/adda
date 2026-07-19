@@ -2,7 +2,7 @@ using Adda.API.Dtos;
 using Adda.API.Helpers;
 using Adda.API.Security.CurrentUserProvider;
 using Adda.API.Services.UserService;
-using AutoMapper;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -12,13 +12,8 @@ namespace Adda.API.Controllers;
 [ServiceFilter(typeof(LogUserActivity))]
 [ApiController]
 [Route("api/users")]
-public class UsersController(
-    IMapper mapper,
-    ICurrentUserProvider currentUser,
-    IUserService userService
-) : ControllerBase
+public class UsersController(ICurrentUserProvider currentUser, IUserService userService) : ControllerBase
 {
-    private readonly IMapper _mapper = mapper;
     private readonly ICurrentUserProvider _currentUser = currentUser;
     private readonly IUserService _userService = userService;
 
@@ -30,7 +25,7 @@ public class UsersController(
 
         if (!result.IsError)
         {
-            UserDetails userToReturn = _mapper.Map<UserDetails>(result.Value);
+            UserDetails userToReturn = result.Value.Adapt<UserDetails>();
             return CreatedAtRoute(
                 "GetUser",
                 new { Controller = "Users", id = userToReturn.Id },
@@ -49,7 +44,7 @@ public class UsersController(
     {
         var users = await _userService.GetAsync(userParams);
 
-        var usersToReturn = _mapper.Map<IEnumerable<UserListDetails>>(users);
+        var usersToReturn = users.Adapt<IEnumerable<UserListDetails>>();
 
         Response.AddPagination(
             users.CurrrentPage,
@@ -65,7 +60,7 @@ public class UsersController(
     public async Task<IActionResult> GetAsync(int id)
     {
         var user = await _userService.GetAsync(id);
-        var userToReturn = _mapper.Map<UserDetails>(user.Value);
+        var userToReturn = user.Value.Adapt<UserDetails>();
 
         return Ok(userToReturn);
     }

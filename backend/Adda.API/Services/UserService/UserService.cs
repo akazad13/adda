@@ -4,15 +4,14 @@ using Adda.API.Models;
 using Adda.API.Repositories.UserRepository;
 using Adda.API.Security.CurrentUserProvider;
 using Adda.API.Security.Roles;
-using AutoMapper;
 using ErrorOr;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 
 namespace Adda.API.Services.UserService;
 
-public class UserService(IMapper mapper, UserManager<User> userManager, ICurrentUserProvider currentUser, IUserRepository userRepository) : IUserService
+public class UserService(UserManager<User> userManager, ICurrentUserProvider currentUser, IUserRepository userRepository) : IUserService
 {
-    private readonly IMapper _mapper = mapper;
     private readonly UserManager<User> _userManager = userManager;
     private readonly ICurrentUserProvider _currentUser = currentUser;
     private readonly IUserRepository _userRepository = userRepository;
@@ -64,7 +63,7 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
                 return Error.Validation(description: "Username already exists.");
             }
 
-            var userToCreate = _mapper.Map<User>(request);
+            var userToCreate = request.Adapt<User>();
 
             var result = await _userManager.CreateAsync(userToCreate, request.Password);
 
@@ -91,7 +90,7 @@ public class UserService(IMapper mapper, UserManager<User> userManager, ICurrent
             return Error.Failure(description: "User not found.");
         }
 
-        _mapper.Map(request, userFromRepo); // (from, to)
+        _ = request.Adapt(userFromRepo); // (from, to)
 
         if (await _userRepository.SaveAllAsync())
         {

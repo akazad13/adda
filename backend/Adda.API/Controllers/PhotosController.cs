@@ -1,16 +1,15 @@
 using Adda.API.Dtos;
 using Adda.API.Security.CurrentUserProvider;
 using Adda.API.Services.PhotoService;
-using AutoMapper;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Adda.API.Controllers;
 
 [ApiController]
 [Route("api/users/{userId}/photos")]
-public class PhotosController(IMapper mapper, ICurrentUserProvider currentUser, IPhotoService photoService) : ControllerBase
+public class PhotosController(ICurrentUserProvider currentUser, IPhotoService photoService) : ControllerBase
 {
-    private readonly IMapper _mapper = mapper;
     private readonly ICurrentUserProvider _currentUser = currentUser;
     private readonly IPhotoService _photoService = photoService;
 
@@ -21,7 +20,7 @@ public class PhotosController(IMapper mapper, ICurrentUserProvider currentUser, 
 
         if (!result.IsError)
         {
-            PhotoResponse photo = _mapper.Map<PhotoResponse>(result.Value);
+            PhotoResponse photo = result.Value.Adapt<PhotoResponse>();
             return Ok(photo);
         }
         return BadRequest("Failed to get photo details");
@@ -42,7 +41,7 @@ public class PhotosController(IMapper mapper, ICurrentUserProvider currentUser, 
 
         if (!result.IsError)
         {
-            PhotoResponse photoToReturn = _mapper.Map<PhotoResponse>(result.Value);
+            PhotoResponse photoToReturn = result.Value.Adapt<PhotoResponse>();
             return CreatedAtRoute(
                 "GetPhoto",
                 new { userId, id = result.Value.Id },
