@@ -52,7 +52,7 @@ public static class DependencyInjection
         services.AddEndpointsApiExplorer().AddSwaggerGen();
         services.AddScoped<LogUserActivity>();
 
-        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());
 
         services.RegisterServices();
         services.AddInfrastructure(configuration, environment);
