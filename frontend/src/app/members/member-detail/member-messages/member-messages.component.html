@@ -1,57 +1,57 @@
-<div class="card">
-  <!-- content goes here -->
+<div class="glass-panel overflow-hidden border-secondary border-opacity-25 shadow-lg">
+  <div class="p-3 border-bottom border-secondary border-opacity-25 bg-dark bg-opacity-40 d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center gap-2">
+      <span class="online-pulse"></span>
+      <span class="fw-bold fs-sm">Live Direct Messages</span>
+    </div>
+    <span class="badge-glass fs-2xs"><i class="fa-solid fa-lock me-1 text-success"></i> End-to-End Encrypted</span>
+  </div>
 
-  <div class="card-body">
-    <ng-scrollbar #scrollbarRef="ngScrollbar" class="chat-scrollbar">
-      @if (messages?.length === 0) {
-        <div>No message yet.... say hi by using the message box below</div>
+  <div class="p-3" style="height: 380px;">
+    <ng-scrollbar #scrollbarRef="ngScrollbar" class="h-100">
+      @if (messages.length === 0) {
+        <div class="text-center py-5 text-muted-custom">
+          <i class="fa-regular fa-comment-dots fs-1 mb-2 text-secondary d-block"></i>
+          <p class="mb-0">No conversation history yet. Send a message to start chatting!</p>
+        </div>
       }
 
-      <ul class="chat">
-        @for (message of messages; track message) {
-          <li>
-            <!-- to them -->
-            @if (message.senderId === recipientId) {
-              <div>
-                <div class="chat-body">
-                  <p>{{ message.content }}</p>
-                  <div class="header">
-                    <small class="text-muted">
-                      <span class="fa fa-clock-o"> {{ message.messageSent | dateAgo }}</span>
-                    </small>
-                  </div>
-                </div>
+      <div class="d-flex flex-column gap-3 py-2 px-1">
+        @for (message of messages; track message.id) {
+          <div class="d-flex" [class.justify-content-end]="message.senderId !== recipientId">
+            <div
+              class="p-3 rounded-3 max-w-75 shadow-sm"
+              [ngClass]="
+                message.senderId !== recipientId
+                  ? 'bg-primary text-white ms-auto border border-danger border-opacity-25'
+                  : 'glass-panel text-light border border-secondary border-opacity-25'
+              "
+            >
+              <p class="mb-1 fs-sm leading-relaxed">{{ message.content }}</p>
+              <div class="d-flex align-items-center justify-content-end gap-1.5 fs-2xs opacity-75">
+                <i class="fa-regular fa-clock"></i>
+                <span>{{ message.messageSent | dateAgo }}</span>
+                @if (message.senderId !== recipientId) {
+                  @if (message.isRead) {
+                    <span class="text-info ms-1" title="Read">
+                      <i class="fa-solid fa-check-double"></i>
+                    </span>
+                  } @else {
+                    <span class="text-white-50 ms-1" title="Sent">
+                      <i class="fa-solid fa-check"></i>
+                    </span>
+                  }
+                }
               </div>
-            }
-            <!-- to me -->
-            @if (message.senderId !== recipientId) {
-              <div>
-                <div class="chat-body text-end">
-                  <p>{{ message.content }}</p>
-                  <div class="header">
-                    <small class="text-muted">
-                      <span class="fa fa-clock-o"> {{ message.messageSent | dateAgo }}</span>
-                      @if (!message.isRead) {
-                        <span class="ms-2" style="color: lightgray">
-                          <i class="fa fa-check" aria-hidden="true"></i>
-                        </span>
-                      }
-                      @if (message.isRead) {
-                        <span class="text-success ms-2">
-                          <i class="fa fa-check" aria-hidden="true"></i> <i class="fa fa-check" aria-hidden="true"></i
-                        ></span>
-                      }
-                    </small>
-                  </div>
-                </div>
-              </div>
-            }
-          </li>
+            </div>
+          </div>
         }
-      </ul>
+      </div>
     </ng-scrollbar>
   </div>
-  <div class="card-footer">
+
+  <!-- Message Input Toolbar -->
+  <div class="p-3 border-top border-secondary border-opacity-25 bg-dark bg-opacity-30">
     <form #messageForm="ngForm" (ngSubmit)="messageForm.valid && sendMessage()">
       <div class="input-group">
         <input
@@ -59,13 +59,14 @@
           name="content"
           required
           type="text"
-          class="form-control input-sm"
-          placeholder="send a private message"
-          />
-          <div class="input-group-append">
-            <button class="btn btn-primary" [disabled]="!messageForm.valid">Send</button>
-          </div>
-        </div>
-      </form>
-    </div>
+          class="form-control border-end-0"
+          placeholder="Type your message..."
+          aria-label="Type your message"
+        />
+        <button class="btn btn-primary" type="submit" [disabled]="!messageForm.valid">
+          <i class="fa-solid fa-paper-plane me-1"></i> Send
+        </button>
+      </div>
+    </form>
   </div>
+</div>

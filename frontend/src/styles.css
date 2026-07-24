@@ -1,19 +1,710 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 @import '../node_modules/bootswatch/dist/vapor/bootstrap.min.css';
-@import '../node_modules/font-awesome/css/font-awesome.min.css';
-@import '../node_modules/alertifyjs/build/css/alertify.min.css';
-@import '../node_modules/alertifyjs/build/css/themes/bootstrap.min.css';
+@import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
+@import '../node_modules/ngx-toastr/toastr.css';
 @import '../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css';
 
+:root {
+  --adda-bg: #080c14;
+  --adda-surface: rgba(18, 25, 41, 0.7);
+  --adda-surface-raised: rgba(28, 38, 62, 0.85);
+  --adda-surface-solid: #131b2e;
+  --adda-border: rgba(255, 255, 255, 0.08);
+  --adda-border-bright: rgba(255, 255, 255, 0.15);
+  --adda-border-glow: rgba(255, 59, 92, 0.35);
+
+  --adda-brand: #ff3b5c;
+  --adda-brand-hover: #ff5773;
+  --adda-brand-gradient: linear-gradient(135deg, #ff6b84 0%, #ff3b5c 45%, #ff758c 100%);
+
+  --adda-accent: #00f2fe;
+  --adda-accent-hover: #38f9d7;
+  --adda-accent-gradient: linear-gradient(135deg, #00f2fe 0%, #38c8fe 100%);
+
+  --adda-success: #10b981;
+  --adda-warning: #f59e0b;
+  --adda-danger: #ef4444;
+
+  --adda-text: #f8fafc;
+  --adda-text-muted: #94a3b8;
+  --adda-text-subtle: #64748b;
+
+  --adda-radius-sm: 0.5rem;
+  --adda-radius: 0.85rem;
+  --adda-radius-lg: 1.5rem;
+  --adda-radius-pill: 9999px;
+
+  --adda-shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --adda-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 59, 92, 0.12);
+
+  --adda-font-display: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --adda-font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --adda-nav-height: 4.5rem;
+  --adda-glass-blur: blur(16px);
+}
+
+/* Global Reset & Ambient Background */
+body {
+  font-family: var(--adda-font-body);
+  color: var(--adda-text);
+  background-color: var(--adda-bg);
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(255, 59, 92, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 65%, rgba(0, 242, 254, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(123, 44, 191, 0.07) 0%, transparent 50%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(8, 12, 20, 0.8);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 59, 92, 0.4);
+}
+
+/* Typography Overrides */
+h1, h2, h3, h4, h5, h6, .display-font {
+  font-family: var(--adda-font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--adda-text);
+}
+
+.text-gradient {
+  background: var(--adda-brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #ff6b84; /* solid fallback */
+  filter: drop-shadow(0 0 8px rgba(255, 107, 132, 0.35));
+}
+
+.text-gradient-accent {
+  background: var(--adda-accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #4facfe; /* solid fallback */
+  filter: drop-shadow(0 0 8px rgba(0, 198, 254, 0.35));
+}
+
+/* Solid readable alternatives for small/subtle contexts */
+.text-brand-solid {
+  color: #ff6b84;
+  transition: color 0.2s ease;
+}
+
+a.text-brand-solid:hover {
+  color: #ff3b5c;
+  text-decoration: underline !important;
+}
+
+.text-accent-solid {
+  color: #38d9fe;
+}
+
+/* Section subheadings on glass panels — high contrast */
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ff6b84;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Accent variant — standalone, self-contained */
+.section-label-accent {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #38d9fe;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.text-muted-custom {
+  color: var(--adda-text-muted) !important;
+}
+
+/* Buttons System */
 .btn {
-  padding: 0.65rem 1rem;
+  font-family: var(--adda-font-body);
+  font-weight: 600;
+  font-size: 0.925rem;
+  padding: 0.65rem 1.35rem;
+  border-radius: var(--adda-radius);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
 }
-.btn.btn-lg {
-  padding: 2rem 3rem;
+
+.btn:active {
+  transform: scale(0.97);
 }
-.form-control {
-  padding: 0.65rem 1rem;
+
+.btn-primary {
+  background: var(--adda-brand-gradient);
+  border: none;
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(255, 59, 92, 0.35);
 }
-.margin-auto {
-  margin: auto;
+
+.btn-primary:hover, .btn-primary:focus {
+  background: linear-gradient(135deg, #ff5773 0%, #ff8ca0 50%, #903be6 100%);
+  color: #ffffff;
+  box-shadow: 0 8px 28px rgba(255, 59, 92, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-success, .btn-accent {
+  background: var(--adda-accent-gradient);
+  border: none;
+  color: #080c14;
+  box-shadow: 0 4px 18px rgba(0, 242, 254, 0.3);
+}
+
+.btn-success:hover, .btn-accent:hover {
+  background: linear-gradient(135deg, #38f9d7 0%, #68b5ff 100%);
+  color: #080c14;
+  box-shadow: 0 8px 28px rgba(0, 242, 254, 0.45);
+  transform: translateY(-2px);
+}
+
+.btn-outline-light, .btn-glass {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--adda-border-bright);
+  color: var(--adda-text);
+  backdrop-filter: var(--adda-glass-blur);
+}
+
+.btn-outline-light:hover, .btn-glass:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.btn-lg {
+  padding: 0.85rem 1.85rem;
+  font-size: 1rem;
+  border-radius: var(--adda-radius);
+}
+
+.btn-sm {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.825rem;
+  border-radius: var(--adda-radius-sm);
+}
+
+/* Form Elements Styling */
+.form-control, .form-select {
+  background-color: rgba(18, 25, 41, 0.8);
+  border: 1px solid var(--adda-border-bright);
+  border-radius: var(--adda-radius);
+  color: var(--adda-text);
+  padding: 0.75rem 1rem;
+  font-size: 0.925rem;
+  backdrop-filter: var(--adda-glass-blur);
+  transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: rgba(28, 38, 62, 0.9);
+  border-color: var(--adda-brand);
+  box-shadow: 0 0 0 0.25rem rgba(255, 59, 92, 0.2);
+  color: var(--adda-text);
+}
+
+.form-control::placeholder {
+  color: var(--adda-text-subtle);
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--adda-text-muted);
+  margin-bottom: 0.4rem;
+}
+
+/* Glassmorphism Cards & Containers */
+.glass-panel {
+  background: var(--adda-surface);
+  backdrop-filter: var(--adda-glass-blur);
+  -webkit-backdrop-filter: var(--adda-glass-blur);
+  border: 1px solid var(--adda-border);
+  border-radius: var(--adda-radius-lg);
+  box-shadow: var(--adda-shadow-sm);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.glass-panel-hover:hover {
+  border-color: var(--adda-border-bright);
+  box-shadow: var(--adda-shadow-lg);
+  transform: translateY(-4px);
+}
+
+.card {
+  background: var(--adda-surface);
+  backdrop-filter: var(--adda-glass-blur);
+  -webkit-backdrop-filter: var(--adda-glass-blur);
+  border: 1px solid var(--adda-border);
+  border-radius: var(--adda-radius-lg);
+  box-shadow: var(--adda-shadow-sm);
+  overflow: hidden;
+}
+
+/* Navbar */
+.navbar {
+  min-height: var(--adda-nav-height);
+  background: rgba(8, 12, 20, 0.75) !important;
+  backdrop-filter: var(--adda-glass-blur) !important;
+  -webkit-backdrop-filter: var(--adda-glass-blur) !important;
+  border-bottom: 1px solid var(--adda-border);
+  position: sticky;
+  top: 0;
+  z-index: 1040;
+}
+
+.navbar-brand {
+  font-family: var(--adda-font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff !important;
+  text-shadow: 0 0 20px rgba(255, 59, 92, 0.4);
+}
+
+.nav-link {
+  font-weight: 500;
+  font-size: 0.925rem;
+  color: var(--adda-text-muted) !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--adda-radius-sm);
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--adda-text) !important;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-link.active {
+  color: var(--adda-brand) !important;
+  background: rgba(255, 59, 92, 0.12);
+}
+
+/* Pulse Online Indicator */
+.online-pulse {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: var(--adda-success);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+/* Badges */
+.badge-glass {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--adda-border-bright);
+  color: var(--adda-text);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--adda-radius-pill);
+  font-weight: 600;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Badge placed directly on top of an image — needs high-contrast backing */
+.badge-on-image {
+  background: rgba(10, 14, 22, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--adda-radius-pill);
+  font-weight: 700;
+  font-size: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* High-contrast solid page-label badges (used for Directory, Favourites etc) */
+.page-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: var(--adda-radius-pill);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: #ff3b5c;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(255, 59, 92, 0.4);
+}
+
+.page-label-accent {
+  background: #00c6c6;
+  color: #080c14;
+  box-shadow: 0 2px 8px rgba(0, 198, 198, 0.4);
+}
+
+.page-label-neutral {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #e2e8f0;
+  box-shadow: none;
+}
+
+/* Low-contrast inline badges (role chips, inline tags) */
+.badge-brand {
+  background: rgba(255, 59, 92, 0.2);
+  border: 1px solid rgba(255, 59, 92, 0.5);
+  color: #ffb3bf;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--adda-radius-pill);
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+}
+
+.badge-accent {
+  background: rgba(0, 242, 254, 0.15);
+  border: 1px solid rgba(0, 198, 198, 0.5);
+  color: #7ef9ff;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--adda-radius-pill);
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Table container — flat corners for table content */
+.table-panel {
+  background: var(--adda-surface);
+  backdrop-filter: var(--adda-glass-blur);
+  -webkit-backdrop-filter: var(--adda-glass-blur);
+  border: 1px solid var(--adda-border);
+  border-radius: var(--adda-radius);
+  overflow: hidden;
+  box-shadow: var(--adda-shadow-sm);
+}
+
+/* Page Shell & Headers */
+.page-shell {
+  padding-top: 2.5rem;
+  padding-bottom: 4rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1, .page-header h2 {
+  font-size: 2.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-header p {
+  color: var(--adda-text-muted);
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+/* Filter Bar */
+.filter-bar {
+  background: var(--adda-surface);
+  backdrop-filter: var(--adda-glass-blur);
+  border: 1px solid var(--adda-border);
+  border-radius: var(--adda-radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* =============================================
+   MEMBER CARD — Image overlays
+   ============================================= */
+.card-img-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Dark gradient scrim at the bottom of card images so action toolbar text is always readable */
+.card-img-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(8, 12, 20, 0.85) 0%,
+    rgba(8, 12, 20, 0.45) 30%,
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Action toolbar sits above the scrim */
+.member-action-toolbar {
+  z-index: 2;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-member:hover .member-action-toolbar {
+  transform: translateY(0);
+}
+
+/* Top overlay badges also above scrim */
+.card-img-wrapper .position-absolute {
+  z-index: 2;
+}
+
+.member-photo {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.card-member:hover .member-photo {
+  transform: scale(1.06);
+  filter: brightness(0.85);
+}
+
+/* =============================================
+   PHOTO GALLERY — Hover overlay
+   ============================================= */
+.photo-gallery-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--adda-radius);
+  cursor: pointer;
+}
+
+.photo-gallery-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.photo-gallery-card:hover img {
+  transform: scale(1.07);
+  filter: brightness(0.7);
+}
+
+.photo-gallery-card .photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 12, 20, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.photo-gallery-card:hover .photo-overlay {
+  opacity: 1;
+}
+
+/* Solid badge shown on top of photos (e.g. Pending, Main) */
+.img-badge-solid {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  background: rgba(10, 14, 22, 0.88);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,59,92,0.6);
+  color: #ffb3bf;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--adda-radius-pill);
+  z-index: 3;
+  text-shadow: none;
+}
+
+/* Dropdown Menu Restyling */
+.dropdown-menu {
+  background: var(--adda-surface-solid) !important;
+  border: 1px solid var(--adda-border-bright) !important;
+  border-radius: var(--adda-radius) !important;
+  box-shadow: var(--adda-shadow-lg) !important;
+  padding: 0.5rem !important;
+}
+
+.dropdown-item {
+  color: var(--adda-text) !important;
+  border-radius: var(--adda-radius-sm) !important;
+  padding: 0.6rem 1rem !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  transition: all 0.15s ease !important;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 59, 92, 0.15) !important;
+  color: #ffffff !important;
+}
+
+/* Nav Tabs Restyling */
+.nav-tabs {
+  border-bottom: 1px solid var(--adda-border);
+}
+
+.nav-tabs .nav-link {
+  border: none;
+  background: transparent;
+  color: var(--adda-text-muted) !important;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem !important;
+  border-radius: var(--adda-radius-sm) var(--adda-radius-sm) 0 0;
+  position: relative;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--adda-brand) !important;
+  background: rgba(255, 59, 92, 0.1) !important;
+  border-bottom: 2px solid var(--adda-brand);
+}
+
+/* Toastr Customization (Glassmorphic Theme) */
+.toast-container .ngx-toastr {
+  background-color: rgba(19, 27, 46, 0.94) !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: var(--adda-radius) !important;
+  box-shadow: var(--adda-shadow-lg) !important;
+  backdrop-filter: var(--adda-glass-blur) !important;
+  -webkit-backdrop-filter: var(--adda-glass-blur) !important;
+  font-family: var(--adda-font-body) !important;
+  font-weight: 500 !important;
+  padding: 0.85rem 1rem 0.85rem 2.8rem !important;
+  width: 320px !important;
+}
+
+.toast-container .toast-success {
+  border-left: 4px solid var(--adda-success) !important;
+  background-image: none !important;
+}
+
+.toast-container .toast-error {
+  border-left: 4px solid var(--adda-danger) !important;
+  background-image: none !important;
+}
+
+.toast-container .toast-warning {
+  border-left: 4px solid var(--adda-warning) !important;
+  background-image: none !important;
+}
+
+.toast-container .toast-info {
+  border-left: 4px solid var(--adda-accent) !important;
+  background-image: none !important;
+}
+
+/* Pagination Overrides */
+.pagination {
+  gap: 0.35rem;
+}
+
+.pagination .page-item .page-link {
+  background: var(--adda-surface);
+  border: 1px solid var(--adda-border);
+  color: var(--adda-text);
+  border-radius: var(--adda-radius-sm);
+  padding: 0.5rem 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.pagination .page-item.active .page-link {
+  background: var(--adda-brand-gradient);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(255, 59, 92, 0.3);
+}
+
+.pagination .page-item .page-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--adda-text);
+}
+
+/* Upload Zone */
+.upload-zone {
+  border: 2px dashed var(--adda-border-bright);
+  border-radius: var(--adda-radius-lg);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: rgba(18, 25, 41, 0.4);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.upload-zone:hover, .upload-zone.nv-file-over {
+  border-color: var(--adda-brand);
+  background: rgba(255, 59, 92, 0.08);
 }

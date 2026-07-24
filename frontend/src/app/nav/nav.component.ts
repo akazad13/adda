@@ -1,36 +1,68 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { AlertifyService } from '../services/alertify.service';
-import { firstValueFrom, Subscription } from 'rxjs';
-import { FormsModule } from '@angular/forms';
-
+import { NotificationService } from '../services/notification.service';
+import { Subscription } from 'rxjs';
 import { HasRoleDirective } from '../directives/hasRole.directive';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @Component({
-    selector: 'app-nav',
-    templateUrl: './nav.component.html',
-    styles: `
+  selector: 'app-nav',
+  templateUrl: './nav.component.html',
+  styles: `
     .dropdown-toggle,
     .dropdown-item {
       cursor: pointer;
     }
 
-    img {
-      max-height: 50px;
-      border: 2px solid #fff;
-      display: inline;
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(255, 59, 92, 0.15);
+      border: 1px solid rgba(255, 59, 92, 0.3);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .brand-text {
+      font-family: var(--adda-font-display);
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .nav-avatar {
+      height: 32px;
+      width: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--adda-brand);
+    }
+
+    .max-w-120 {
+      max-width: 120px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .fs-xs {
+      font-size: 0.75rem;
     }
   `,
-    imports: [FormsModule, RouterLink, HasRoleDirective, BsDropdownModule]
+  imports: [RouterLink, RouterLinkActive, HasRoleDirective, BsDropdownModule],
 })
 export class NavComponent implements OnInit, OnDestroy {
-  model: any = {};
   photoUrl!: string;
   currentPhotoUrlSubscription!: Subscription;
 
-  constructor(public authService: AuthService, private readonly alertify: AlertifyService, private readonly router: Router) {}
+  constructor(
+    public authService: AuthService,
+    private readonly notify: NotificationService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit() {
     this.currentPhotoUrlSubscription = this.authService.currentPhotoUrl.subscribe((photoUrl) => {
@@ -39,18 +71,7 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.currentPhotoUrlSubscription.unsubscribe();
-  }
-
-  async login(): Promise<void> {
-    try {
-      await firstValueFrom(this.authService.login(this.model));
-      this.alertify.success('Logged in successfully!');
-    } catch (e: any) {
-      this.alertify.error(e.error.title);
-    } finally {
-      this.router.navigate(['/members']);
-    }
+    this.currentPhotoUrlSubscription?.unsubscribe();
   }
 
   loggedIn() {
@@ -61,7 +82,7 @@ export class NavComponent implements OnInit, OnDestroy {
     localStorage.removeItem('user');
     this.authService.decodedToken = null;
     this.authService.currentUser = null;
-    this.alertify.message('Logged Out!');
-    this.router.navigate(['/home']);
+    this.notify.message('Logged Out!');
+    this.router.navigate(['/']);
   }
 }

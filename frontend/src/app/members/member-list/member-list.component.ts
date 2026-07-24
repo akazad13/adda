@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
-import { AlertifyService } from '../../services/alertify.service';
+import { NotificationService } from '../../services/notification.service';
 import { PaginatedResult, Pagination } from '../../models/pagination';
 import { NgClass } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
@@ -34,7 +34,7 @@ export class MemberListComponent implements OnInit, OnDestroy {
   routeSubscription!: Subscription;
   constructor(
     private readonly userService: UserService,
-    private readonly alertify: AlertifyService,
+    private readonly notify: NotificationService,
     private readonly route: ActivatedRoute
   ) {}
 
@@ -73,7 +73,7 @@ export class MemberListComponent implements OnInit, OnDestroy {
       this.users = res.result!;
       this.pagination = res.pagination;
     } catch (e: any) {
-      this.alertify.error(e.statusText);
+      this.notify.error(e.statusText);
     }
   }
 }

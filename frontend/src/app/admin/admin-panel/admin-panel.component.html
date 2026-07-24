@@ -1,11 +1,26 @@
-<div class="container mt-5">
-  <h2>Admin Panel</h2>
-  <div class="tab-panel">
+<div class="container page-shell">
+  <!-- Page Header -->
+  <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+    <div>
+      <span class="page-label mb-1">Administration</span>
+      <h1 class="h2 fw-bold mb-0">Control & Moderation Panel</h1>
+    </div>
+    <span class="badge-glass"><i class="fa-solid fa-shield-halved text-success me-1"></i> Admin Privilege</span>
+  </div>
+
+  <div class="glass-panel p-4 shadow-lg">
     <tabset class="member-tabset">
-      <tab heading="User Management" *appHasRole="['Admin']">
+      <tab class="pt-4" *appHasRole="['Admin']">
+        <ng-template tabHeading>
+          <i class="fa-solid fa-users-gear me-2"></i>User Management
+        </ng-template>
         <app-user-management></app-user-management>
       </tab>
-      <tab heading="Photo Management" *appHasRole="['Admin', 'Moderator']">
+
+      <tab class="pt-4" *appHasRole="['Admin', 'Moderator']">
+        <ng-template tabHeading>
+          <i class="fa-solid fa-images-user me-2"></i>Photo Moderation Queue
+        </ng-template>
         <app-photo-management></app-photo-management>
       </tab>
     </tabset>

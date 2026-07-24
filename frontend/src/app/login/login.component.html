@@ -1,0 +1,64 @@
+<div class="auth-page py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="glass-panel p-4 p-md-5 shadow-lg border-secondary border-opacity-25 position-relative overflow-hidden">
+          <div class="text-center mb-4">
+            <div class="d-inline-flex align-items-center justify-content-center width-56 height-56 rounded-circle bg-danger bg-opacity-10 border border-danger border-opacity-25 mb-3">
+              <i class="fa-solid fa-fire text-gradient fs-2"></i>
+            </div>
+            <h2 class="h3 fw-bold mb-1">Welcome Back</h2>
+            <p class="text-muted-custom fs-sm mb-0">Sign in to browse members and join conversations</p>
+          </div>
+
+          <form #loginForm="ngForm" (ngSubmit)="login()">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0 border-secondary border-opacity-25 text-muted-custom">
+                  <i class="fa-solid fa-user"></i>
+                </span>
+                <input
+                  id="username"
+                  class="form-control border-start-0"
+                  type="text"
+                  name="username"
+                  placeholder="Enter your username"
+                  required
+                  [(ngModel)]="model.username"
+                />
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="password" class="form-label">Password</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0 border-secondary border-opacity-25 text-muted-custom">
+                  <i class="fa-solid fa-lock"></i>
+                </span>
+                <input
+                  id="password"
+                  class="form-control border-start-0"
+                  type="password"
+                  name="password"
+                  placeholder="Enter your password"
+                  required
+                  [(ngModel)]="model.password"
+                />
+              </div>
+            </div>
+
+            <button class="btn btn-primary w-100 py-2.5 mb-3 shadow" [disabled]="!loginForm.valid" type="submit">
+              <i class="fa-solid fa-right-to-bracket"></i> Sign In to Adda
+            </button>
+
+            <div class="text-center text-muted-custom fs-sm">
+              New to Adda?
+              <a routerLink="/register" class="text-brand-solid fw-bold text-decoration-none ms-1">Create an account</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

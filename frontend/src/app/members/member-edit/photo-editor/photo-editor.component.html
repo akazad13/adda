@@ -1,99 +1,136 @@
-<div class="row">
-  @for (photo of photos; track photo) {
-    <div class="col-sm-2">
-      <img [ngClass]="{ 'not-approved': !photo.isApproved }" src="{{ photo.url }}" class="img-thumbnail p-1" alt="" />
-      @if (!photo.isApproved) {
-        <div class="pending-image-text">Pending approval</div>
-      }
-      <div class="text-center">
-        <button
-          type="button"
-          class="btn btn-sm me-1"
-          (click)="setMainPhoto(photo)"
-          [ngClass]="photo.isMain ? 'btn-success active' : 'btn-secondary'"
-          [disabled]="photo.isMain || !photo.isApproved"
+<!-- Photo Gallery Grid -->
+<div class="row g-3 mb-4">
+  @for (photo of photos; track photo.id) {
+    <div class="col-6 col-sm-4 col-md-3">
+      <div class="glass-panel overflow-hidden position-relative p-1 text-center h-100 d-flex flex-column justify-content-between">
+        <div class="position-relative overflow-hidden rounded mb-2" style="aspect-ratio: 1;">
+          <img
+            [src]="photo.url"
+            [alt]="photo.description || 'Photo'"
+            class="w-100 h-100 object-cover"
+            [class.opacity-50]="!photo.isApproved"
+          />
+          @if (!photo.isApproved) {
+            <span class="img-badge-solid" style="top:50%; right:50%; transform:translate(50%,-50%);">
+              <i class="fa-solid fa-clock me-1"></i>Pending
+            </span>
+          }
+          @if (photo.isMain) {
+            <span class="img-badge-solid" style="top:0.4rem; left:0.4rem; right:auto; border-color:rgba(0,198,198,0.6); color:#7ef9ff;">
+              <i class="fa-solid fa-star me-1"></i>Main
+            </span>
+          }
+        </div>
+
+        <div class="d-flex gap-1 justify-content-center p-1">
+          <button
+            type="button"
+            class="btn btn-xs flex-fill"
+            (click)="setMainPhoto(photo)"
+            [class.btn-primary]="photo.isMain"
+            [class.btn-outline-light]="!photo.isMain"
+            [disabled]="photo.isMain || !photo.isApproved"
           >
-          Main
-        </button>
-        <button type="button" class="btn btn-sm btn-danger" (click)="deletePhoto(photo.id)" [disabled]="photo.isMain">
-          <i class="fa fa-trash-o"></i>
-        </button>
+            {{ photo.isMain ? 'Main' : 'Set Main' }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-icon btn-xs btn-outline-danger"
+            (click)="deletePhoto(photo.id)"
+            [disabled]="photo.isMain"
+            title="Delete photo"
+            aria-label="Delete photo"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
       </div>
     </div>
   }
 </div>
 
-<div class="row mt-3">
-  <div class="col-md-3">
-    <h3>Add Photos</h3>
+<!-- Upload Section -->
+<div class="row g-4 pt-3 border-top border-secondary border-opacity-25">
+  <div class="col-lg-5">
+    <span class="section-label mb-3">Upload New Photos</span>
 
     <div
       ng2FileDrop
       [ngClass]="{ 'nv-file-over': hasBaseDropZoneOver }"
       (fileOver)="fileOverBase($event)"
       [uploader]="uploader"
-      class="card bg-faded p-3 text-center mb-3 my-drop-zone"
-      >
-      <i class="fa fa-upload fa-3x"></i>
-      Drop Photos Here
+      class="upload-zone mb-3"
+    >
+      <i class="fa-solid fa-cloud-arrow-up text-gradient fs-1 mb-2"></i>
+      <div class="fw-bold fs-sm">Drag & drop photos here</div>
+      <div class="text-muted-custom fs-xs">Supports JPG, PNG & WEBP</div>
     </div>
-    Multiple
-    <input type="file" ng2FileSelect [uploader]="uploader" multiple /><br />
 
-    Single
-    <input type="file" ng2FileSelect [uploader]="uploader" />
+    <div class="mb-3">
+      <label class="form-label">Select Files</label>
+      <input type="file" class="form-control" ng2FileSelect [uploader]="uploader" multiple />
+    </div>
   </div>
 
-  @if (uploader?.queue?.length) {
-    <div class="col-md-9" style="margin-bottom: 40px">
-      <h3>Upload queue</h3>
-      <p>Queue length: {{ uploader.queue.length }}</p>
-      <table class="table">
-        <thead>
-          <tr>
-            <th width="50%">Name</th>
-            <th>Size</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of uploader.queue; track item) {
+  @if (uploader.queue.length) {
+    <div class="col-lg-7">
+      <span class="section-label mb-3">Upload Queue ({{ uploader.queue.length }})</span>
+
+      <div class="table-panel overflow-hidden mb-3">
+        <table class="table table-sm mb-0 align-middle">
+          <thead class="table-dark">
             <tr>
-              <td>
-                <strong>{{ (item?.file?.name)!.length > 20 ? (item?.file?.name | slice : 0 : 20) + '...' : item?.file?.name }}</strong>
-              </td>
-              @if (uploader.options.isHTML5) {
-                <td nowrap>{{ item?.file?.size / 1024 / 1024 | number : '.2' }} MB</td>
-              }
-              <td nowrap>
-                <button type="button" class="btn btn-danger btn-xs" (click)="item.remove()">
-                  <span class="glyphicon glyphicon-trash"></span> Remove
-                </button>
-              </td>
+              <th>File Name</th>
+              <th>Size</th>
+              <th class="text-end">Actions</th>
             </tr>
-          }
-        </tbody>
-      </table>
-      <div>
-        <div>
-          Queue progress:
-          <div class="progress mb-4">
-            <div class="progress-bar" role="progressbar" [ngStyle]="{ width: uploader.progress + '%' }"></div>
-          </div>
+          </thead>
+          <tbody>
+            @for (item of uploader.queue; track item) {
+              <tr>
+                <td>
+                  <span class="text-truncate d-inline-block max-w-180 fw-semibold fs-xs">
+                    {{ item?.file?.name }}
+                  </span>
+                </td>
+                @if (uploader.options.isHTML5) {
+                  <td class="fs-xs text-muted-custom">{{ item?.file?.size / 1024 / 1024 | number : '.2' }} MB</td>
+                }
+                <td class="text-end">
+                  <button type="button" class="btn btn-icon btn-xs btn-outline-danger" (click)="item.remove()" title="Remove">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mb-3">
+        <div class="d-flex justify-content-between fs-xs text-muted-custom mb-1">
+          <span>Upload Progress</span>
+          <span>{{ uploader.progress }}%</span>
         </div>
+        <div class="progress height-6 bg-dark">
+          <div class="progress-bar bg-danger" role="progressbar" [ngStyle]="{ width: uploader.progress + '%' }"></div>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap gap-2">
         <button
           type="button"
-          class="btn btn-success btn-s"
+          class="btn btn-primary btn-sm"
           (click)="uploader.uploadAll()"
           [disabled]="!uploader.getNotUploadedItems().length"
-          >
-          <span class="fa fa-upload"></span> Upload
+        >
+          <i class="fa-solid fa-upload me-1"></i> Upload All
         </button>
-        <button type="button" class="btn btn-warning btn-s" (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
-          <span class="fa fa-ban"></span> Cancel
+        <button type="button" class="btn btn-outline-light btn-sm" (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
+          <i class="fa-solid fa-ban me-1"></i> Cancel
         </button>
-        <button type="button" class="btn btn-danger btn-s" (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
-          <span class="fa fa-trash"></span> Remove all
+        <button type="button" class="btn btn-outline-danger btn-sm" (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
+          <i class="fa-solid fa-trash me-1"></i> Clear
         </button>
       </div>
     </div>

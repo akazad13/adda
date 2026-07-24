@@ -1,95 +1,81 @@
-<div class="text-center mt-3">
-  <h2>Your matches - {{ pagination.totalItems }} found</h2>
-</div>
-<div class="container mt-5">
-  <form class="" #form="ngForm" (ngSubmit)="loadUsers(null)" novalidate>
-    <div class="row">
-      <div class="col-10">
-        <div class="row">
-          <div class="col-2">
-            <label for="minAge" class="col-form-label" style="width: 50%">Age From</label>
-            <input
-              type="number"
-              class="form-control"
-              style="width: 50%; display: inline-block"
-              id="minAge"
-              name="minAge"
-              [(ngModel)]="userParams.minAge"
-              />
-            </div>
-            <div class="col-2">
-              <label for="maxAge" class="col-form-label" style="width: 50%">Age To</label>
-              <input
-                type="number"
-                class="form-control"
-                style="width: 50%; display: inline-block"
-                id="maxAge"
-                name="maxAge"
-                [(ngModel)]="userParams.maxAge"
-                />
-              </div>
-              <div class="col-2">
-                <label for="gender" class="col-form-label" style="width: 35%">Show: </label>
-                <select
-                  class="form-control"
-                  style="width: 60%; display: inline-block"
-                  id="gender"
-                  name="gender"
-                  [(ngModel)]="userParams.gender"
-                  >
-                  @for (gender of genderList; track gender) {
-                    <option [value]="gender.value">{{ gender.display }}</option>
-                  }
-                </select>
-              </div>
-              <div class="col-4">
-                <button type="submit" class="btn btn-primary" style="width: 45%">Apply Filters</button>
-                <button type="button" class="btn btn-info" style="width: 45%; margin-left: 5%" (click)="resetFilters()">Reset Filter</button>
-              </div>
-            </div>
-          </div>
-        </div>
+<div class="container page-shell">
+  <!-- Page Header -->
+  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <span class="page-label">Directory</span>
+        <span class="text-muted-custom fs-xs">• {{ pagination.totalItems }} Members</span>
+      </div>
+      <h1 class="h2 fw-bold mb-0">Discover Matches</h1>
+    </div>
 
-        <div class="row mt-5">
-          <div class="col=6">
-            <div class="btn-group float-right">
-              <button
-                type="button"
-                name="orderBy"
-                class="btn btn-primary"
-                btnRadio="lastActive"
-                id="lastActive"
-                (click)="loadUsers('lastActive')"
-                [ngClass]="userParams.orderBy == 'lastActive' ? 'active' : ''"
-                >
-                Last Active
-              </button>
-              <button
-                type="button"
-                name="orderBy"
-                class="btn btn-primary"
-                btnRadio="created"
-                id="created"
-                (click)="loadUsers('created')"
-                [ngClass]="userParams.orderBy == 'created' ? 'active' : ''"
-                >
-                Newest Members
-              </button>
-            </div>
-          </div>
-        </div>
-      </form>
-      <br />
-
-      <div class="row">
-        @for (user of users; track user) {
-          <div class="col-lg-2 col-md-3 col-sm-6">
-            <app-member-card [user]="user"></app-member-card>
-          </div>
-        }
+    <!-- Quick Sort Toggle Pills -->
+    <div class="mt-3 mt-md-0">
+      <div class="btn-group p-1 glass-panel rounded-pill">
+        <button
+          type="button"
+          class="btn btn-sm rounded-pill border-0 px-3"
+          [class.btn-primary]="userParams.orderBy == 'lastActive'"
+          [class.btn-glass]="userParams.orderBy != 'lastActive'"
+          (click)="loadUsers('lastActive')"
+        >
+          <i class="fa-solid fa-clock me-1"></i> Last Active
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm rounded-pill border-0 px-3"
+          [class.btn-primary]="userParams.orderBy == 'created'"
+          [class.btn-glass]="userParams.orderBy != 'created'"
+          (click)="loadUsers('created')"
+        >
+          <i class="fa-solid fa-user-plus me-1"></i> Newest
+        </button>
       </div>
     </div>
-    <div class="d-flex justify-content-center">
+  </div>
+
+  <!-- Filter Bar -->
+  <form class="glass-panel p-4 mb-4" #form="ngForm" (ngSubmit)="loadUsers(null)" novalidate>
+    <div class="row g-3 align-items-end">
+      <div class="col-6 col-sm-3 col-lg-2">
+        <label for="minAge" class="form-label">Min Age</label>
+        <input type="number" class="form-control" id="minAge" name="minAge" [(ngModel)]="userParams.minAge" min="18" max="99" />
+      </div>
+      <div class="col-6 col-sm-3 col-lg-2">
+        <label for="maxAge" class="form-label">Max Age</label>
+        <input type="number" class="form-control" id="maxAge" name="maxAge" [(ngModel)]="userParams.maxAge" min="18" max="99" />
+      </div>
+      <div class="col-12 col-sm-6 col-lg-3">
+        <label for="gender" class="form-label">Show Gender</label>
+        <select class="form-select" id="gender" name="gender" [(ngModel)]="userParams.gender">
+          @for (gender of genderList; track gender) {
+            <option [value]="gender.value">{{ gender.display }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-12 col-lg-5 d-flex gap-2">
+        <button type="submit" class="btn btn-primary flex-fill">
+          <i class="fa-solid fa-filter me-1"></i> Apply Filters
+        </button>
+        <button type="button" class="btn btn-outline-light" (click)="resetFilters()">
+          <i class="fa-solid fa-rotate-left me-1"></i> Reset
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Member Cards Grid -->
+  <div class="row g-3 g-md-4 mb-5">
+    @for (user of users; track user.id) {
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2.4 col-xl-2">
+        <app-member-card [user]="user"></app-member-card>
+      </div>
+    }
+  </div>
+
+  <!-- Pagination -->
+  @if (pagination && pagination.totalItems > pagination.itemsPerPage) {
+    <div class="d-flex justify-content-center pb-4">
       <pagination
         [boundaryLinks]="true"
         [totalItems]="pagination.totalItems"
@@ -100,6 +86,8 @@
         nextText="&rsaquo;"
         firstText="&laquo;"
         lastText="&raquo;"
-        >
+      >
       </pagination>
     </div>
+  }
+</div>

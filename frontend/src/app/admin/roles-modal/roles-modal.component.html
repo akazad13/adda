@@ -1,28 +1,36 @@
-<div class="modal-header">
-  <h4 class="modal-title pull-left">Edit Roles for {{ user.userName }}</h4>
-  <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<div class="modal-body">
-  <form #rolesForm="ngForm" id="rolesForm">
-    @for (role of roles; track role) {
-      <div class="custom-control custom-checkbox">
-        <input
-          type="checkbox"
-          class="custom-control-input"
-          id="{{ role.value }}Checkbox"
-          value="{{ role.value }}"
-          [checked]="role.checked"
-          (change)="role.checked = !role.checked"
-          [disabled]="role.name === 'Admin' && user.userName === 'Admin'"
-          />
-          <label class="custom-control-label" for="{{ role.value }}Checkbox">{{ role.name }}</label>
-        </div>
-      }
+<div class="glass-panel-modal bg-dark border border-secondary border-opacity-50 text-white rounded">
+  <div class="modal-header border-bottom border-secondary border-opacity-25 px-4 py-3">
+    <h4 class="modal-title h5 fw-bold mb-0">
+      <i class="fa-solid fa-user-shield text-gradient me-2"></i>Edit Roles for {{ user.userName }}
+    </h4>
+    <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="bsModalRef.hide()"></button>
+  </div>
+  <div class="modal-body p-4">
+    <form #rolesForm="ngForm" id="rolesForm">
+      <div class="d-flex flex-column gap-2">
+        @for (role of roles; track role.value) {
+          <div class="glass-panel p-3 d-flex align-items-center justify-content-between">
+            <label class="form-check-label fw-semibold cursor-pointer mb-0" for="{{ role.value }}Checkbox">
+              <i class="fa-solid fa-shield me-2 text-muted-custom"></i>{{ role.name }}
+            </label>
+            <input
+              type="checkbox"
+              class="form-check-input fs-5 cursor-pointer"
+              id="{{ role.value }}Checkbox"
+              value="{{ role.value }}"
+              [checked]="role.checked"
+              (change)="role.checked = !role.checked"
+              [disabled]="role.name === 'Admin' && user.userName === 'Admin'"
+            />
+          </div>
+        }
+      </div>
     </form>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-success" (click)="updateRoles()">Submit</button>
-    <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Cancel</button>
+  <div class="modal-footer border-top border-secondary border-opacity-25 px-4 py-3">
+    <button type="button" class="btn btn-primary btn-sm" (click)="updateRoles()">
+      <i class="fa-solid fa-check me-1"></i> Save Changes
+    </button>
+    <button type="button" class="btn btn-outline-light btn-sm" (click)="bsModalRef.hide()">Cancel</button>
   </div>
+</div>

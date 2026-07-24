@@ -1,1 +1,1 @@
-declare module 'alertifyjs';
+// Custom TypeScript module definitions

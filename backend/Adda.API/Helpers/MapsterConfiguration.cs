@@ -10,13 +10,13 @@ public static class MapsterConfiguration
     {
         TypeAdapterConfig<User, UserListDetails>
             .NewConfig()
-            .Map(dest => dest.PhotoUrl, src => src.Photos.FirstOrDefault(p => p.IsMain)!.Url)
+            .Map(dest => dest.PhotoUrl, src => src.Photos.FirstOrDefault(p => p.IsMain) != null ? src.Photos.FirstOrDefault(p => p.IsMain)!.Url : null)
             .Map(dest => dest.Age, src => src.DateOfBirth.CalculateAge());
 
         TypeAdapterConfig<User, UserDetails>
             .NewConfig()
             .Map(dest => dest.Photos, src => src.Photos)
-            .Map(dest => dest.PhotoUrl, src => src.Photos.FirstOrDefault(p => p.IsMain)!.Url)
+            .Map(dest => dest.PhotoUrl, src => src.Photos.FirstOrDefault(p => p.IsMain) != null ? src.Photos.FirstOrDefault(p => p.IsMain)!.Url : null)
             .Map(dest => dest.Age, src => src.DateOfBirth.CalculateAge());
 
         TypeAdapterConfig<Photo, PhotosDetails>.NewConfig();
@@ -27,7 +27,7 @@ public static class MapsterConfiguration
 
         TypeAdapterConfig<Message, MessageResponse>
             .NewConfig()
-            .Map(dest => dest.SenderPhotoUrl, src => src.Sender.Photos.FirstOrDefault(p => p.IsMain)!.Url)
-            .Map(dest => dest.RecipientPhotoUrl, src => src.Recipient.Photos.FirstOrDefault(p => p.IsMain)!.Url);
+            .Map(dest => dest.SenderPhotoUrl, src => src.Sender.Photos.FirstOrDefault(p => p.IsMain) != null ? src.Sender.Photos.FirstOrDefault(p => p.IsMain)!.Url : null)
+            .Map(dest => dest.RecipientPhotoUrl, src => src.Recipient.Photos.FirstOrDefault(p => p.IsMain) != null ? src.Recipient.Photos.FirstOrDefault(p => p.IsMain)!.Url : null);
     }
 }

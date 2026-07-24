@@ -1,66 +1,108 @@
-<div class="container mt-4">
-  <div class="row">
-    <div class="col-sm-4"><h1>Your Profile</h1></div>
-    <div class="col-sm-8">
-      @if (editForm.dirty) {
-        <div class="alert alert-info">
-          <strong>Information:</strong> You have made changes. Any unsaved changes will be lost!
-        </div>
-      }
+<div class="container page-shell">
+  <!-- Page Header -->
+  <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+    <div>
+      <span class="page-label mb-1">Settings</span>
+      <h1 class="h2 fw-bold mb-0">Edit Profile</h1>
     </div>
+    @if (editForm.dirty) {
+      <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-primary shadow" type="submit">
+        <i class="fa-solid fa-floppy-disk me-1"></i> Save Changes
+      </button>
+    }
   </div>
-  <div class="row mb-4">
-    <div class="col-sm-4">
-      <div class="card">
-        <img class="card-img-top img-thumbnail" src="{{ photoUrl || './user.png' }}" alt="{{ user.knownAs }}" />
-        <div class="card-body">
-          <div>
-            <strong>Email:</strong>
-            <P>{{ user.email }}</P>
-          </div>
-          <div>
-            <strong>Location:</strong>
-            <P>{{ user.city }}, {{ user.country }}</P>
-          </div>
-          <div>
-            <strong>Age:</strong>
-            <P>{{ user.age }}</P>
-          </div>
-          <div>
-            <strong>Last Active:</strong>
-            <P>{{ user.lastActive | dateAgo }}</P>
-          </div>
-          <div>
-            <strong>Member since:</strong>
-            <P>{{ user.created | date : 'mediumDate' }}</P>
+
+  @if (editForm.dirty) {
+    <div class="glass-panel p-3 mb-4 border-warning border-opacity-50 text-warning d-flex align-items-center gap-2">
+      <i class="fa-solid fa-triangle-exclamation fs-5"></i>
+      <div>
+        <strong>Unsaved Changes:</strong> You have unsaved changes in your profile. Click <strong>Save Changes</strong> to keep them.
+      </div>
+    </div>
+  }
+
+  <div class="row g-4">
+    <!-- Left Sidebar Card -->
+    <div class="col-lg-4">
+      <div class="glass-panel p-4 shadow-lg text-center">
+        <div class="position-relative d-inline-block mb-3">
+          <img
+            class="rounded-circle object-cover border border-3 border-danger shadow"
+            style="width: 120px; height: 120px;"
+            [src]="photoUrl || './user.png'"
+            [alt]="user.knownAs"
+          />
+        </div>
+
+        <h3 class="h5 fw-bold mb-1">{{ user.knownAs }}</h3>
+        <p class="text-muted-custom fs-xs mb-3">{{ user.email }}</p>
+
+        <div class="border-top border-secondary border-opacity-25 pt-3 text-start">
+          <div class="row g-3 fs-xs">
+            <div class="col-6">
+              <div class="text-muted-custom fw-bold">LOCATION</div>
+              <div>{{ user.city }}, {{ user.country }}</div>
+            </div>
+            <div class="col-6">
+              <div class="text-muted-custom fw-bold">AGE</div>
+              <div>{{ user.age }} Years</div>
+            </div>
+            <div class="col-6">
+              <div class="text-muted-custom fw-bold">LAST ACTIVE</div>
+              <div>{{ user.lastActive | dateAgo }}</div>
+            </div>
+            <div class="col-6">
+              <div class="text-muted-custom fw-bold">MEMBER SINCE</div>
+              <div>{{ user.created | date : 'mediumDate' }}</div>
+            </div>
           </div>
         </div>
-        <div class="margin-auto mb-4 card-footer">
-          <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-success btn-block">Save Changes</button>
+
+        <div class="mt-4 pt-2">
+          <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-primary w-100 py-2" type="submit">
+            <i class="fa-solid fa-floppy-disk me-1"></i> Save Changes
+          </button>
         </div>
       </div>
     </div>
-    <div class="col-sm-8">
-      <div class="tab-panel">
+
+    <!-- Right Edit Forms Tabs -->
+    <div class="col-lg-8">
+      <div class="glass-panel p-4 shadow-lg">
         <tabset class="member-tabset">
-          <tab heading="Edit Profile">
+          <tab class="pt-4">
+            <ng-template tabHeading>
+              <i class="fa-solid fa-user-pen me-2"></i>Profile Details
+            </ng-template>
             <form #editForm="ngForm" id="editForm" (ngSubmit)="updateUser()">
-              <h4>Description</h4>
-              <textarea name="introduction" rows="5" class="form-control" [(ngModel)]="user.introduction"></textarea>
-              <h4>Looking For</h4>
-              <textarea name="lookingFor" rows="5" class="form-control" [(ngModel)]="user.lookingFor"></textarea>
-              <h4>Interests</h4>
-              <textarea name="interests" rows="5" class="form-control" [(ngModel)]="user.interests"></textarea>
-              <h4>Location Details:</h4>
-              <div class="form-inline">
-                <label for="city">City</label>
-                <input type="text" class="form-control" name="city" [(ngModel)]="user.city" />
-                <label for="city">Country</label>
-                <input type="text" class="form-control" name="country" [(ngModel)]="user.country" />
+              <div class="mb-3">
+                <label for="introduction" class="form-label">Description / Bio</label>
+                <textarea id="introduction" name="introduction" rows="4" class="form-control" placeholder="Tell members about yourself..." [(ngModel)]="user.introduction"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="lookingFor" class="form-label">Looking For</label>
+                <textarea id="lookingFor" name="lookingFor" rows="4" class="form-control" placeholder="What kind of connections or friends are you seeking?" [(ngModel)]="user.lookingFor"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="interests" class="form-label">Interests & Hobbies</label>
+                <textarea id="interests" name="interests" rows="3" class="form-control" placeholder="Music, Gaming, Hiking, Tech..." [(ngModel)]="user.interests"></textarea>
+              </div>
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label for="city" class="form-label">City</label>
+                  <input id="city" type="text" class="form-control" name="city" [(ngModel)]="user.city" />
+                </div>
+                <div class="col-md-6">
+                  <label for="country" class="form-label">Country</label>
+                  <input id="country" type="text" class="form-control" name="country" [(ngModel)]="user.country" />
+                </div>
               </div>
             </form>
           </tab>
-          <tab heading="Edit Photos">
+          <tab class="pt-4">
+            <ng-template tabHeading>
+              <i class="fa-solid fa-images me-2"></i>Photo Gallery & Upload
+            </ng-template>
             <app-photo-editor [photos]="user.photos!"></app-photo-editor>
           </tab>
         </tabset>

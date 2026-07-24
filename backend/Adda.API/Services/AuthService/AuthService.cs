@@ -18,13 +18,7 @@ public class AuthService(IJwtTokenGenerator jwtTokenGenerator, UserManager<User>
         try
         {
 
-            var user = await _userManager.Users
-                .Include(p => p.Photos)
-                .SingleOrDefaultAsync(
-                    u => u.UserName.Equals(
-                            request.Username
-                    )
-                );
+            var user = await _userManager.FindByNameAsync(request.Username);
 
             if (user == null)
             {
@@ -41,7 +35,7 @@ public class AuthService(IJwtTokenGenerator jwtTokenGenerator, UserManager<User>
             {
                 var roles = await _userManager.GetRolesAsync(user);
                 string token = _jwtTokenGenerator.GenerateToken(user.Id, user.UserName, roles);
-                return new AuthResponse(user.Id, user.KnownAs, user.Gender, user.Photos.FirstOrDefault(p => p.IsMain)?.Url, token);
+                return new AuthResponse(user.Id, user.KnownAs, user.Gender, user.Photos?.FirstOrDefault(p => p.IsMain)?.Url, token);
             }
             else
             {

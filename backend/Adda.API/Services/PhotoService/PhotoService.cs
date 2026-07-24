@@ -18,14 +18,14 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
         {
             if (file == null)
             {
-                return Error.Failure("No file was uploaded");
+                return Error.Failure(description: "No file was uploaded");
             }
 
             var userFromRepo = await _userRepository.GetAsync(userId, true);
 
             if (userFromRepo == null)
             {
-                return Error.Failure("User not found");
+                return Error.Failure(description: "User not found");
             }
 
             var res = await _cloudinaryService.UploadPhotoAsync(
@@ -34,7 +34,7 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
 
             if (res.IsError)
             {
-                return Error.Failure(res.FirstError.Description);
+                return Error.Failure(description: res.FirstError.Description);
             }
 
             var photo = new Photo()

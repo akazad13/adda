@@ -1,53 +1,121 @@
-<div class="container mt-4">
-  <div class="row">
-    <div class="col-sm-4">
-      <div class="card">
-        <img class="card-img-top img-thumbnail" src="{{ user.photoUrl || './user.png' }}" alt="{{ user.knownAs }}" />
-        <div class="card-body">
-          <div>
-            <strong>Email:</strong>
-            <P>{{ user.email }}</P>
-          </div>
-          <div>
-            <strong>Location:</strong>
-            <P>{{ user.city }}, {{ user.country }}</P>
-          </div>
-          <div>
-            <strong>Age:</strong>
-            <P>{{ user.age }}</P>
-          </div>
-          <div>
-            <strong>Last Active:</strong>
-            <P>{{ user.lastActive | dateAgo }}</P>
-          </div>
-          <div>
-            <strong>Member since:</strong>
-            <P>{{ user.created | date : 'mediumDate' }}</P>
-          </div>
+<div class="container page-shell">
+  <div class="row g-4">
+    <!-- Left Profile Sidebar -->
+    <div class="col-lg-4">
+      <div class="glass-panel p-4 shadow-lg text-center position-relative overflow-hidden">
+        <!-- Avatar Holder -->
+        <div class="position-relative d-inline-block mb-3">
+          <img
+            class="rounded-circle object-cover border border-3 border-danger shadow-lg"
+            style="width: 140px; height: 140px;"
+            [src]="user.photoUrl || './user.png'"
+            [alt]="user.knownAs"
+          />
+          <span class="online-pulse position-absolute bottom-0 end-0 p-2 me-2 mb-2"></span>
         </div>
-        <div class="">
-          <div class="btn-group d-flex">
-            <button class="btn btn-outline-primary w-100" (click)="bookmark(user.id)">Bookmark</button>
-            <button class="btn btn-outline-info w-100" (click)="selecTab(3)">Message</button>
+
+        <h2 class="h3 fw-bold mb-1">
+          {{ user.knownAs }}<span class="text-gradient-accent ms-2">, {{ user.age }}</span>
+        </h2>
+        <p class="text-muted-custom fs-sm mb-4">
+          <i class="fa-solid fa-location-dot me-1 text-danger"></i>{{ user.city }}, {{ user.country }}
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="d-flex gap-2 mb-4">
+          <button type="button" class="btn btn-outline-light flex-fill" (click)="bookmark(user.id)">
+            <i class="fa-solid fa-heart text-danger me-1"></i> Bookmark
+          </button>
+          <button type="button" class="btn btn-primary flex-fill" (click)="selecTab(3)">
+            <i class="fa-solid fa-paper-plane me-1"></i> Message
+          </button>
+        </div>
+
+        <!-- Profile Metadata Stack -->
+        <div class="border-top border-secondary border-opacity-25 pt-3 text-start">
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="form-label text-muted-custom fs-2xs mb-0">LAST ACTIVE</div>
+              <div class="fw-semibold fs-sm text-truncate">{{ user.lastActive | dateAgo }}</div>
+            </div>
+            <div class="col-6">
+              <div class="form-label text-muted-custom fs-2xs mb-0">MEMBER SINCE</div>
+              <div class="fw-semibold fs-sm text-truncate">{{ user.created | date : 'mediumDate' }}</div>
+            </div>
+            <div class="col-6">
+              <div class="form-label text-muted-custom fs-2xs mb-0">GENDER</div>
+              <div class="fw-semibold fs-sm text-capitalize">{{ user.gender || 'Not specified' }}</div>
+            </div>
+            <div class="col-6">
+              <div class="form-label text-muted-custom fs-2xs mb-0">PHOTOS</div>
+              <div class="fw-semibold fs-sm">{{ user.photos?.length || 0 }} Uploaded</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-sm-8">
-      <div class="tab-panel">
+
+    <!-- Right Profile Details Tabs -->
+    <div class="col-lg-8">
+      <div class="glass-panel p-4 shadow-lg">
         <tabset class="member-tabset" #memberTabs>
-          <tab heading="About {{ user.knownAs }}" class="mt-4">
-            <h4>Description</h4>
-            <p>{{ user.introduction }}</p>
-            <h4>Looking For</h4>
-            <p>{{ user.lookingFor }}</p>
+          <tab class="pt-4">
+            <ng-template tabHeading>
+              <i class="fa-solid fa-user me-2"></i>About {{ user.knownAs }}
+            </ng-template>
+            <div class="mb-4">
+              <span class="section-label">Introduction &amp; Biography</span>
+              <p class="text-muted-custom leading-relaxed">{{ user.introduction || 'No description added yet.' }}</p>
+            </div>
+            <div>
+              <span class="section-label-accent">Looking For</span>
+              <p class="text-muted-custom leading-relaxed">{{ user.lookingFor || 'Not specified.' }}</p>
+            </div>
           </tab>
-          <tab heading="Interests" class="mt-4">
-            <h4>Interests</h4>
-            <p>{{ user.interests }}</p>
+
+          <tab class="pt-4">
+            <ng-template tabHeading>
+              <i class="fa-solid fa-sparkles me-2"></i>Interests
+            </ng-template>
+            <div>
+              <span class="section-label">Hobbies &amp; Interests</span>
+              <p class="text-muted-custom leading-relaxed">{{ user.interests || 'No interests listed.' }}</p>
+            </div>
           </tab>
-          <tab heading="Files" class="mt-4"> </tab>
-          <tab heading="Messages" class="mt-4">
+
+          <tab class="pt-4">
+            <ng-template tabHeading>
+              <i class="fa-solid fa-images me-2"></i>Photo Gallery ({{ user.photos?.length || 0 }})
+            </ng-template>
+            @if (user.photos?.length) {
+              <div class="row g-3">
+                @for (photo of user.photos; track photo.id) {
+                  <div class="col-6 col-md-4">
+                    <div class="photo-gallery-card">
+                      <img
+                        [src]="photo.url"
+                        [alt]="photo.description || user.knownAs"
+                      />
+                      <!-- Hover overlay with zoom icon -->
+                      <div class="photo-overlay">
+                        <i class="fa-solid fa-magnifying-glass-plus text-white" style="font-size:1.75rem; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.8));"></i>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="text-center py-5 text-muted-custom">
+                <i class="fa-solid fa-camera-retro fs-1 mb-2 d-block text-secondary"></i>
+                <p class="mb-0">No photos uploaded yet.</p>
+              </div>
+            }
+          </tab>
+
+          <tab class="pt-4">
+            <ng-template tabHeading>
+              <i class="fa-solid fa-comments me-2"></i>Messages
+            </ng-template>
             <app-member-messages [recipientId]="user.id"></app-member-messages>
           </tab>
         </tabset>

@@ -3,16 +3,16 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { RolesModalComponent } from '../roles-modal/roles-modal.component';
 import { User } from '../../models/user';
 import { AdminService } from '../../services/admin.service';
-import { AlertifyService } from '../../services/alertify.service';
+import { NotificationService } from '../../services/notification.service';
 
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-    selector: 'app-user-management',
-    templateUrl: './user-management.component.html',
-    styles: ``,
-    imports: [],
-    providers: [BsModalService]
+  selector: 'app-user-management',
+  templateUrl: './user-management.component.html',
+  styles: ``,
+  imports: [],
+  providers: [BsModalService]
 })
 export class UserManagementComponent implements OnInit {
   bsModalRef!: BsModalRef;
@@ -20,9 +20,9 @@ export class UserManagementComponent implements OnInit {
 
   constructor(
     private readonly adminService: AdminService,
-    private readonly alertify: AlertifyService,
+    private readonly notify: NotificationService,
     private readonly modalService: BsModalService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getUsersWithRoles();
@@ -33,7 +33,7 @@ export class UserManagementComponent implements OnInit {
       const users: User[] = await firstValueFrom(this.adminService.getUsersWithRoles());
       this.users = users;
     } catch (e: any) {
-      this.alertify.error(e.statusText);
+      this.notify.error(e.statusText);
     }
   }
 
@@ -53,7 +53,7 @@ export class UserManagementComponent implements OnInit {
           await firstValueFrom(this.adminService.updateUserRoles(user, rolesToUpdate));
           user.roles = [...rolesToUpdate.roleName];
         } catch (e: any) {
-          this.alertify.error(e.statusText);
+          this.notify.error(e.statusText);
         }
       }
     });

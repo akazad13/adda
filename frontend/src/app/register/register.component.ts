@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, AbstractControlOptions, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { AlertifyService } from '../services/alertify.service';
+import { NotificationService } from '../services/notification.service';
 import { User } from '../models/user';
 import { HasErrorPipe } from '../pipes/has-error.pipe';
 import { IsInvalidPipe } from '../pipes/is-invalid.pipe';
@@ -14,8 +14,15 @@ import { firstValueFrom } from 'rxjs';
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
-    styles: ``,
-    imports: [HasErrorPipe, IsInvalidPipe, BsDatepickerModule, ReactiveFormsModule]
+    styles: `
+    .auth-page {
+      min-height: calc(100vh - var(--adda-nav-height));
+      display: flex;
+      align-items: center;
+      padding: 2rem 0 3rem;
+    }
+  `,
+    imports: [HasErrorPipe, IsInvalidPipe, BsDatepickerModule, ReactiveFormsModule, RouterLink]
 })
 export class RegisterComponent implements OnInit {
   user!: User;
@@ -25,7 +32,7 @@ export class RegisterComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
-    private readonly alertify: AlertifyService,
+    private readonly notify: NotificationService,
     private readonly formBuilder: FormBuilder,
     private readonly router: Router
   ) {}
@@ -67,15 +74,15 @@ export class RegisterComponent implements OnInit {
 
       try {
         await firstValueFrom(this.userService.register(this.user));
-        this.alertify.success('registration successful');
+        this.notify.success('registration successful');
         try {
           await firstValueFrom(this.authService.login(this.user));
           this.router.navigate(['/members']);
         } catch (e: any) {
-          this.alertify.error(e.error.title);
+          this.notify.error(e.error.title);
         }
       } catch (e: any) {
-        this.alertify.error(e.error);
+        this.notify.error(e.error);
       }
     }
   }

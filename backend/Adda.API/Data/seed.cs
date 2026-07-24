@@ -22,9 +22,31 @@ public class Seed(
     {
         try
         {
-            if (_context.Database.IsMySql())
+            bool isMySql = false;
+            try
+            {
+                isMySql = _context.Database.IsMySql();
+            }
+            catch (InvalidOperationException)
+            {
+                // When running under test with InMemory provider alongside MySQL registrations,
+                // IsMySql() may throw; fall back to EnsureCreated.
+            }
+
+            if (isMySql)
             {
                 await _context.Database.MigrateAsync();
+            }
+            else
+            {
+                try
+                {
+                    await _context.Database.EnsureCreatedAsync();
+                }
+                catch (InvalidOperationException)
+                {
+                    // Tolerate mixed-provider scenarios (e.g., test environment)
+                }
             }
         }
         catch (Exception ex)
@@ -51,8 +73,13 @@ public class Seed(
     {
         if (!await _userManager.Users.AnyAsync())
         {
-            string userData = await File.ReadAllTextAsync("Data/UserSeedData.json");
-            var users = userData is not null ? JsonConvert.DeserializeObject<List<User>>(userData) : [];
+            string path = Path.Combine(AppContext.BaseDirectory, "Data", "UserSeedData.json");
+            if (!File.Exists(path))
+            {
+                path = "Data/UserSeedData.json";
+            }
+            string userData = File.Exists(path) ? await File.ReadAllTextAsync(path) : "[]";
+            var users = JsonConvert.DeserializeObject<List<User>>(userData) ?? [];
 
             // create some roles
 

@@ -1,0 +1,13 @@
+global using System.Net;
+global using System.Net.Http.Json;
+global using Adda.API.Controllers;
+global using Adda.API.Dtos;
+global using Adda.API.Models;
+global using Adda.API.Security.CurrentUserProvider;
+global using Adda.API.Services.AuthService;
+global using Adda.API.Services.PhotoService;
+global using Adda.API.Services.UserService;
+global using FluentAssertions;
+global using Microsoft.AspNetCore.Mvc;
+global using Moq;
+global using Xunit;

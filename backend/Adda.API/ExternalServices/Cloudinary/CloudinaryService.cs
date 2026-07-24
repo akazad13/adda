@@ -22,7 +22,8 @@ public class CloudinaryService(
                 var uploadParams = new ImageUploadParams()
                 {
                     File = new FileDescription(file.Name, stream),
-                    Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face")
+                    Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face"),
+                    AssetFolder = "adda"
                 };
                 var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 

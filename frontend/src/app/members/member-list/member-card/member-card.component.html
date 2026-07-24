@@ -1,26 +1,62 @@
-<div class="card mb-4">
+<div class="glass-panel glass-panel-hover h-100 position-relative overflow-hidden card-member">
   <div class="card-img-wrapper">
-    <img src="{{ user.photoUrl || './user.png' }}" alt="{{ user.knownAs }}" class="card-img-top" />
-    <ul class="list-inline member-icons animate text-center">
-      <li class="list-inline-item">
-        <button class="btn btn-primary" [routerLink]="['/members/', user.id]" title="Profile">
-          <i class="fa fa-user"></i>
+    <img [src]="user.photoUrl || './user.png'" [alt]="user.knownAs" class="member-photo" />
+
+    <!-- Top Badges Overlay — dark backing for visibility on any photo -->
+    <div class="position-absolute top-0 start-0 w-100 p-2 d-flex align-items-center justify-content-between" style="z-index:2;">
+      <span class="badge-on-image">
+        <span class="online-pulse"></span>
+        <span>Online</span>
+      </span>
+      @if (user.city) {
+        <span class="badge-on-image">
+          <i class="fa-solid fa-location-dot" style="color:#ff6b84;"></i>{{ user.city }}
+        </span>
+      }
+    </div>
+
+    <!-- Quick Hover Action Overlay Toolbar — sits above gradient scrim -->
+    <div class="member-action-toolbar position-absolute bottom-0 start-0 w-100 p-3 text-center">
+      <div class="d-inline-flex gap-2 p-1 rounded-pill" style="background:rgba(8,12,20,0.75); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.12);">
+        <button
+          class="btn btn-icon btn-sm btn-primary rounded-circle"
+          [routerLink]="['/members/', user.id]"
+          title="View profile"
+          aria-label="View profile"
+        >
+          <i class="fa-solid fa-eye"></i>
         </button>
-      </li>
-      <li class="list-inline-item">
-        <button class="btn btn-primary" (click)="bookmark(user.id)" title="Bookmark">
-          <i class="fa fa-bookmark" aria-hidden="true"></i>
+
+        <button
+          class="btn btn-icon btn-sm rounded-circle"
+          style="background:rgba(255,59,92,0.25); border:1px solid rgba(255,59,92,0.5); color:#ff6b84;"
+          (click)="bookmark(user.id)"
+          title="Bookmark profile"
+          aria-label="Bookmark profile"
+        >
+          <i class="fa-solid fa-heart"></i>
         </button>
-      </li>
-      <li class="list-inline-item">
-        <button class="btn btn-primary" [routerLink]="['/members/', user.id]" [queryParams]="{ tab: 3 }">
-          <i class="fa fa-envelope"></i>
+
+        <button
+          class="btn btn-icon btn-sm btn-outline-light rounded-circle"
+          [routerLink]="['/members/', user.id]"
+          [queryParams]="{ tab: 3 }"
+          title="Send message"
+          aria-label="Send message"
+        >
+          <i class="fa-solid fa-comment"></i>
         </button>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
-  <div class="card-body p-1">
-    <h6 class="card-title text-center mb-1"><i class="fa fa-user"></i> {{ user.knownAs }}, {{ user.age }}</h6>
-    <p class="card-text text-muted text-center">{{ user.city }}</p>
+
+  <!-- Card Info -->
+  <div class="p-3 text-center">
+    <h3 class="h6 fw-bold mb-1 text-truncate text-white">
+      {{ user.knownAs }}<span class="text-accent-solid ms-1" style="font-weight:500;">, {{ user.age }}</span>
+    </h3>
+    <p class="text-muted-custom fs-xs mb-0 text-truncate">
+      <i class="fa-solid fa-map-pin me-1" style="color:#64748b;"></i>{{ user.city || 'Member' }}, {{ user.country || 'Global' }}
+    </p>
   </div>
 </div>

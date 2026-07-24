@@ -14,9 +14,11 @@ import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { ListsResolver } from './resolver/lists.resolver';
 import { MessagesResolver } from './resolver/messages';
 import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'login', component: LoginComponent },
   {
     path: '',
     runGuardsAndResolvers: 'always',

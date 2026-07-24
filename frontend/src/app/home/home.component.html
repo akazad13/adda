@@ -1,9 +1,155 @@
-<div class="container mt-5">
-  <div style="text-align: center">
-    <h1>Let's find a friend</h1>
+<section class="hero-section py-5 position-relative">
+  <div class="container py-4">
+    <div class="row align-items-center g-5">
+      <!-- Left Hero Content -->
+      <div class="col-lg-7 text-center text-lg-start">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill glass-panel border-secondary border-opacity-25 mb-4 animate-fade-in">
+          <span class="page-label">NEW</span>
+          <span class="fs-xs fw-semibold text-muted-custom">Experience the all-new Adda platform</span>
+          <i class="fa-solid fa-arrow-right fs-xs text-brand-solid"></i>
+        </div>
 
-    <div class="text-center mt-4">
-      <img width="90%" src="home.jpg" style="border-radius: 10px" alt="" />
+        <h1 class="display-3 fw-bold tracking-tight mb-3">
+          Find Meaningful <br class="d-none d-md-inline" />
+          <span class="text-gradient">Connections Nearby.</span>
+        </h1>
+
+        <p class="lead text-muted-custom mb-4 max-w-600">
+          Discover like-minded members, bookmark your favorite profiles, share photos, and start real-time conversations instantly.
+        </p>
+
+        <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start mb-5">
+          @if (authService.loggedIn()) {
+            <a routerLink="/members" class="btn btn-primary btn-lg shadow-lg">
+              <i class="fa-solid fa-compass"></i> Explore Directory
+            </a>
+            <a routerLink="/messages" class="btn btn-outline-light btn-lg">
+              <i class="fa-solid fa-comments"></i> Open Messages
+            </a>
+          } @else {
+            <a routerLink="/register" class="btn btn-primary btn-lg shadow-lg">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Create Free Account
+            </a>
+            <a routerLink="/login" class="btn btn-outline-light btn-lg">
+              <i class="fa-solid fa-right-to-bracket"></i> Sign In Now
+            </a>
+          }
+        </div>
+
+        <!-- Social Proof Stats -->
+        <div class="row g-3 pt-3 border-top border-secondary border-opacity-25">
+          <div class="col-4">
+            <div class="fw-bold fs-3 text-gradient">10K+</div>
+            <div class="fs-xs text-muted-custom">Active Members</div>
+          </div>
+          <div class="col-4">
+            <div class="fw-bold fs-3 text-gradient-accent">50K+</div>
+            <div class="fs-xs text-muted-custom">Connections Made</div>
+          </div>
+          <div class="col-4">
+            <div class="fw-bold fs-3 text-gradient">100%</div>
+            <div class="fs-xs text-muted-custom">Verified Profiles</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Visual Feature Showcase -->
+      <div class="col-lg-5">
+        <div class="position-relative">
+          <div class="hero-glow-orb position-absolute top-50 start-50 translate-middle"></div>
+          
+          <div class="glass-panel p-4 position-relative z-1 shadow-lg">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+              <div class="d-flex align-items-center gap-2">
+                <span class="online-pulse"></span>
+                <span class="fw-bold fs-sm">Trending Profiles</span>
+              </div>
+              <span class="badge-glass">Live</span>
+            </div>
+
+            <!-- Demo Card Showcase Stack -->
+            <div class="d-flex flex-column gap-3">
+              <div class="glass-panel p-3 d-flex align-items-center gap-3">
+                <div class="avatar-holder position-relative">
+                  <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Member" class="rounded-circle width-48 height-48 object-cover border border-danger" />
+                  <span class="online-pulse position-absolute bottom-0 end-0"></span>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="fw-bold fs-sm">Sophia, 24</div>
+                  <div class="text-muted-custom fs-xs">New York • Graphic Designer</div>
+                </div>
+                <span class="btn btn-icon btn-sm btn-primary rounded-circle">
+                  <i class="fa-solid fa-heart"></i>
+                </span>
+              </div>
+
+              <div class="glass-panel p-3 d-flex align-items-center gap-3 ms-3">
+                <div class="avatar-holder position-relative">
+                  <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Member" class="rounded-circle width-48 height-48 object-cover border border-info" />
+                  <span class="online-pulse position-absolute bottom-0 end-0"></span>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="fw-bold fs-sm">Alexander, 28</div>
+                  <div class="text-muted-custom fs-xs">Chicago • Software Architect</div>
+                </div>
+                <span class="btn btn-icon btn-sm btn-accent rounded-circle">
+                  <i class="fa-solid fa-comment"></i>
+                </span>
+              </div>
+
+              <div class="glass-panel p-3 d-flex align-items-center gap-3">
+                <div class="avatar-holder position-relative">
+                  <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Member" class="rounded-circle width-48 height-48 object-cover border border-warning" />
+                </div>
+                <div class="flex-grow-1">
+                  <div class="fw-bold fs-sm">Emma, 26</div>
+                  <div class="text-muted-custom fs-xs">Seattle • Photographer</div>
+                </div>
+                <span class="btn btn-icon btn-sm btn-outline-light rounded-circle">
+                  <i class="fa-solid fa-bookmark"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature Highlights Section -->
+    <div class="row g-4 mt-5 pt-4">
+      <div class="col-md-4">
+        <div class="glass-panel glass-panel-hover p-4 h-100">
+          <div class="feature-icon mb-3">
+            <i class="fa-solid fa-sliders text-gradient fs-2"></i>
+          </div>
+          <h3 class="h5 fw-bold mb-2">Advanced Filtering</h3>
+          <p class="text-muted-custom fs-sm mb-0">
+            Tailor your search by age, location, gender, and activity to meet people who fit your lifestyle.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="glass-panel glass-panel-hover p-4 h-100">
+          <div class="feature-icon mb-3">
+            <i class="fa-solid fa-bolt text-gradient-accent fs-2"></i>
+          </div>
+          <h3 class="h5 fw-bold mb-2">Real-Time Chat</h3>
+          <p class="text-muted-custom fs-sm mb-0">
+            Connect instantly with instant messaging powered by SignalR real-time synchronization.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="glass-panel glass-panel-hover p-4 h-100">
+          <div class="feature-icon mb-3">
+            <i class="fa-solid fa-shield-heart text-gradient fs-2"></i>
+          </div>
+          <h3 class="h5 fw-bold mb-2">Secure & Verified</h3>
+          <p class="text-muted-custom fs-sm mb-0">
+            Enjoy peace of mind with photo moderation, role permissions, and privacy controls.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</section>

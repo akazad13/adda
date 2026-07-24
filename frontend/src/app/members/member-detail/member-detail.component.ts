@@ -3,7 +3,7 @@ import { TabsetComponent, TabsModule } from 'ngx-bootstrap/tabs';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../../models/user';
-import { AlertifyService } from '../../services/alertify.service';
+import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { MemberMessagesComponent } from './member-messages/member-messages.component';
@@ -14,20 +14,37 @@ import { DateAgoPipe } from '../../pipes/date-ago.pipe';
     selector: 'app-member-detail',
     templateUrl: './member-detail.component.html',
     styles: `
-    .img-thumbnail {
-      margin: 25px;
-      width: 85%;
-      height: 85%;
+    .profile-sidebar {
+      overflow: hidden;
     }
 
-    .card-body {
-      padding: 0 25px;
+    .profile-photo {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
     }
 
-    .card-footer {
-      padding: 10px 15px;
-      background-color: #fff;
-      border-top: none;
+    .profile-meta div {
+      margin-bottom: 0.85rem;
+    }
+
+    .profile-meta dt {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--adda-text-muted);
+      margin-bottom: 0.15rem;
+    }
+
+    .profile-meta dd {
+      margin-bottom: 0;
+    }
+
+    .profile-gallery-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: var(--adda-radius);
     }
   `,
     imports: [MemberMessagesComponent, TabsModule, DatePipe, DateAgoPipe]
@@ -42,7 +59,7 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
-    private readonly alertify: AlertifyService,
+    private readonly notify: NotificationService,
     private readonly route: ActivatedRoute
   ) {}
 
@@ -61,7 +78,7 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.routeSubscription.unsubscribe();
+    this.routeSubscription?.unsubscribe();
   }
 
   getImages() {
@@ -83,9 +100,9 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   async bookmark(id: number): Promise<void> {
     try {
       await firstValueFrom(this.userService.bookmark(this.authService.decodedToken.nameid, id));
-      this.alertify.success('You have bookmarked: ' + this.user.knownAs);
+      this.notify.success('You have bookmarked: ' + this.user.knownAs);
     } catch (e: any) {
-      this.alertify.error(e.error);
+      this.notify.error(e.error);
     }
   }
 }

@@ -2,61 +2,62 @@ import { Component, OnInit, Input } from '@angular/core';
 import { User } from '../../../models/user';
 import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
-import { AlertifyService } from '../../../services/alertify.service';
+import { NotificationService } from '../../../services/notification.service';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-    selector: 'app-member-card',
-    templateUrl: './member-card.component.html',
-    styles: `
-    .card:hover img {
-    transform: scale(1.2, 1.2);
-    transition-duration: 500ms;
-    transition-timing-function: ease-out;
-    opacity: 0.7;
-  }
+  selector: 'app-member-card',
+  templateUrl: './member-card.component.html',
+  styles: `
+    .card-member {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-  .card img {
-    transform: scale(1, 1);
-    transition-duration: 500ms;
-    transition-timing-function: ease-out;
-  }
+    .card-img-wrapper {
+      aspect-ratio: 1;
+      overflow: hidden;
+      border-radius: var(--adda-radius-lg) var(--adda-radius-lg) 0 0;
+    }
 
-  .card-img-wrapper {
-    overflow: hidden;
-    position: relative;
-  }
+    .member-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease, filter 0.4s ease;
+    }
 
-  .member-icons {
-    position: absolute;
-    bottom: -30%;
-    left: 0;
-    right: 0;
-    margin-right: auto;
-    margin-left: auto;
-    opacity: 0;
-  }
+    .card-member:hover .member-photo {
+      transform: scale(1.08);
+      filter: brightness(0.85);
+    }
 
-  .card-img-wrapper:hover .member-icons {
-    bottom: 0;
-    opacity: 1;
-  }
+    .member-action-toolbar {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
 
-  .animate {
-    transition: all 0.3s ease-in-out;
-  }
+    .card-member:hover .member-action-toolbar {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .fs-2xs { font-size: 0.7rem; }
+    .fs-xs { font-size: 0.785rem; }
+    .pointer-events-none { pointer-events: none; }
   `,
-    imports: [RouterLink]
+  imports: [RouterLink]
 })
 export class MemberCardComponent implements OnInit {
-  @Input()
-  user!: User;
+  @Input() user!: User;
 
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
-    private readonly alertify: AlertifyService
+    private readonly notify: NotificationService
   ) {}
 
   ngOnInit() {}
@@ -66,9 +67,9 @@ export class MemberCardComponent implements OnInit {
 
     try {
       await firstValueFrom(this.userService.bookmark(this.authService.decodedToken.nameid, id));
-      this.alertify.success('You have bookmarked: ' + this.user?.knownAs);
+      this.notify.success('You have bookmarked: ' + this.user?.knownAs);
     } catch (e: any) {
-      this.alertify.error(e.error);
+      this.notify.error(e.error);
     }
   }
 }

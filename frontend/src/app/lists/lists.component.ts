@@ -3,7 +3,7 @@ import { Pagination, PaginatedResult } from '../models/pagination';
 import { User } from '../models/user';
 import { UserService } from '../services/user.service';
 import { ActivatedRoute } from '@angular/router';
-import { AlertifyService } from '../services/alertify.service';
+import { NotificationService } from '../services/notification.service';
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { MemberCardComponent } from '../members/member-list/member-card/member-card.component';
@@ -11,10 +11,10 @@ import { NgClass } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-    selector: 'app-lists',
-    templateUrl: './lists.component.html',
-    styles: ``,
-    imports: [FormsModule, PaginationModule, MemberCardComponent, NgClass]
+  selector: 'app-lists',
+  templateUrl: './lists.component.html',
+  styles: ``,
+  imports: [FormsModule, PaginationModule, MemberCardComponent, NgClass]
 })
 export class ListsComponent implements OnInit {
   users: User[] | null = null;
@@ -28,8 +28,8 @@ export class ListsComponent implements OnInit {
   constructor(
     private readonly userService: UserService,
     private readonly route: ActivatedRoute,
-    private readonly alertify: AlertifyService
-  ) {}
+    private readonly notify: NotificationService
+  ) { }
 
   ngOnInit() {
     this.route.data.subscribe((data) => {
@@ -57,7 +57,7 @@ export class ListsComponent implements OnInit {
       }
       this.pagination = res.pagination;
     } catch (e: any) {
-      this.alertify.error(e.statusText);
+      this.notify.error(e.statusText);
     }
   }
 }

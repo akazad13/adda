@@ -1,61 +1,73 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+<nav class="navbar navbar-expand-md sticky-top py-2">
   <div class="container">
-    <a class="navbar-brand" [routerLink]="['/home']"
-      ><img src="./logo.svg" alt="Adda logo" style="border: none; max-height: 30px; margin-right: 5px" /> Adda</a
-      >
+    <a class="navbar-brand text-decoration-none" routerLink="/">
+      <div class="brand-icon me-2">
+        <i class="fa-solid fa-fire" style="color: #ff6b84;"></i>
+      </div>
+      <span class="brand-text" style="color: #ffffff;">Adda<span style="color: #ff6b84;">.</span></span>
+    </a>
 
-      @if (loggedIn()) {
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item" routerLinkActive="active">
-            <a class="nav-link" [routerLink]="['/members']">Members</a>
-          </li>
-          <li class="nav-item" routerLinkActive="active">
-            <a class="nav-link" [routerLink]="['/lists']">My Bookmarks</a>
-          </li>
-          <li class="nav-item" routerLinkActive="active">
-            <a class="nav-link" [routerLink]="['/messages']">Messages</a>
-          </li>
-          <li *appHasRole="['Admin', 'Moderator']" class="nav-item" routerLinkActive="active">
-            <a class="nav-link" [routerLink]="['/admin']">Admin</a>
-          </li>
-        </ul>
-      }
+    @if (loggedIn()) {
+      <ul class="navbar-nav me-auto ms-md-4 gap-md-1">
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/members">
+            <i class="fa-solid fa-users me-1 text-muted-custom"></i> Discover
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/lists">
+            <i class="fa-solid fa-heart me-1 text-muted-custom"></i> Bookmarks
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/messages">
+            <i class="fa-solid fa-comments me-1 text-muted-custom"></i> Messages
+          </a>
+        </li>
+        <li *appHasRole="['Admin', 'Moderator']" class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/admin">
+            <i class="fa-solid fa-shield-halved me-1 text-muted-custom"></i> Admin
+          </a>
+        </li>
+      </ul>
 
-      @if (loggedIn()) {
-        <div class="dropdown" dropdown>
-          <span class="me-1">
-            <img src="{{ photoUrl || './user.png' }}" alt="{{ authService.currentUser?.knownAs }}" />
-          </span>
-          <a class="dropdown-toggle text-light" dropdownToggle> Welcome {{ authService.decodedToken?.unique_name }} </a>
-          <div class="dropdown-menu mt-3" *dropdownMenu>
-            <a class="dropdown-item" [routerLink]="['/member/edit']"><i class="fa fa-user"></i> Edit Profile</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" (click)="logout()"><i class="fa fa-sign-out"></i> Logout</a>
+      <div class="dropdown ms-auto" dropdown>
+        <button
+          type="button"
+          class="btn btn-glass dropdown-toggle text-light text-decoration-none d-flex align-items-center gap-2 py-1 px-3"
+          dropdownToggle
+          aria-label="Account menu"
+        >
+          <div class="position-relative">
+            <img class="nav-avatar" [src]="photoUrl || './user.png'" [alt]="authService.currentUser?.knownAs || 'User'" />
+            <span class="online-pulse position-absolute bottom-0 end-0"></span>
           </div>
+          <span class="fw-semibold text-truncate max-w-120">{{ authService.decodedToken?.unique_name || 'Account' }}</span>
+          <i class="fa-solid fa-chevron-down ms-1 fs-xs text-muted-custom"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end mt-2 glass-panel" *dropdownMenu>
+          <div class="px-3 py-2 border-bottom border-secondary border-opacity-25 mb-1">
+            <div class="fw-bold text-white">{{ authService.decodedToken?.unique_name }}</div>
+            <div class="text-muted fs-xs">Logged in user</div>
+          </div>
+          <a class="dropdown-item d-flex align-items-center gap-2" routerLink="/member/edit">
+            <i class="fa-solid fa-user-pen text-gradient" aria-hidden="true"></i> Edit Profile
+          </a>
+          <div class="dropdown-divider border-secondary border-opacity-25"></div>
+          <button type="button" class="dropdown-item d-flex align-items-center gap-2 text-danger" (click)="logout()">
+            <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log out
+          </button>
         </div>
-      }
-
-      @if (!loggedIn()) {
-        <form #loginFrom="ngForm" class="d-flex flex-row align-items-center flex-wrap" (ngSubmit)="login()">
-          <input
-            class="form-control my-1 me-sm-2 w-auto"
-            type="text"
-            name="username"
-            placeholder="Username"
-            required
-            [(ngModel)]="model.username"
-            />
-            <input
-              class="form-control my-1 me-sm-2 w-auto"
-              type="password"
-              name="password"
-              placeholder="Password"
-              required
-              [(ngModel)]="model.password"
-              />
-              <button class="btn btn-success" [disabled]="!loginFrom.valid" type="submit">Login</button>
-              <button class="btn btn-secondary ms-3" type="button" [routerLink]="['/register']">Register</button>
-            </form>
-          }
-        </div>
-      </nav>
+      </div>
+    } @else {
+      <div class="nav-auth-actions ms-auto d-flex align-items-center gap-2">
+        <a routerLink="/login" class="btn btn-outline-light btn-sm">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In
+        </a>
+        <a routerLink="/register" class="btn btn-primary btn-sm">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Join Adda
+        </a>
+      </div>
+    }
+  </div>
+</nav>

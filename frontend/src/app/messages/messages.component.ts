@@ -4,8 +4,9 @@ import { Pagination, PaginatedResult } from '../models/pagination';
 import { UserService } from '../services/user.service';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AlertifyService } from '../services/alertify.service';
-import { DatePipe, NgClass } from '@angular/common';
+import { NotificationService } from '../services/notification.service';
+import { DatePipe, LowerCasePipe, NgClass } from '@angular/common';
+import { DateAgoPipe } from '../pipes/date-ago.pipe';
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { firstValueFrom } from 'rxjs';
@@ -13,15 +14,8 @@ import { firstValueFrom } from 'rxjs';
 @Component({
     selector: 'app-messages',
     templateUrl: './messages.component.html',
-    styles: `
-    table {
-      margin-top: 15px;
-    }
-    .img-circle {
-      max-height: 50px;
-    }
-  `,
-    imports: [NgClass, DatePipe, FormsModule, PaginationModule, RouterLink]
+    styles: ``,
+    imports: [NgClass, DatePipe, DateAgoPipe, LowerCasePipe, FormsModule, PaginationModule, RouterLink]
 })
 export class MessagesComponent implements OnInit {
   messages: Message[] | null = null;
@@ -31,7 +25,7 @@ export class MessagesComponent implements OnInit {
     private readonly userService: UserService,
     private readonly authService: AuthService,
     private readonly route: ActivatedRoute,
-    private readonly alertify: AlertifyService
+    private readonly notify: NotificationService
   ) {}
 
   ngOnInit() {
@@ -62,7 +56,7 @@ export class MessagesComponent implements OnInit {
         this.messageContainer = messageContainer;
       }
     } catch (e: any) {
-      this.alertify.error(e.statusText);
+      this.notify.error(e.statusText);
     }
   }
 
@@ -72,16 +66,16 @@ export class MessagesComponent implements OnInit {
   }
 
   async deleteMessage(id: number): Promise<void> {
-    this.alertify.confirm('Are you sure you want to delete this message?', async () => {
+    this.notify.confirm('Are you sure you want to delete this message?', async () => {
       try {
         await firstValueFrom(this.userService.deleteMessage(id, this.authService.decodedToken.nameid));
         this.messages!.splice(
           this.messages!.findIndex((m) => m.id === id),
           1
         );
-        this.alertify.success('Message has been deleted');
+        this.notify.success('Message has been deleted');
       } catch (e: any) {
-        this.alertify.error('Failed to delete the messages');
+        this.notify.error('Failed to delete the messages');
       }
     });
   }

@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { environment } from '../../../../environments/environment.prod';
 import { Photo } from '../../../models/photo';
-import { AlertifyService } from '../../../services/alertify.service';
+import { NotificationService } from '../../../services/notification.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
 import { DecimalPipe, NgClass, NgStyle, SlicePipe } from '@angular/common';
@@ -12,29 +12,25 @@ import { firstValueFrom } from 'rxjs';
     selector: 'app-photo-editor',
     templateUrl: './photo-editor.component.html',
     styles: `
-    img.img-thumbnail {
-      height: 100px;
-      min-width: 100px !important;
-      margin-bottom: 2px;
+    .photo-thumb {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: var(--adda-radius);
     }
 
-    .nv-file-over {
-      border: dotted 3px red;
-    }
-
-    input[type='file'] {
-      color: transparent;
+    .photo-thumb-wrap {
+      text-align: center;
     }
 
     .pending-image-text {
-      color: red;
-      /* position: absolute; */
-      text-align: center;
-      margin-bottom: 5px;
+      color: var(--adda-brand);
+      font-size: 0.85rem;
+      margin-top: 0.35rem;
     }
 
     .not-approved {
-      opacity: 0.2;
+      opacity: 0.35;
     }
   `,
     imports: [NgStyle, FileUploadModule, DecimalPipe, SlicePipe, NgClass]
@@ -49,7 +45,7 @@ export class PhotoEditorComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
-    private readonly alertify: AlertifyService
+    private readonly notify: NotificationService
   ) {
     this.hasBaseDropZoneOver = false;
   }
@@ -109,21 +105,21 @@ export class PhotoEditorComponent implements OnInit {
       this.authService.currentUser!.photoUrl = photo.url;
       localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
     } catch (e: any) {
-      this.alertify.error(e.statusText);
+      this.notify.error(e.statusText);
     }
   }
 
   async deletePhoto(id: number): Promise<void> {
-    this.alertify.confirm('Are you sure you want to delete this photo?', async () => {
+    this.notify.confirm('Are you sure you want to delete this photo?', async () => {
       try {
         await firstValueFrom(this.userService.deletePhoto(this.authService.decodedToken.nameid, id));
         this.photos.splice(
           this.photos.findIndex((p) => p.id === id),
           1
         );
-        this.alertify.success('Photo has been deleted');
+        this.notify.success('Photo has been deleted');
       } catch (e: any) {
-        this.alertify.error(e.statusText);
+        this.notify.error(e.statusText);
       }
     });
   }

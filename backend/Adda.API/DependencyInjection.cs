@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Shopizy.Infrastructure.Security.TokenGenerator;
 
@@ -166,9 +167,18 @@ public static class DependencyInjection
 
         string connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-        services.AddDbContext<DataContext>(
-            x => x.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-        );
+        if (environment.IsEnvironment("Testing"))
+        {
+            services.AddDbContext<DataContext>(
+                x => x.UseInMemoryDatabase("TestDb_" + Guid.NewGuid())
+            );
+        }
+        else
+        {
+            services.AddDbContext<DataContext>(
+                x => x.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 31)))
+            );
+        }
 
         services.AddScoped<Seed>();
 

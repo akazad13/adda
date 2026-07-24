@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Photo } from '../../models/photo';
 import { AdminService } from '../../services/admin.service';
-import { AlertifyService } from '../../services/alertify.service';
+import { NotificationService } from '../../services/notification.service';
 
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-    selector: 'app-photo-management',
-    templateUrl: './photo-management.component.html',
-    styles: ``,
-    imports: []
+  selector: 'app-photo-management',
+  templateUrl: './photo-management.component.html',
+  styles: ``,
+  imports: []
 })
 export class PhotoManagementComponent implements OnInit {
   photos: Photo[] = [];
-  constructor(private readonly adminService: AdminService, private readonly alertify: AlertifyService) {}
+  constructor(private readonly adminService: AdminService, private readonly notify: NotificationService) { }
 
   ngOnInit() {
     this.getPhotosForModeration();
@@ -24,7 +24,7 @@ export class PhotoManagementComponent implements OnInit {
       const photos: Photo[] = await firstValueFrom(this.adminService.getPhotosForModeration());
       this.photos = photos;
     } catch (e: any) {
-      this.alertify.error(e.statusText);
+      this.notify.error(e.statusText);
     }
   }
 
@@ -35,23 +35,23 @@ export class PhotoManagementComponent implements OnInit {
         this.photos.findIndex((p) => p.id === photoId),
         1
       );
-      this.alertify.success('Photo has been approved successfully');
+      this.notify.success('Photo has been approved successfully');
     } catch (e: any) {
-      this.alertify.error(e.statusText);
+      this.notify.error(e.statusText);
     }
   }
 
   async rejectPhoto(photoId: number): Promise<void> {
-    this.alertify.confirm('Are you sure you want to delete this photo?', async () => {
+    this.notify.confirm('Are you sure you want to delete this photo?', async () => {
       try {
         await firstValueFrom(this.adminService.rejectPhoto(photoId));
         this.photos.splice(
           this.photos.findIndex((p) => p.id === photoId),
           1
         );
-        this.alertify.success('Photo has been deleted successfully');
+        this.notify.success('Photo has been deleted successfully');
       } catch (e: any) {
-        this.alertify.error(e.statusText);
+        this.notify.error(e.statusText);
       }
     });
   }
