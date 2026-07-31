@@ -41,8 +41,10 @@ public class PhotoService(IUserRepository userRepository, IPhotoRepository photo
             {
                 Url = res.Value.Url,
                 PublicId = res.Value.PublicId,
+                Description = string.Empty,
                 DateAdded = DateTime.Now,
                 IsMain = false,
+                IsApproved = false,
                 UserId = userId,
                 User = userFromRepo,
             };

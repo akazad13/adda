@@ -5,7 +5,7 @@ import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { DateAgoPipe } from '../../../pipes/date-ago.pipe';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { ChatService } from '../../../services/chat.service';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { DatePipe, NgClass } from '@angular/common';
@@ -66,8 +66,9 @@ export class MemberMessagesComponent implements OnInit, OnDestroy {
   @ViewChild(NgScrollbar) scrollable!: NgScrollbar;
 
   @Input() recipientId!: number;
-  messages!: Message[];
+  messages: Message[] = [];
   newMessage: string = '';
+  private messageSubscription!: Subscription;
 
   constructor(
     private readonly userService: UserService,
@@ -81,8 +82,20 @@ export class MemberMessagesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadMessages();
 
-    this.chatService.message$.subscribe((message: Message) => {
-      this.messages = [...this.messages, message];
+    this.messageSubscription = this.chatService.message$.subscribe((message: Message) => {
+      const currentUserId = this.authService.getCurrentUserId();
+      if (
+        (message.senderId === this.recipientId && message.recipientId === currentUserId) ||
+        (message.senderId === currentUserId && message.recipientId === this.recipientId)
+      ) {
+        if (!this.messages.some((m) => m.id === message.id)) {
+          this.messages = [...this.messages, message];
+        }
+        this.scrollToLatestMessage();
+        if (message.senderId === this.recipientId) {
+          this.chatService.readThreadMessage(this.recipientId);
+        }
+      }
     });
   }
 
@@ -107,12 +120,14 @@ export class MemberMessagesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.chatService.stopHubConnection();
+    this.messageSubscription?.unsubscribe();
   }
 
   private scrollToLatestMessage(): void {
-    setTimeout(async () => {
-      this.scrollable.scrollTo({ top: this.scrollable.nativeElement.scrollHeight });
-    }, 0);
+    setTimeout(() => {
+      if (this.scrollable) {
+        this.scrollable.scrollTo({ bottom: 0 });
+      }
+    }, 50);
   }
 }

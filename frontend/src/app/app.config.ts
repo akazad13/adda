@@ -5,7 +5,6 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { environment } from '../environments/environment';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
 import { provideScrollbarOptions } from 'ngx-scrollbar';
 
@@ -24,10 +23,9 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
-    provideAnimations(),
     provideToastr({
-      timeOut: 3500,
-      positionClass: 'toast-bottom-right',
+      timeOut: 10000,
+      positionClass: 'toast-top-right',
       preventDuplicates: true,
       progressBar: true,
       progressAnimation: 'decreasing',

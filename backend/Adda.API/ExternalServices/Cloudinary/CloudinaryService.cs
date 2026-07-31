@@ -21,19 +21,42 @@ public class CloudinaryService(
                 using var stream = file.OpenReadStream();
                 var uploadParams = new ImageUploadParams()
                 {
-                    File = new FileDescription(file.Name, stream),
+                    File = new FileDescription(file.FileName, stream),
                     Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face"),
-                    AssetFolder = "adda"
+                    Folder = "adda"
                 };
-                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
-                return uploadResult.Error switch
+                try
                 {
-                    null => new PhotoUploadResult(uploadResult.Url.ToString(), uploadResult.PublicId),
-                    _ => ErrorOr.Error.Failure(description: uploadResult.Error.Message),
-                };
+                    var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                    if (uploadResult.Error == null && !string.IsNullOrEmpty(uploadResult.Url?.ToString()))
+                    {
+                        return new PhotoUploadResult(uploadResult.Url.ToString(), uploadResult.PublicId);
+                    }
+                }
+                catch
+                {
+                    // Fall back to local file storage if Cloudinary throws an exception
+                }
+
+                // Local storage fallback
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                string uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+
+                string localUrl = $"/uploads/{uniqueFileName}";
+                return new PhotoUploadResult(localUrl, uniqueFileName);
             }
-            return ErrorOr.Error.Failure(description: "File not found!");
+            return ErrorOr.Error.Failure(description: "File is empty!");
         }
         catch (Exception ex)
         {

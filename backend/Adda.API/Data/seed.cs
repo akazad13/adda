@@ -71,8 +71,16 @@ public class Seed(
 
     public async Task TrySeedAsync()
     {
-        if (!await _userManager.Users.AnyAsync())
+        bool hasOldData = await _context.Photos.AnyAsync(p => p.Url.Contains("randomuser.me"));
+        if (hasOldData || !await _userManager.Users.AnyAsync())
         {
+            _context.Photos.RemoveRange(_context.Photos);
+            _context.Bookmarks.RemoveRange(_context.Bookmarks);
+            _context.Messages.RemoveRange(_context.Messages);
+            _context.UserRoles.RemoveRange(_context.UserRoles);
+            _context.Users.RemoveRange(_context.Users);
+            await _context.SaveChangesAsync();
+
             string path = Path.Combine(AppContext.BaseDirectory, "Data", "UserSeedData.json");
             if (!File.Exists(path))
             {
@@ -82,17 +90,19 @@ public class Seed(
             var users = JsonConvert.DeserializeObject<List<User>>(userData) ?? [];
 
             // create some roles
-
-            var roles = new List<Role>
+            if (!await _roleManager.Roles.AnyAsync())
             {
-                new() { Name = RoleOption.Member },
-                new() { Name = RoleOption.Admin },
-                new() { Name = RoleOption.Moderator }
-            };
+                var roles = new List<Role>
+                {
+                    new() { Name = RoleOption.Member },
+                    new() { Name = RoleOption.Admin },
+                    new() { Name = RoleOption.Moderator }
+                };
 
-            foreach (var role in roles)
-            {
-                _ = await _roleManager.CreateAsync(role);
+                foreach (var role in roles)
+                {
+                    _ = await _roleManager.CreateAsync(role);
+                }
             }
 
             foreach (var user in users)

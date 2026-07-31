@@ -1,4 +1,4 @@
-﻿using Adda.API.Dtos;
+using Adda.API.Dtos;
 using Adda.API.Models;
 using Adda.API.Repositories.MessageRepository;
 using Adda.API.Security.CurrentUserProvider;
@@ -48,7 +48,8 @@ public class ChatHub(
 
             if (await _messageRepository.SaveAllAsync())
             {
-                var messageToReturn = message.Adapt<MessageResponse>();
+                var createdMessage = await _messageRepository.GetMessageAsync(message.Id);
+                var messageToReturn = (createdMessage ?? message).Adapt<MessageResponse>();
                 await Clients.Group($"{userId}").SendAsync("NewMessage", messageToReturn);
                 await Clients
                     .Group($"{createMessage.RecipientId}")

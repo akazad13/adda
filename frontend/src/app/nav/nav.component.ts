@@ -5,6 +5,7 @@ import { NotificationService } from '../services/notification.service';
 import { Subscription } from 'rxjs';
 import { HasRoleDirective } from '../directives/hasRole.directive';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ChatService } from '../services/chat.service';
 
 @Component({
   selector: 'app-nav',
@@ -61,6 +62,7 @@ export class NavComponent implements OnInit, OnDestroy {
   constructor(
     public authService: AuthService,
     private readonly notify: NotificationService,
+    private readonly chatService: ChatService,
     private readonly router: Router
   ) {}
 
@@ -79,6 +81,7 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   logout() {
+    this.chatService.stopHubConnection();
     localStorage.removeItem('user');
     this.authService.decodedToken = null;
     this.authService.currentUser = null;

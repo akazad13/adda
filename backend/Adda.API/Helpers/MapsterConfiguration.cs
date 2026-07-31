@@ -27,7 +27,7 @@ public static class MapsterConfiguration
 
         TypeAdapterConfig<Message, MessageResponse>
             .NewConfig()
-            .Map(dest => dest.SenderPhotoUrl, src => src.Sender.Photos.FirstOrDefault(p => p.IsMain) != null ? src.Sender.Photos.FirstOrDefault(p => p.IsMain)!.Url : null)
-            .Map(dest => dest.RecipientPhotoUrl, src => src.Recipient.Photos.FirstOrDefault(p => p.IsMain) != null ? src.Recipient.Photos.FirstOrDefault(p => p.IsMain)!.Url : null);
+            .Map(dest => dest.SenderPhotoUrl, src => src.Sender != null && src.Sender.Photos != null ? src.Sender.Photos.FirstOrDefault(p => p.IsMain)!.Url : null)
+            .Map(dest => dest.RecipientPhotoUrl, src => src.Recipient != null && src.Recipient.Photos != null ? src.Recipient.Photos.FirstOrDefault(p => p.IsMain)!.Url : null);
     }
 }

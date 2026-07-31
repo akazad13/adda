@@ -10,7 +10,10 @@ public class MessageRepository(DataContext context) : BaseRepository(context), I
 {
     private readonly DataContext _context = context;
 
-    public async Task<Message> GetMessageAsync(int id) => await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
+    public async Task<Message> GetMessageAsync(int id) => await _context.Messages
+        .Include(m => m.Sender).ThenInclude(p => p.Photos)
+        .Include(m => m.Recipient).ThenInclude(p => p.Photos)
+        .FirstOrDefaultAsync(m => m.Id == id);
 
     public async Task<PageList<Message>> GetMessagesForUserAsync(MessageParams messageParams)
     {

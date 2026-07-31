@@ -5,7 +5,7 @@ import { UserService } from '../services/user.service';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NotificationService } from '../services/notification.service';
-import { DatePipe, LowerCasePipe, NgClass } from '@angular/common';
+import { DatePipe, LowerCasePipe } from '@angular/common';
 import { DateAgoPipe } from '../pipes/date-ago.pipe';
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
@@ -15,7 +15,7 @@ import { firstValueFrom } from 'rxjs';
     selector: 'app-messages',
     templateUrl: './messages.component.html',
     styles: ``,
-    imports: [NgClass, DatePipe, DateAgoPipe, LowerCasePipe, FormsModule, PaginationModule, RouterLink]
+    imports: [DatePipe, DateAgoPipe, LowerCasePipe, FormsModule, PaginationModule, RouterLink]
 })
 export class MessagesComponent implements OnInit {
   messages: Message[] | null = null;

@@ -40,6 +40,8 @@ else
 
 app.UseCors("_myAllowSpecificOrigins");
 
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 
 app.UseRouting();

@@ -7,14 +7,13 @@ import { NotificationService } from '../services/notification.service';
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { MemberCardComponent } from '../members/member-list/member-card/member-card.component';
-import { NgClass } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-lists',
   templateUrl: './lists.component.html',
   styles: ``,
-  imports: [FormsModule, PaginationModule, MemberCardComponent, NgClass]
+  imports: [FormsModule, PaginationModule, MemberCardComponent]
 })
 export class ListsComponent implements OnInit {
   users: User[] | null = null;

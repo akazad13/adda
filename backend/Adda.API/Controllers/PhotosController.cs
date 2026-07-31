@@ -49,7 +49,7 @@ public class PhotosController(ICurrentUserProvider currentUser, IPhotoService ph
             );
         }
 
-        return BadRequest("Could not add the photo");
+        return BadRequest(string.IsNullOrEmpty(result.FirstError.Description) ? "Could not add the photo" : result.FirstError.Description);
     }
 
     [HttpPost("{id}/setMain")]

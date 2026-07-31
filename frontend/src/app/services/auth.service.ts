@@ -12,7 +12,21 @@ import { environment } from '../../environments/environment.prod';
 export class AuthService {
   baseUrl = `${environment.apiUrl}/api/auth/`;
   jwtHelper = new JwtHelperService();
-  decodedToken: any;
+  private _decodedToken: any;
+
+  get decodedToken(): any {
+    if (!this._decodedToken) {
+      const token = this.getToken();
+      if (token) {
+        this._decodedToken = this.jwtHelper.decodeToken(token);
+      }
+    }
+    return this._decodedToken;
+  }
+
+  set decodedToken(value: any) {
+    this._decodedToken = value;
+  }
   currentUser: User | null = null;
   photoUrl = new BehaviorSubject<string>('./user.png');
   currentPhotoUrl = this.photoUrl.asObservable();

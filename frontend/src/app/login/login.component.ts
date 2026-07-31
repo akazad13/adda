@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
+import { ChatService } from '../services/chat.service';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +24,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
+    private readonly chatService: ChatService,
     private readonly notify: NotificationService,
     private readonly router: Router
   ) {}
@@ -36,6 +38,7 @@ export class LoginComponent implements OnInit {
   async login(): Promise<void> {
     try {
       await firstValueFrom(this.authService.login(this.model));
+      this.chatService.createHubConnection();
       this.notify.success('Logged in successfully!');
       this.router.navigate(['/members']);
     } catch (e: any) {
