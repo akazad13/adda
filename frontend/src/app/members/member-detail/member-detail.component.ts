@@ -52,8 +52,6 @@ import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 export class MemberDetailComponent implements OnInit, OnDestroy {
   @ViewChild('memberTabs', { static: true }) memberTabs!: TabsetComponent;
   user!: User;
-  // galleryOptions: NgxGalleryOptions[];
-  // galleryImages: NgxGalleryImage[];
   routeSubscription!: Subscription;
 
   constructor(
@@ -69,11 +67,12 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     });
 
     this.route.queryParams.subscribe((params) => {
-      let selectedTab = parseInt(params['tab'], 10);
-      if (isNaN(selectedTab) || selectedTab < 0 || selectedTab >= this.memberTabs.tabs.length) {
-        selectedTab = 0;
+      const selectedTab = parseInt(params['tab'], 10);
+      if (!isNaN(selectedTab) && selectedTab >= 0) {
+        setTimeout(() => {
+          this.selecTab(selectedTab);
+        }, 0);
       }
-      this.memberTabs.tabs[selectedTab].active = true;
     });
   }
 
@@ -95,8 +94,11 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   }
 
   selecTab(tabId: number) {
-    this.memberTabs.tabs[tabId].active = true;
+    if (this.memberTabs?.tabs && this.memberTabs.tabs[tabId]) {
+      this.memberTabs.tabs[tabId].active = true;
+    }
   }
+
   async bookmark(id: number): Promise<void> {
     try {
       await firstValueFrom(this.userService.bookmark(this.authService.decodedToken.nameid, id));
