@@ -227,5 +227,5 @@ public static class DependencyInjection
         return services;
     }
 
-    private static string[] Origins() => ["http://localhost:4200"];
+    private static string[] Origins() => ["http://localhost:4200", "https://addaa.alwaysdata.net"];
 }
