@@ -29,5 +29,15 @@
     <None Update="Data\UserSeedData.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Update="wwwroot\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
+
+  <Target Name="SyncFrontendToWwwroot" BeforeTargets="Build;Publish">
+    <ItemGroup>
+      <FrontendFiles Include="$(MSBuildThisFileDirectory)..\..\frontend\dist\adda-app\browser\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(FrontendFiles)" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
 </Project>
