@@ -3,9 +3,13 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "EasyConnectApp": {
+    "adda-app": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "css"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -55,10 +59,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "EasyConnectApp:build:production"
+              "buildTarget": "adda-app:build:production"
             },
             "development": {
-              "buildTarget": "EasyConnectApp:build:development"
+              "buildTarget": "adda-app:build:development"
             }
           },
           "defaultConfiguration": "development"
