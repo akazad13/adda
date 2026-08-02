@@ -25,7 +25,25 @@ public class UsersController(ICurrentUserProvider currentUser, IUserService user
 
         if (!result.IsError)
         {
-            UserDetails userToReturn = result.Value.Adapt<UserDetails>();
+            var user = result.Value;
+            var userToReturn = new UserDetails
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Gender = user.Gender,
+                Age = user.DateOfBirth.CalculateAge(),
+                KnownAs = user.KnownAs,
+                Created = user.Created,
+                LastActive = user.LastActive,
+                Introduction = user.Introduction,
+                LookingFor = user.LookingFor,
+                Interests = user.Interests,
+                city = user.city,
+                Country = user.Country,
+                PhotoUrl = user.Photos?.FirstOrDefault(p => p.IsMain)?.Url,
+                Photos = user.Photos?.Adapt<ICollection<PhotosDetails>>()
+            };
+
             return CreatedAtRoute(
                 "GetUser",
                 new { Controller = "Users", id = userToReturn.Id },

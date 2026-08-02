@@ -58,10 +58,10 @@ public class AuthServiceTests
     public async Task LoginAsync_WithNonexistentUser_ReturnsValidationError()
     {
         // Arrange
-        var request = new AuthRequest { Username = "nonexistent", Password = "password123" };
+        var request = new AuthRequest { UserName = "nonexistent", Password = "password123" };
 
         _mockUserManager
-            .Setup(um => um.FindByNameAsync(request.Username))
+            .Setup(um => um.FindByNameAsync(request.UserName))
             .ReturnsAsync((User)null!);
 
         // Act
@@ -69,7 +69,7 @@ public class AuthServiceTests
 
         // Assert
         result.IsError.Should().BeTrue();
-        result.FirstError.Description.Should().Contain("Invalid username or password");
+        result.FirstError.Description.Should().Contain("Invalid userName or password");
     }
 
     [Fact]
@@ -77,10 +77,10 @@ public class AuthServiceTests
     {
         // Arrange
         var user = TestDataFactory.CreateUser(1, "testuser");
-        var request = new AuthRequest { Username = "testuser", Password = "wrongpassword" };
+        var request = new AuthRequest { UserName = "testuser", Password = "wrongpassword" };
 
         _mockUserManager
-            .Setup(um => um.FindByNameAsync(request.Username))
+            .Setup(um => um.FindByNameAsync(request.UserName))
             .ReturnsAsync(user);
 
         _mockSignInManager
@@ -92,7 +92,7 @@ public class AuthServiceTests
 
         // Assert
         result.IsError.Should().BeTrue();
-        result.FirstError.Description.Should().Contain("Invalid username or password");
+        result.FirstError.Description.Should().Contain("Invalid userName or password");
     }
 
     #endregion

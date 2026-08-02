@@ -16,11 +16,17 @@
             <div class="mb-4">
               <label class="form-label">I am a</label>
               <div class="gender-toggle d-flex gap-3">
-                <label for="male" class="flex-fill text-center py-2 px-3 rounded glass-panel cursor-pointer">
+                <label for="male" class="flex-fill text-center py-2 px-3 rounded glass-panel cursor-pointer"
+                  [class.bg-info]="formData['gender'].value === 'male'"
+                  [class.bg-opacity-25]="formData['gender'].value === 'male'"
+                  [class.border-info]="formData['gender'].value === 'male'">
                   <input type="radio" id="male" value="male" formControlName="gender" class="d-none" />
                   <i class="fa-solid fa-mars me-1 text-info"></i> Male
                 </label>
-                <label for="female" class="flex-fill text-center py-2 px-3 rounded glass-panel cursor-pointer">
+                <label for="female" class="flex-fill text-center py-2 px-3 rounded glass-panel cursor-pointer"
+                  [class.bg-danger]="formData['gender'].value === 'female'"
+                  [class.bg-opacity-25]="formData['gender'].value === 'female'"
+                  [class.border-danger]="formData['gender'].value === 'female'">
                   <input type="radio" id="female" value="female" formControlName="gender" class="d-none" />
                   <i class="fa-solid fa-venus me-1 text-danger"></i> Female
                 </label>

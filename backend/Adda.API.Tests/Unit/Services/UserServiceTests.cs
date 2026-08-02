@@ -40,7 +40,7 @@ public class UserServiceTests
         // Arrange
         var request = new RegistrationRequest 
         { 
-            Username = "newuser", 
+            UserName = "newuser", 
             Password = "Password123!"
         };
 
@@ -48,7 +48,7 @@ public class UserServiceTests
         User capturedUser = null!;
 
         _mockUserManager
-            .Setup(um => um.FindByNameAsync(request.Username))
+            .Setup(um => um.FindByNameAsync(request.UserName))
             .ReturnsAsync((User)null!);
 
         _mockUserManager
@@ -56,7 +56,7 @@ public class UserServiceTests
             .Callback<User, string>((user, password) => 
             {
                 capturedUser = user;
-                user.UserName = request.Username; // Simulate UserManager setting the username
+                user.UserName = request.UserName; // Simulate UserManager setting the username
             })
             .ReturnsAsync(identityResult);
 
@@ -69,7 +69,7 @@ public class UserServiceTests
 
         // Assert
         result.IsError.Should().BeFalse();
-        result.Value.UserName.Should().Be(request.Username);
+        result.Value.UserName.Should().Be(request.UserName);
         _mockUserManager.Verify(um => um.CreateAsync(It.IsAny<User>(), request.Password), Times.Once);
         _mockUserManager.Verify(um => um.AddToRolesAsync(It.IsAny<User>(), It.Is<IEnumerable<string>>(r => r.Contains("Member"))), Times.Once);
     }
@@ -85,12 +85,12 @@ public class UserServiceTests
         var existingUser = TestDataFactory.CreateUser(1, "existinguser");
         var request = new RegistrationRequest 
         { 
-            Username = "existinguser", 
+            UserName = "existinguser", 
             Password = "Password123!" 
         };
 
         _mockUserManager
-            .Setup(um => um.FindByNameAsync(request.Username))
+            .Setup(um => um.FindByNameAsync(request.UserName))
             .ReturnsAsync(existingUser);
 
         // Act
@@ -98,7 +98,7 @@ public class UserServiceTests
 
         // Assert
         result.IsError.Should().BeTrue();
-        result.FirstError.Description.Should().Contain("Username already exists");
+        result.FirstError.Description.Should().Contain("UserName already exists");
     }
 
     [Fact]
@@ -107,12 +107,12 @@ public class UserServiceTests
         // Arrange
         var request = new RegistrationRequest 
         { 
-            Username = "newuser", 
+            UserName = "newuser", 
             Password = "Password123!" 
         };
 
         _mockUserManager
-            .Setup(um => um.FindByNameAsync(request.Username))
+            .Setup(um => um.FindByNameAsync(request.UserName))
             .ReturnsAsync((User)null!);
 
         var identityErrors = new[] { new IdentityError { Description = "Password too weak" } };
@@ -136,14 +136,14 @@ public class UserServiceTests
         // Arrange
         var request = new RegistrationRequest 
         { 
-            Username = "newuser", 
+            UserName = "newuser", 
             Password = "Password123!" 
         };
 
         var exceptionMessage = "Database connection failed";
 
         _mockUserManager
-            .Setup(um => um.FindByNameAsync(request.Username))
+            .Setup(um => um.FindByNameAsync(request.UserName))
             .ThrowsAsync(new Exception(exceptionMessage));
 
         // Act

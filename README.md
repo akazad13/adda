@@ -15,6 +15,9 @@ Built with **Angular 21** on the frontend and **ASP.NET Core 10** on the backend
 - 🛡️ **Role-based Access Control (RBAC)**: Fine-grained user access management with `Admin`, `Moderator`, and `Member` roles.
 - 🎨 **Dark Glassmorphic UI**: High-contrast, premium aesthetic built with custom CSS design tokens, custom responsive cards, toast notifications (`ngx-toastr`), and Google Fonts (*Outfit* and *Plus Jakarta Sans*).
 
+<img width="1889" height="933" alt="image" src="https://github.com/user-attachments/assets/c42c28cb-db1e-4168-8512-4effb7ec501b" />
+
+
 ---
 
 ## 🛠️ Technology Stack
