@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Dark Glass Container Gradient -->
+    <linearGradient id="addaBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a233a"/>
+      <stop offset="50%" stop-color="#101726"/>
+      <stop offset="100%" stop-color="#080c14"/>
+    </linearGradient>
+
+    <!-- Brand Flame Gradient -->
+    <linearGradient id="addaFlame" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff758c"/>
+      <stop offset="45%" stop-color="#ff3b5c"/>
+      <stop offset="100%" stop-color="#d91b43"/>
+    </linearGradient>
+
+    <!-- Flame Inner Core Highlight -->
+    <linearGradient id="addaCore" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffb3bf"/>
+      <stop offset="100%" stop-color="#ff5773"/>
+    </linearGradient>
+
+    <!-- Accent Cyan Glow Gradient -->
+    <linearGradient id="addaAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="100%" stop-color="#4facfe"/>
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="flameGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Squircle Card -->
+  <rect x="16" y="16" width="480" height="480" rx="120" fill="url(#addaBg)" stroke="#ff3b5c" stroke-width="8" stroke-opacity="0.45"/>
+  
+  <!-- Inner Border Highlight -->
+  <rect x="24" y="24" width="464" height="464" rx="112" fill="none" stroke="rgba(255, 255, 255, 0.12)" stroke-width="2"/>
+
+  <!-- Flame Shadow / Ambient Glow -->
+  <path fill="#ff3b5c" opacity="0.35" filter="url(#flameGlow)" transform="translate(0, 8)"
+        d="M256 72c-16 68-60 132-116 174-38 28-76 72-76 134 0 106 86 192 192 192s192-86 192-192c0-82-52-150-110-194-14-11-30-30-38-48-10 48-38 86-76 116 34-68 44-136 32-182z"/>
+
+  <!-- Main Flame Body -->
+  <path fill="url(#addaFlame)" 
+        d="M256 80c-14 60-54 116-104 153-34 25-68 63-68 119 0 94 76 170 172 170s172-76 172-170c0-73-46-133-98-172-13-10-27-26-34-42-9 42-34 76-68 102 30-60 39-120 28-160z"/>
+
+  <!-- Flame Inner Dynamic Core -->
+  <path fill="url(#addaCore)" opacity="0.9"
+        d="M256 220c-8 36-32 70-62 92-20 15-40 38-40 72 0 56 46 102 102 102s102-46 102-102c0-44-28-80-59-103-8-6-16-16-20-25-5 25-20 45-41 61 18-36 23-72 18-97z"/>
+
+  <!-- Cyan Spark Detail -->
+  <circle cx="360" cy="140" r="14" fill="url(#addaAccent)" />
+</svg>
