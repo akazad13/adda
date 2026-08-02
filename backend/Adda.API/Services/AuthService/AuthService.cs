@@ -18,11 +18,11 @@ public class AuthService(IJwtTokenGenerator jwtTokenGenerator, UserManager<User>
         try
         {
 
-            var user = await _userManager.FindByNameAsync(request.Username);
+            var user = await _userManager.FindByNameAsync(request.UserName);
 
             if (user == null)
             {
-                return Error.Validation(description: "Invalid username or password!");
+                return Error.Validation(description: "Invalid userName or password!");
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(
@@ -39,7 +39,7 @@ public class AuthService(IJwtTokenGenerator jwtTokenGenerator, UserManager<User>
             }
             else
             {
-                return Error.Validation(description: "Invalid username or password!");
+                return Error.Validation(description: "Invalid userName or password!");
             }
         }
         catch (Exception ex)

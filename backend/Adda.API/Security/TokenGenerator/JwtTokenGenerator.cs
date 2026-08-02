@@ -14,7 +14,7 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptoins) : IJwtTokenGene
     public string GenerateToken(
 
         int userId,
-        string username,
+        string userName,
         IList<string> roles
     )
     {
@@ -22,7 +22,7 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptoins) : IJwtTokenGene
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, userId.ToString()),
-            new(ClaimTypes.Name, username),
+            new(ClaimTypes.Name, userName),
         };
 
         if(roles != null)

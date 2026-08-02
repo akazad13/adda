@@ -56,11 +56,11 @@ public class UserService(UserManager<User> userManager, ICurrentUserProvider cur
     {
         try
         {
-            var user = await _userManager.FindByNameAsync(request.Username);
+            var user = await _userManager.FindByNameAsync(request.UserName);
 
             if (user != null)
             {
-                return Error.Validation(description: "Username already exists.");
+                return Error.Validation(description: "UserName already exists.");
             }
 
             var userToCreate = request.Adapt<User>();

@@ -54,7 +54,7 @@ public class AuthControllerIntegrationTests : ApiIntegrationTestBase
         // Arrange
         var request = new AuthRequest 
         { 
-            Username = "testuser",
+            UserName = "testuser",
             Password = "Password123!" 
         };
 
@@ -79,7 +79,7 @@ public class AuthControllerIntegrationTests : ApiIntegrationTestBase
         // Arrange
         var request = new AuthRequest 
         { 
-            Username = "",
+            UserName = "",
             Password = "" 
         };
 
@@ -159,7 +159,7 @@ public class UsersControllerIntegrationTests : ApiIntegrationTestBase
         // Arrange
         var request = new RegistrationRequest
         {
-            Username = $"newuser_{Guid.NewGuid()}",
+            UserName = $"newuser_{Guid.NewGuid()}",
             Password = "Password123!",
             KnownAs = "New User",
             Gender = "Male",
@@ -185,7 +185,7 @@ public class UsersControllerIntegrationTests : ApiIntegrationTestBase
         // Arrange
         var request = new RegistrationRequest
         {
-            Username = "",
+            UserName = "",
             Password = ""
         };
 
