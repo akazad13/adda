@@ -1,167 +1,167 @@
-# Adda 💬
+<div align="center">
 
-A modern, full-stack social networking and dating web application featuring real-time chat, member directory, profile customization, photo moderation, and role-based administration.
+# 💬 Adda
 
-Built with **Angular 21** on the frontend and **ASP.NET Core 10** on the backend.
+### Full-stack social networking platform featuring real-time SignalR chat, photo moderation, and RBAC
 
----
+[![CI Status](https://img.shields.io/github/actions/workflow/status/akazad13/adda/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white)](https://github.com/akazad13/adda/actions)
+[![Angular](https://img.shields.io/badge/Angular-21-DD0031?style=flat-square&logo=angular&logoColor=white)](https://angular.dev/)
+[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-10.0-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![SignalR](https://img.shields.io/badge/SignalR-WebSockets-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
-## ✨ Features
+[Overview](#-overview) •
+[Architecture](#-architecture) •
+[Tech Stack](#-tech-stack) •
+[Repository Layout](#-repository-layout) •
+[Quick Start](#-quick-start) •
+[Testing](#-testing) •
+[License](#-license)
 
-- 👤 **User Profiles & Customization**: Comprehensive profile management with age calculation, bio, location details, interest tags, and photo gallery.
-- 💬 **Real-time Messaging**: Instant direct messaging powered by SignalR web sockets with unread indicators and message thread history.
-- 💖 **Member Directory & Bookmarks**: Browse and filter members by age, gender, and last active status with one-click profile bookmarking.
-- 📸 **Photo Management & Moderation**: Multi-photo upload powered by Cloudinary with admin/moderator approval workflow for public photos.
-- 🛡️ **Role-based Access Control (RBAC)**: Fine-grained user access management with `Admin`, `Moderator`, and `Member` roles.
-- 🎨 **Dark Glassmorphic UI**: High-contrast, premium aesthetic built with custom CSS design tokens, custom responsive cards, toast notifications (`ngx-toastr`), and Google Fonts (*Outfit* and *Plus Jakarta Sans*).
-
-## 🚀 Live site
-https://addaa.alwaysdata.net
-
-<img width="1889" height="933" alt="image" src="https://github.com/user-attachments/assets/c42c28cb-db1e-4168-8512-4effb7ec501b" />
-
-Moderator Username: John, Password: Password
-
----
-
-## 🛠️ Technology Stack
-
-### **Frontend**
-- **Framework**: Angular 21 (Standalone Components)
-- **State & Routing**: Angular Router with Route Resolvers & Auth Guards
-- **Real-time Communication**: `@microsoft/signalr`
-- **UI & Styling**: Custom Dark Glassmorphic Design System, Bootstrap 5, FontAwesome 6
-- **Notifications**: `ngx-toastr` (`NotificationService`)
-- **File Uploads**: `ng2-file-upload`
-- **UI Components**: `ngx-bootstrap` (Datepicker, Dropdowns, Pagination, Modals), `ngx-scrollbar`
-
-### **Backend**
-- **Framework**: ASP.NET Core 10 Web API (C# 13)
-- **Database**: Entity Framework Core with MySQL / SQLite support
-- **Authentication**: JWT Bearer Tokens with Identity Role authorization
-- **Mapping**: Mapster for high-performance DTO mapping
-- **Cloud Storage**: Cloudinary API integration for image uploads
-- **Real-time WebSockets**: SignalR Chat Hub (`ChatHub`)
+</div>
 
 ---
 
-## 🚀 Getting Started
+## 📌 Overview
+
+**Adda** is a modern full-stack social networking and messaging platform featuring instant direct chat over WebSockets (SignalR), a filterable member directory, profile customization, Cloudinary photo moderation workflows, and fine-grained role-based access control (Admin, Moderator, Member).
+
+🔗 **Live Deployment**: [https://addaa.alwaysdata.net](https://addaa.alwaysdata.net)  
+*(Demo Moderator: Username `John`, Password `Password`)*
+
+### Key Highlights
+- 💬 **Real-Time Direct Messaging**: Bi-directional instant chat powered by ASP.NET Core SignalR WebSockets with message history and unread status.
+- 👤 **Profiles & Member Directory**: Age calculation, bios, interest tags, bookmarking, and multi-photo galleries.
+- 📸 **Cloudinary Media Moderation**: Multi-photo upload with an approval pipeline for public gallery moderation.
+- 🛡️ **Role-Based Access Control**: JWT Bearer authentication with ASP.NET Core Identity roles (`Admin`, `Moderator`, `Member`).
+- 🎨 **Dark Glassmorphic UI**: High-contrast modern interface with custom design tokens, toast notifications (`ngx-toastr`), and Google Fonts (*Outfit*, *Plus Jakarta Sans*).
+
+---
+
+## 🏛 Architecture
+
+```mermaid
+flowchart LR
+    subgraph Client["Frontend (Angular 21)"]
+        SPA["Angular Standalone Components<br/>Route Guards & Resolvers"]
+    end
+
+    subgraph Server["Backend API (.NET 10)"]
+        API["ASP.NET Core REST API<br/>JWT Auth & Mapster DTOs"]
+        Hub["SignalR Chat Hub<br/>(WebSocket Transport)"]
+    end
+
+    subgraph Data["Persistence & Cloud"]
+        DB[("MySQL / SQLite<br/>EF Core Migrations")]
+        Media["Cloudinary<br/>Image Hosting"]
+    end
+
+    SPA -->|HTTP REST| API
+    SPA <-->|WebSockets| Hub
+    API --> DB
+    API --> Media
+```
+
+> [!NOTE]
+> Angular Route Resolvers pre-fetch profile data before rendering views, ensuring instant zero-flicker transitions.
+
+---
+
+## 🛠 Tech Stack
+
+| Domain | Technologies |
+| :--- | :--- |
+| **Frontend Framework** | Angular 21 (Standalone Components, Signals, Resolvers) |
+| **Frontend UI & Styling** | Custom Dark Glassmorphism, Bootstrap 5, FontAwesome 6, `ngx-bootstrap`, `ngx-toastr` |
+| **Real-time WebSockets** | `@microsoft/signalr` |
+| **Backend Framework** | ASP.NET Core 10 Web API, C# 13 |
+| **Persistence & ORM** | Entity Framework Core 10 (MySQL & SQLite support) |
+| **Authentication** | JWT Bearer Authentication with ASP.NET Core Identity RBAC |
+| **Object Mapping** | Mapster (High-performance compiled mapper) |
+| **Media Storage** | Cloudinary API |
+| **Testing** | xUnit (Backend), Karma & Jasmine (Frontend) |
+
+---
+
+## 📂 Repository Layout
+
+```text
+├── backend/
+│   ├── Adda.API/                 # ASP.NET Core 10 Web API
+│   │   ├── Controllers/          # REST endpoints (Auth, Users, Messages, Admin)
+│   │   ├── Data/                 # DataContext, migrations, and seed data
+│   │   ├── Dtos/                 # Data Transfer Objects
+│   │   ├── Helpers/              # Mapster configs and pagination helpers
+│   │   ├── Hubs/                 # SignalR ChatHub
+│   │   ├── Models/               # Entities (User, Photo, Message, Role)
+│   │   ├── Repositories/         # Repository implementations
+│   │   └── Services/             # Token service and business logic
+│   └── Adda.API.Tests/           # xUnit integration and unit tests
+└── frontend/                     # Angular 21 Single Page Application
+    ├── src/
+    │   ├── app/
+    │   │   ├── admin/            # Role and photo moderation views
+    │   │   ├── guards/           # Route authorization guards
+    │   │   ├── members/          # Member directory, card, detail & edit
+    │   │   ├── messages/         # Direct messaging & threads
+    │   │   └── services/         # API, Notification, Auth & Chat services
+    │   └── styles.css            # Dark glassmorphic design tokens
+```
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
+- [.NET 10 SDK](https://dotnet.microsoft.com/)
+- [Node.js 20+](https://nodejs.org/) & npm 9+
+- MySQL Server (or SQLite fallback)
 
-Ensure you have the following installed:
-- [.NET 10.0 SDK](https://dotnet.microsoft.com/download)
-- [Node.js](https://nodejs.org/) (v18+ or v20+)
-- [npm](https://www.npmjs.com/) (v9+)
+### 1. Setup Backend
+```bash
+cd backend/Adda.API
 
----
+# Apply database migrations
+dotnet ef database update
 
-### Backend Setup (`Adda.API`)
+# Run the API server
+dotnet run
+```
+API starts at `https://localhost:44392` (or configured port).
 
-1. **Navigate to the backend project**:
-   ```bash
-   cd backend/Adda.API
-   ```
+### 2. Setup Frontend
+```bash
+cd frontend
 
-2. **Configure App Settings**:
-   Ensure `appsettings.json` contains your database connection string and Cloudinary/JWT secrets:
-   ```json
-   {
-     "ConnectionStrings": {
-       "DefaultConnection": "Server=localhost;Database=adda;User=root;Password=yourpassword;"
-     },
-     "CloudinarySettings": {
-       "CloudName": "your_cloud_name",
-       "ApiKey": "your_api_key",
-       "ApiSecret": "your_api_secret"
-     },
-     "JwtSettings": {
-       "Secret": "YourSuperSecretJwtKeyHere"
-     }
-   }
-   ```
+# Install dependencies
+npm install --legacy-peer-deps
 
-3. **Apply Database Migrations**:
-   ```bash
-   dotnet ef database update
-   ```
-
-4. **Run the API**:
-   ```bash
-   dotnet run
-   ```
-   The backend API will start at `https://localhost:44392` (or configured port).
-
----
-
-### Frontend Setup (`frontend`)
-
-1. **Navigate to the frontend directory**:
-   ```bash
-   cd frontend
-   ```
-
-2. **Install Dependencies**:
-   ```bash
-   npm install --legacy-peer-deps
-   ```
-
-3. **Start Development Server**:
-   ```bash
-   npm start
-   ```
-
-4. **Open in Browser**:
-   Navigate to `http://localhost:4200/`
+# Start Angular dev server
+npm start
+```
+Navigate to `http://localhost:4200/`.
 
 ---
 
 ## 🧪 Testing
 
-### Running Frontend Tests (Karma / Jasmine)
-```bash
-cd frontend
-npx ng test --watch=false
-```
-
-### Running Backend Tests (xUnit)
-```bash
-cd backend
-dotnet test
-```
+| Test Suite | Framework | Command |
+| :--- | :--- | :--- |
+| **Backend Tests** | xUnit | `cd backend && dotnet test` |
+| **Frontend Tests** | Karma & Jasmine | `cd frontend && npx ng test --watch=false` |
 
 ---
 
-## 📁 Repository Structure
+## 👤 Author
 
-```
-adda/
-├── backend/
-│   ├── Adda.API/                 # ASP.NET Core 10 Web API
-│   │   ├── Controllers/          # API Endpoints (Auth, Users, Messages, Admin)
-│   │   ├── Data/                 # DataContext & Database Seeders
-│   │   ├── Dtos/                 # Data Transfer Objects
-│   │   ├── Helpers/              # Mapster Configurations & Helpers
-│   │   ├── Hubs/                 # SignalR Chat Hubs
-│   │   ├── Models/               # Entity Models (User, Photo, Message, Role)
-│   │   ├── Repositories/         # Repository pattern implementations
-│   │   └── Services/             # Business Logic & Auth Services
-│   └── Adda.API.Tests/           # Integration & Unit Tests
-│
-└── frontend/                     # Angular 21 Single Page App
-    ├── src/
-    │   ├── app/
-    │   │   ├── admin/            # Role & Photo management components
-    │   │   ├── guards/           # Route Authorization Guards
-    │   │   ├── members/          # Member directory, card, detail & edit views
-    │   │   ├── messages/         # Direct messaging & thread views
-    │   │   ├── resolver/         # Angular Route Resolvers
-    │   │   └── services/         # API, Notification, Auth & Chat Services
-    │   └── styles.css            # Dark Glassmorphism CSS Design Tokens
-```
+**Md. Abul Kalam**
+- GitHub: [@akazad13](https://github.com/akazad13)
+- LinkedIn: [Md. Abul Kalam](https://linkedin.com/in/akazad13)
 
 ---
 
 ## 📄 License
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
