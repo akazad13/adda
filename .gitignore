@@ -400,3 +400,7 @@ FodyWeavers.xsd
 # User Input
 **/*.db
 **/*.db-*
+
+# ASP.NET local development settings / secrets
+**/appsettings.Development.json
+appsettings.Development.json
