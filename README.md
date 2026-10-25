@@ -120,6 +120,22 @@ flowchart LR
 - MySQL Server (or SQLite fallback)
 
 ### 1. Setup Backend
+1. Configure credentials:
+   Create or update `backend/Adda.API/appsettings.Development.json` with your local development connection string, Cloudinary credentials, and JWT token key (this file is `.gitignore` protected):
+   ```json
+   {
+     "ConnectionStrings": {
+       "DefaultConnection": "Server=localhost;Database=adda_db;User=root;Password=your_password;"
+     },
+     "TokenKey": "super_secret_dev_key_at_least_64_characters_long_for_security",
+     "CloudinarySettings": {
+       "CloudName": "your-cloud-name",
+       "ApiKey": "your-api-key",
+       "ApiSecret": "your-api-secret"
+     }
+   }
+   ```
+2. Run database migrations and start the server:
 ```bash
 cd backend/Adda.API
 
@@ -151,6 +167,12 @@ Navigate to `http://localhost:4200/`.
 | :--- | :--- | :--- |
 | **Backend Tests** | xUnit | `cd backend && dotnet test` |
 | **Frontend Tests** | Karma & Jasmine | `cd frontend && npx ng test --watch=false` |
+
+---
+
+## 🤖 AI-Driven Development & Contributing
+
+Autonomous coding agents (Antigravity, Cursor, Claude Code, GitHub Copilot) operating in this repository must consult [AGENTS.md](AGENTS.md) for zero-secret commit rules, Angular standalone component patterns, and validation commands.
 
 ---
 
