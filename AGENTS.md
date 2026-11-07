@@ -51,13 +51,35 @@ All architectural decisions and technical trade-offs are governed by the [Archit
 
 ---
 
-## 3. Commands Cheat Sheet
+## 3. Testing Paradigm & Agentic Verification ([ADR-0002](docs/adr/0002-testing-paradigm-and-agentic-verification.md))
+
+Autonomous agents must follow the **Dual-Tier Testing Paradigm** defined in [ADR-0002](docs/adr/0002-testing-paradigm-and-agentic-verification.md):
+
+1. **Dual-Tier Structure**:
+   - **Backend (.NET 10 / xUnit / FluentAssertions)**:
+     - **Unit**: Test domain services (`MessageService`, `UserService`, etc.) in isolation with deterministic `TestDataFactory` fixtures.
+     - **Database Integration**: Inherit from `DatabaseIntegrationTestBase` using isolated EF Core InMemory or SQLite instances.
+     - **API Controllers**: Inherit from `ApiIntegrationTestBase` (`WebApplicationFactory<Program>` with `Testing` environment).
+     - **SignalR Hubs**: Mock `HubCallerContext` and `IHubClients` to test group joins and message dispatches.
+   - **Frontend (Angular 22 / Jasmine / Karma)**:
+     - **Standalone Components**: Verify UI rendering with `TestBed` imports and minimal providers (`provideRouter`, `provideHttpClient`).
+     - **Signals & Reactive State**: Verify signal state transitions and computed bindings via `fixture.detectChanges()`.
+     - **Pipes & Utilities**: Pure function unit testing with zero TestBed overhead.
+2. **Testing Invariants**:
+   - **State Over Interactions**: Assert on returned DTOs, HTTP statuses, database states, and DOM outputs—not internal method invocation counts.
+   - **DAMP Over DRY**: Tests must be self-contained and descriptive; do not over-abstract test fixtures.
+   - **Red-Green-Refactor Loop**: Write the failing test first (RED), write minimal code to pass (GREEN), then clean up (REFACTOR).
+   - **The Prove-It Pattern**: For any bug fix, write a reproduction test that fails before attempting any code fix.
+   - **The Beyoncé Rule**: If you touched or added critical behavior, put a test on it.
+
+---
+
+## 4. Commands Cheat Sheet
 
 ```bash
 # Backend build & test
-cd backend
-dotnet build Adda.sln
-dotnet test
+dotnet build backend/Adda.sln
+dotnet test backend/Adda.sln
 
 # Run backend API
 cd backend/Adda.API
@@ -75,8 +97,10 @@ npx ng test --watch=false
 
 ---
 
-## 4. Verification Gates for AI Agents
+## 5. Verification Gates for AI Agents
 
 Before submitting code changes or finishing a turn:
-1. Run `dotnet build backend/Adda.sln` — must compile with **0 errors**.
-2. Verify that no database connection strings or JWT secrets were checked into tracked files.
+1. Run `dotnet test backend/Adda.sln` — must compile with **0 errors** and pass all tests with **0 failures**.
+2. Run frontend tests when touching UI code (`cd frontend && npx ng test --watch=false`).
+3. Ensure all new features or bug fixes are backed by state-based unit or integration tests per [ADR-0002](docs/adr/0002-testing-paradigm-and-agentic-verification.md).
+4. Verify that no database connection strings or JWT secrets were checked into tracked files.

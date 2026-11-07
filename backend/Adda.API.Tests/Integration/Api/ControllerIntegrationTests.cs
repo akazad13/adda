@@ -1,6 +1,8 @@
 using Adda.API.Dtos;
 using FluentAssertions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -21,7 +23,16 @@ public abstract class ApiIntegrationTestBase : IAsyncLifetime
         _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             // Use "Testing" environment so DependencyInjection uses InMemory instead of MySQL
-            builder.UseSetting("ASPNETCORE_ENVIRONMENT", "Testing");
+            builder.UseEnvironment("Testing");
+            builder.ConfigureAppConfiguration((context, config) =>
+            {
+                config.AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    ["JwtSettings:Secret"] = "super_secret_test_key_that_is_at_least_64_characters_long_for_security!",
+                    ["JwtSettings:Issuer"] = "Addaapi",
+                    ["JwtSettings:Audience"] = "Addaspa"
+                });
+            });
         });
         _client = _factory.CreateClient();
     }

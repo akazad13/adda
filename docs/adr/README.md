@@ -10,6 +10,7 @@ For more details on the ADR process and format, see [ADR-0000](0000-record-archi
 | :--- | :--- | :--- | :--- | :--- |
 | [ADR-0000](0000-record-architecture-decisions.md) | Record Architecture Decisions | Accepted | 2026-11-07 | Governance & Standards |
 | [ADR-0001](0001-angular-22-and-net-modernization.md) | Angular 22 and .NET 10 Modernization | Accepted | 2026-11-07 | Frontend & Backend Frameworks |
+| [ADR-0002](0002-testing-paradigm-and-agentic-verification.md) | Testing Paradigm and Agentic Verification | Accepted | 2026-11-07 | Quality Assurance & Testing |
 
 ## Creating a New ADR
 

@@ -74,6 +74,7 @@ flowchart LR
 ### Decision Records
 - [ADR-0000: Record Architecture Decisions](docs/adr/0000-record-architecture-decisions.md)
 - [ADR-0001: Angular 22 and .NET 10 Modernization](docs/adr/0001-angular-22-and-net-modernization.md)
+- [ADR-0002: Testing Paradigm and Agentic Verification](docs/adr/0002-testing-paradigm-and-agentic-verification.md)
 
 ---
 
@@ -171,10 +172,23 @@ Navigate to `http://localhost:4200/`.
 
 ## 🧪 Testing
 
-| Test Suite | Framework | Command |
-| :--- | :--- | :--- |
-| **Backend Tests** | xUnit | `cd backend && dotnet test` |
-| **Frontend Tests** | Karma & Jasmine | `cd frontend && npx ng test --watch=false` |
+Adda adheres to a structured **Dual-Tier Testing Paradigm** codified in [ADR-0002](docs/adr/0002-testing-paradigm-and-agentic-verification.md) to ensure robust human and AI agentic development:
+
+- **Backend Tier (.NET 10 / xUnit / FluentAssertions)**:
+  - **Unit**: Business services (`MessageService`, `UserService`, `PhotoService`, `AuthService`) tested with deterministic `TestDataFactory` fixtures.
+  - **Database Integration**: Repository and query filtering validated against EF Core InMemory/SQLite databases (`DatabaseIntegrationTestBase`).
+  - **API Controllers**: Endpoints validated using `WebApplicationFactory<Program>` in an isolated testing environment.
+  - **SignalR WebSockets**: Connection handling, group management, and real-time message broadcasting verified via hub context mocks.
+- **Frontend Tier (Angular 22 / Karma & Jasmine)**:
+  - **Standalone Components**: Isolated UI mounting with `TestBed` and modular providers (`provideRouter`, `provideHttpClient`).
+  - **Reactive State & Signals**: Verification of Angular Signals state updates and DOM synchronizations.
+  - **Pipes & Utilities**: Fast pure function testing.
+- **Invariants**: State-based over interaction-based assertions, DAMP test readability, and the Red-Green-Refactor agentic loop (with the Prove-It bug fix pattern).
+
+| Test Suite | Framework | Command | Scope |
+| :--- | :--- | :--- | :--- |
+| **Backend Suite** | xUnit & FluentAssertions | `dotnet test backend/Adda.sln` | Domain services, repositories, API controllers |
+| **Frontend Suite** | Karma & Jasmine | `cd frontend && npx ng test --watch=false` | Standalone components, signals, pipes |
 
 ---
 
