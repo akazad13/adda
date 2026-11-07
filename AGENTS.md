@@ -8,7 +8,7 @@ This document provides mandatory guidance for autonomous AI coding agents (Antig
 
 **Product**: `Adda` — Full-stack social networking and messaging platform featuring real-time SignalR chat, Cloudinary photo moderation, and role-based access control.
 - **Backend**: .NET 10, C# 13, ASP.NET Core Web API, Entity Framework Core 10, SignalR WebSockets, MySQL / SQLite.
-- **Frontend**: Angular 21 (Standalone Components, Signals, Resolvers), Bootstrap 5, FontAwesome, `ngx-bootstrap`.
+- **Frontend**: Angular 22 (Standalone Components, Signals, Resolvers), Bootstrap 5, FontAwesome, `ngx-bootstrap`.
 - **Media**: Cloudinary image upload and moderation pipeline.
 - **Mapping**: Mapster compiled object mapper.
 
@@ -33,8 +33,10 @@ This document provides mandatory guidance for autonomous AI coding agents (Antig
    - SignalR hub calls must be authenticated using the query string access token (`access_token`) validated in `JwtBearerOptions`.
 3. **Photo Approval Workflow**:
    - Unapproved member photos must have `IsApproved = false`. The public gallery and member card endpoints must query only `IsApproved == true` photos unless requested by `Admin`/`Moderator`.
-4. **Angular Legacy Peer Dependencies**:
-   - Due to Angular 21 animation package changes, always install frontend packages with `npm install --legacy-peer-deps`.
+4. **Angular 22 & TypeScript Pinning (ADR-0001)**:
+   - Always install frontend packages with `npm install --legacy-peer-deps`.
+   - Keep `typescript` pinned to `~6.0.2` in `frontend/package.json` as required by the Angular 22 compiler.
+   - Use relative path aliases (`./src/app/*`) in `frontend/tsconfig.json`.
 
 ---
 
