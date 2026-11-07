@@ -2,6 +2,8 @@
 
 This document provides mandatory guidance for autonomous AI coding agents (Antigravity, Claude Code, GitHub Copilot, Cursor, Windsurf, Devin) operating in `akazad13/adda`.
 
+All architectural decisions and technical trade-offs are governed by the [Architecture Decision Records (docs/adr/README.md)](docs/adr/README.md).
+
 ---
 
 ## 1. System Identity & Architecture
@@ -11,6 +13,7 @@ This document provides mandatory guidance for autonomous AI coding agents (Antig
 - **Frontend**: Angular 22 (Standalone Components, Signals, Resolvers), Bootstrap 5, FontAwesome, `ngx-bootstrap`.
 - **Media**: Cloudinary image upload and moderation pipeline.
 - **Mapping**: Mapster compiled object mapper.
+- **Architecture Decisions**: Managed in [`docs/adr/`](docs/adr/README.md) per [ADR-0000](docs/adr/0000-record-architecture-decisions.md).
 
 ### Project Layout:
 - `backend/Adda.API/`:
@@ -20,6 +23,7 @@ This document provides mandatory guidance for autonomous AI coding agents (Antig
   - `Helpers/`: Mapster mapping configs, pagination parameters, and user activity filters.
 - `backend/Adda.API.Tests/`: xUnit unit and integration tests.
 - `frontend/`: Angular SPA (`src/app/members`, `src/app/messages`, `src/app/admin`).
+- `docs/adr/`: [Architecture Decision Records](docs/adr/README.md) cataloging system design and evolution.
 
 ---
 
@@ -29,14 +33,21 @@ This document provides mandatory guidance for autonomous AI coding agents (Antig
    - `backend/Adda.API/appsettings.Development.json` is untracked and strictly `.gitignore`d.
    - Never commit or log real Cloudinary API secrets, JWT private keys, or database passwords. Baseline configurations live in `appsettings.json` with empty placeholders.
 2. **SignalR Connection & Group Tracking**:
-   - Private chat messages must be delivered strictly to the authenticated recipient's SignalR connection or saved to the database if offline.
+   - Private chat messages must be delivered strictly to the authenticated recipient's SignalR connection or persisted to the database if offline.
    - SignalR hub calls must be authenticated using the query string access token (`access_token`) validated in `JwtBearerOptions`.
 3. **Photo Approval Workflow**:
    - Unapproved member photos must have `IsApproved = false`. The public gallery and member card endpoints must query only `IsApproved == true` photos unless requested by `Admin`/`Moderator`.
-4. **Angular 22 & TypeScript Pinning (ADR-0001)**:
+4. **Role-Based Access Control (RBAC)**:
+   - Protected actions must enforce ASP.NET Core Identity policies (`RequireAdminRole`, `ModeratePhotoRole`).
+   - Admin management endpoints must remain locked to authorized roles; user role adjustments must be logged and validated.
+5. **Data Mapping & DTO Boundaries**:
+   - Database entities must never be returned directly across public API boundaries. All incoming requests and outgoing responses must pass through dedicated DTOs mapped via Mapster.
+6. **Angular 22 & TypeScript Pinning ([ADR-0001](docs/adr/0001-angular-22-and-net-modernization.md))**:
    - Always install frontend packages with `npm install --legacy-peer-deps`.
    - Keep `typescript` pinned to `~6.0.2` in `frontend/package.json` as required by the Angular 22 compiler.
    - Use relative path aliases (`./src/app/*`) in `frontend/tsconfig.json`.
+7. **Architectural Decision Tracking ([ADR-0000](docs/adr/0000-record-architecture-decisions.md))**:
+   - Any architectural modification, library replacement, or invariant alteration must be documented in a corresponding ADR under `docs/adr/` and indexed in `docs/adr/README.md`.
 
 ---
 

@@ -5,7 +5,7 @@
 ### Full-stack social networking platform featuring real-time SignalR chat, photo moderation, and RBAC
 
 [![CI Status](https://img.shields.io/github/actions/workflow/status/akazad13/adda/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white)](https://github.com/akazad13/adda/actions)
-[![Angular](https://img.shields.io/badge/Angular-21-DD0031?style=flat-square&logo=angular&logoColor=white)](https://angular.dev/)
+[![Angular](https://img.shields.io/badge/Angular-22-DD0031?style=flat-square&logo=angular&logoColor=white)](https://angular.dev/)
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-10.0-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![SignalR](https://img.shields.io/badge/SignalR-WebSockets-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
@@ -13,7 +13,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
 [Overview](#-overview) •
-[Architecture](#-architecture) •
+[Architecture & Decision Records](#-architecture--decision-records) •
 [Tech Stack](#-tech-stack) •
 [Repository Layout](#-repository-layout) •
 [Quick Start](#-quick-start) •
@@ -40,11 +40,15 @@
 
 ---
 
-## 🏛 Architecture
+## 🏛 Architecture & Decision Records
+
+Technical decisions, trade-offs, and invariants in Adda are documented as Architecture Decision Records. Refer to the [Architecture Decision Records Index](docs/adr/README.md) for full context and history.
+
+### System Architecture
 
 ```mermaid
 flowchart LR
-    subgraph Client["Frontend (Angular 21)"]
+    subgraph Client["Frontend (Angular 22)"]
         SPA["Angular Standalone Components<br/>Route Guards & Resolvers"]
     end
 
@@ -67,13 +71,17 @@ flowchart LR
 > [!NOTE]
 > Angular Route Resolvers pre-fetch profile data before rendering views, ensuring instant zero-flicker transitions.
 
+### Decision Records
+- [ADR-0000: Record Architecture Decisions](docs/adr/0000-record-architecture-decisions.md)
+- [ADR-0001: Angular 22 and .NET 10 Modernization](docs/adr/0001-angular-22-and-net-modernization.md)
+
 ---
 
 ## 🛠 Tech Stack
 
 | Domain | Technologies |
 | :--- | :--- |
-| **Frontend Framework** | Angular 21 (Standalone Components, Signals, Resolvers) |
+| **Frontend Framework** | Angular 22 (Standalone Components, Signals, Resolvers) |
 | **Frontend UI & Styling** | Custom Dark Glassmorphism, Bootstrap 5, FontAwesome 6, `ngx-bootstrap`, `ngx-toastr` |
 | **Real-time WebSockets** | `@microsoft/signalr` |
 | **Backend Framework** | ASP.NET Core 10 Web API, C# 13 |
@@ -99,7 +107,7 @@ flowchart LR
 │   │   ├── Repositories/         # Repository implementations
 │   │   └── Services/             # Token service and business logic
 │   └── Adda.API.Tests/           # xUnit integration and unit tests
-└── frontend/                     # Angular 21 Single Page Application
+└── frontend/                     # Angular 22 Single Page Application
     ├── src/
     │   ├── app/
     │   │   ├── admin/            # Role and photo moderation views
