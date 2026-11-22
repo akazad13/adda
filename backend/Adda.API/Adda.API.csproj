@@ -22,8 +22,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.15" />
     <PackageReference Include="ErrorOr" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.15" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="11.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="11.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.3.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.3.1" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Data\UserSeedData.json">
@@ -31,3 +31,4 @@
     </None>
   </ItemGroup>
 </Project>
+
